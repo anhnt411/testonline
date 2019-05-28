@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TestOnlineBase\TestOnlineBase.csproj" />
+    <ProjectReference Include="..\TestOnlineEntity\TestOnlineEntity.csproj" />
   </ItemGroup>
 
 </Project>
