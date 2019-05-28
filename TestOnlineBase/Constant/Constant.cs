@@ -26,6 +26,13 @@ namespace TestOnlineBase.Constant
 
 
         }
+
+        public static class Role
+        {
+            public const string SUPER_USER = "SuperUSer";
+            public const string ADMIN = "Admin";
+            public const string NORMAL_USER = "User";
+        }
         #endregion
 
     }
