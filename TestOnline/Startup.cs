@@ -25,6 +25,9 @@ using TestOnlineModel.ViewModel.User;
 using Microsoft.AspNetCore.Identity;
 using TestOnlineEntity.Model.ViewModel;
 using Serilog;
+using Microsoft.AspNetCore.Http;
+using TestOnlineBusiness.Service;
+using TestOnlineBusiness.Interface;
 
 namespace TestOnline
 {
@@ -44,9 +47,15 @@ namespace TestOnline
             services.Configure<ApplicationSettingViewModel>(Configuration.GetSection("ApplicationSettings"));
             AddService(services);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDefaultIdentity<ApplicationUser>()
-               .AddRoles<IdentityRole>()
-               .AddEntityFrameworkStores<TestOnlineDbContext>();
+
+            services.AddDbContext<TestOnlineDbContext>(options =>
+           options.UseSqlServer(Configuration.GetConnectionString("sqlServerConnectionString")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+      .AddEntityFrameworkStores<TestOnlineDbContext>()
+      .AddDefaultTokenProviders();
+
+            services.AddCors();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -93,7 +102,7 @@ namespace TestOnline
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
         {
-            loggerBuilder.AddDebug();
+        
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
             
@@ -119,6 +128,8 @@ namespace TestOnline
             services.AddScoped<DbContext, TestOnlineDbContext>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ITestOnlienUnitOfWork, TestOnlineUnitOfWork>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUserDomain, UserDomain>();
         }
     }
 }

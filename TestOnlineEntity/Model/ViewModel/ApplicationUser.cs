@@ -11,5 +11,7 @@ namespace TestOnlineEntity.Model.ViewModel
         public string CreatedBy { get; set; }
         [Column(TypeName = "nvarchar(150)")]
         public string FullName { get; set; }
+        public string Address { get; set; }
+        public bool Status { get; set; }
     }
 }
