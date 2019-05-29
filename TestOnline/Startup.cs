@@ -28,6 +28,7 @@ using Serilog;
 using Microsoft.AspNetCore.Http;
 using TestOnlineBusiness.Service;
 using TestOnlineBusiness.Interface;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace TestOnline
 {
@@ -48,8 +49,7 @@ namespace TestOnline
             AddService(services);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddDbContext<TestOnlineDbContext>(options =>
-           options.UseSqlServer(Configuration.GetConnectionString("sqlServerConnectionString")));
+          
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
       .AddEntityFrameworkStores<TestOnlineDbContext>()
@@ -76,8 +76,8 @@ namespace TestOnline
                 });
             });
 
-           
 
+          
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
 
             services.AddAuthentication(x =>
@@ -102,7 +102,7 @@ namespace TestOnline
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
         {
-        
+            SeedData.InitilizeDatabase(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
             
@@ -113,6 +113,7 @@ namespace TestOnline
 
              );
             app.UseHttpsRedirection();
+            
             app.UseAuthentication();
             loggerFactory.AddSerilog();
             app.UseMvc();
@@ -125,11 +126,12 @@ namespace TestOnline
         private void AddService(IServiceCollection services)
         {
             services.AddDbContext<TestOnlineDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("sqlServerConnectionString")));
-            services.AddScoped<DbContext, TestOnlineDbContext>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<ITestOnlienUnitOfWork, TestOnlineUnitOfWork>();
+            services.TryAddScoped<DbContext, TestOnlineDbContext>();
+            services.TryAddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.TryAddScoped<ITestOnlienUnitOfWork, TestOnlineUnitOfWork>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IUserDomain, UserDomain>();
+            services.TryAddScoped<IUserDomain, UserDomain>();
+            
         }
     }
 }
