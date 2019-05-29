@@ -105,7 +105,7 @@ namespace TestOnline
             SeedData.InitilizeDatabase(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
-            
+
             app.UseCors(builder =>
              builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString())
              .AllowAnyHeader()
@@ -113,14 +113,14 @@ namespace TestOnline
 
              );
             app.UseHttpsRedirection();
-            
-            app.UseAuthentication();
-            loggerFactory.AddSerilog();
-            app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(c => {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "TestOnlineAPI V1");
             });
+            app.UseAuthentication();
+            loggerFactory.AddSerilog();
+            app.UseMvc();
+          
         }
 
         private void AddService(IServiceCollection services)

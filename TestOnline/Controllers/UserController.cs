@@ -52,8 +52,8 @@ namespace TestOnline.Controllers
                 return FailedProcessingErorrResult();
             }
         }
-
-        public async Task<IActionResult> Login(LoginViewModel viewModel)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginViewModel viewModel)
         {
             try
             {
