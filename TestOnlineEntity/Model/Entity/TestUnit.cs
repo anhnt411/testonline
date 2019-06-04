@@ -6,19 +6,18 @@ using System.Text;
 
 namespace TestOnlineEntity.Model.Entity
 {
-    [Table("TestCategorys")]
-    public class TestCategory
+    [Table("TestUnits")]
+    public class TestUnit
     {
         [Key]
         public Guid Id { get; set; }
-
-        [Required(ErrorMessage = "Name is not empty")]
-        [MaxLength(200,ErrorMessage = "Allow 200 character")]
+        [Required]
+        [Column(TypeName = "nvarchar(200)")]
         public string Name { get; set; }
 
-        public string Image { get; set; }
+        public string Address { get; set; }
 
-        public string Description { get; set; }
+        public string PhoneNumber { get; set; }
 
         [Required]
         public string CreatedBy { get; set; }
@@ -30,7 +29,5 @@ namespace TestOnlineEntity.Model.Entity
         public DateTime? ModifiedDate { get; set; }
 
         public bool Status { get; set; }
-
-
     }
 }

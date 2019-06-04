@@ -6,31 +6,28 @@ using System.Text;
 
 namespace TestOnlineEntity.Model.Entity
 {
-    [Table("TestCategorys")]
-    public class TestCategory
+    [Table("ResultTest")]
+    public class ResultTest
     {
         [Key]
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "Name is not empty")]
-        [MaxLength(200,ErrorMessage = "Allow 200 character")]
-        public string Name { get; set; }
+        public Guid MemberId { get; set; }
 
-        public string Image { get; set; }
+        public Guid ExamId { get; set; }
 
-        public string Description { get; set; }
+        public string TotalTime { get; set; }
 
-        [Required]
+        public int? Score { get; set; }
+
         public string CreatedBy { get; set; }
-        [Required]
+      
         public DateTime? CreatedDate { get; set; }
 
         public string ModifiedBy { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
 
-        public bool Status { get; set; }
-
-
+        public bool IsActive { get; set; }
     }
 }

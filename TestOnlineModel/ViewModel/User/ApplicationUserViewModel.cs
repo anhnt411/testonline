@@ -15,7 +15,7 @@ namespace TestOnlineModel.ViewModel.User
         [Compare(nameof(Password),ErrorMessage ="Password mismatch")]
         public string ConfirmPassWord { get; set; }
         public string FullName { get; set; }
-        public string Role { get; set; }
+        public IList<string> Role { get; set; }
       
     }
 }

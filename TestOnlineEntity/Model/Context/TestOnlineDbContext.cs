@@ -17,5 +17,19 @@ namespace TestOnlineEntity.Model.Context
 
         public DbSet<TestCategory> TestCategories { get; set; }
 
+        public DbSet<TestUnit> TestUnits { get; set; }
+
+        public DbSet<Answer> Answers { get; set; }
+
+        public DbSet<Exam> Exams { get; set; }
+
+        public DbSet<Question> Questions { get; set; }
+
+        public DbSet<QuestionGroup> QuestionGroups { get; set; }
+
+        public DbSet<Member> Members { get; set; }
+
+        public DbSet<TestSchedule> TestSchedules { get; set; }
+
     }
 }
