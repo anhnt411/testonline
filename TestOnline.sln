@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOnline", "TestOnline\TestOnline.csproj", "{7BB29779-AC1E-4ECC-BAE5-537433FD0457}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOnline", "TestOnline\TestOnline.csproj", "{7BB29779-AC1E-4ECC-BAE5-537433FD0457}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOnlineBusiness", "TestOnlineBusiness\TestOnlineBusiness.csproj", "{73EC72E7-FAFF-450C-8158-7BFD1BF6EF00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOnlineBusiness", "TestOnlineBusiness\TestOnlineBusiness.csproj", "{73EC72E7-FAFF-450C-8158-7BFD1BF6EF00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOnlineEntity", "TestOnlineEntity\TestOnlineEntity.csproj", "{8857B5D1-3B5C-4A60-BD00-8AC079534B95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOnlineEntity", "TestOnlineEntity\TestOnlineEntity.csproj", "{8857B5D1-3B5C-4A60-BD00-8AC079534B95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOnlineModel", "TestOnlineModel\TestOnlineModel.csproj", "{07A98022-836F-416B-88B8-2803F09999F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOnlineModel", "TestOnlineModel\TestOnlineModel.csproj", "{07A98022-836F-416B-88B8-2803F09999F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOnlineShared", "TestOnlineShared\TestOnlineShared.csproj", "{50DFDB44-2F13-452C-8C52-1FC893093899}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOnlineShared", "TestOnlineShared\TestOnlineShared.csproj", "{50DFDB44-2F13-452C-8C52-1FC893093899}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOnlineBase", "TestOnlineBase\TestOnlineBase.csproj", "{4B6AE41B-000F-456D-B368-19B90F84584A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOnlineBase", "TestOnlineBase\TestOnlineBase.csproj", "{4B6AE41B-000F-456D-B368-19B90F84584A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

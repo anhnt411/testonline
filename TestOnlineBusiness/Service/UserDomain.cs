@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TestOnlineBase;
 using TestOnlineBase.Constant;
+using TestOnlineBase.Helper;
 using TestOnlineBusiness.Interface;
 using TestOnlineEntity.Interface;
 using TestOnlineEntity.Model.ViewModel;
@@ -30,8 +31,9 @@ namespace TestOnlineBusiness.Service
         private SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationSettingViewModel _appSetting;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private IEmailSender _sender;
 
-        public UserDomain(ITestOnlienUnitOfWork unitOfWork, ILogger<UserDomain> logger, IOptions<ApplicationSettingViewModel> appSetting, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,IHttpContextAccessor contextAccessor)
+        public UserDomain(ITestOnlienUnitOfWork unitOfWork, ILogger<UserDomain> logger, IOptions<ApplicationSettingViewModel> appSetting, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,IHttpContextAccessor contextAccessor, IEmailSender sender)
         {
             this._unitOfWork = unitOfWork;
             this._logger = logger;
@@ -39,7 +41,7 @@ namespace TestOnlineBusiness.Service
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._httpContextAccessor = contextAccessor;
-
+            this._sender = sender;
 
         }
         public async Task<string> CreateUserAsync(ApplicationUserViewModel userViewModel)
@@ -56,7 +58,7 @@ namespace TestOnlineBusiness.Service
                     Status = true
                 };
                 var result = await _userManager.CreateAsync(user, userViewModel.Password);                    
-                await _userManager.AddToRoleAsync(user, Constant.Role.ADMIN);
+                await _userManager.AddToRoleAsync(user, Constant.Role.ADMIN);            
                 return user.Id;
             }
             catch (Exception ex)
@@ -75,6 +77,11 @@ namespace TestOnlineBusiness.Service
                 var user = await _userManager.FindByNameAsync(viewModel.UserName);
                 if (user != null && await _userManager.CheckPasswordAsync(user, viewModel.PassWord))
                 {
+                    if(!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        var content = "Xac thuc";
+                        return content;
+                    }
                     //Get role assigned to the user
                     var role = await _userManager.GetRolesAsync(user);
                    

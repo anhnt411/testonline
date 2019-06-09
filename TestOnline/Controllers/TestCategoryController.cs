@@ -79,7 +79,7 @@ namespace TestOnline.Controllers
                 var userId = _user.GetUserId();
                 if(userId==null || _user.IsUser())
                 {
-                    return Unauthorized();
+                    return AuthorizedErorrResult();
                 }
                 var output = await _category.CreateCategory(viewModel, userId);
                 var result = new ResultObject()
@@ -106,7 +106,7 @@ namespace TestOnline.Controllers
                 var userId = _user.GetUserId();
                 if (userId == null || !_user.IsAdmin())
                 {
-                    return Unauthorized();
+                    return AuthorizedErorrResult();
                 }
                 var output = await _category.UpdateCategory(categoryId,viewModel,userId);
                 var result = new ResultObject()

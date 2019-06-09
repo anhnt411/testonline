@@ -74,8 +74,20 @@ namespace TestOnline.Controllers
             return Ok(resultObject);
         }
 
-        
-        
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult AuthorizedErorrResult()
+        {
+            var resultObject = new ResultObject()
+            {
+                Message = Constant.Message.UNAUTHORIZED,
+                Result = null,
+                StatusCode = Enums.StatusCode.Unauthorized
+            };
+            return BadRequest(resultObject);
+            //return Ok(resultObject);
+        }
+
 
     }
 }

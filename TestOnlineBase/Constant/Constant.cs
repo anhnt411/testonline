@@ -23,6 +23,9 @@ namespace TestOnlineBase.Constant
             public const string NOTFOUND_RESULT = "NotFound";
             public const string FORBIDDENRESULT = "ForbiddenError";
             public const string FAILDPROCESSINGRESULT = "InternalServerError";
+            public const string UNAUTHORIZED = "Authorize Error";
+            public const string EMAIL_CONFIRM_SUCCESS = "Confired Success";
+            
 
 
         }

@@ -29,6 +29,9 @@ using Microsoft.AspNetCore.Http;
 using TestOnlineBusiness.Service;
 using TestOnlineBusiness.Interface;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using TestOnlineBase.Helper;
+using TestOnlineBase.EmailHelper;
 
 namespace TestOnline
 {
@@ -46,15 +49,20 @@ namespace TestOnline
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<ApplicationSettingViewModel>(Configuration.GetSection("ApplicationSettings"));
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             AddService(services);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
 
-            services.AddDefaultIdentity<ApplicationUser>()
+            services.AddDefaultIdentity<ApplicationUser>(config => {
+                config.SignIn.RequireConfirmedEmail = true;
+                config.User.RequireUniqueEmail = true;
+                
+            })
                .AddRoles<IdentityRole>()
                .AddEntityFrameworkStores<TestOnlineDbContext>();
-
+                 
             services.AddCors();
 
             services.Configure<IdentityOptions>(options =>
@@ -64,6 +72,7 @@ namespace TestOnline
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
+                
             }
           );
 
@@ -132,8 +141,13 @@ namespace TestOnline
             });
             app.UseAuthentication();
             loggerFactory.AddSerilog();
-            app.UseMvc();
-          
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action=Index}/{id?}");
+            });
+
         }
 
         private void AddService(IServiceCollection services)
@@ -145,6 +159,8 @@ namespace TestOnline
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUserDomain, UserDomain>();
             services.AddScoped<ICategoryDomain, CategoryDomain>();
+            services.AddSingleton<TestOnlineBase.Helper.IEmailSender, EmailSender>();
+
         }
     }
 }
