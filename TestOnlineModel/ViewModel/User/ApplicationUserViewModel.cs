@@ -16,6 +16,6 @@ namespace TestOnlineModel.ViewModel.User
         public string ConfirmPassWord { get; set; }
         public string FullName { get; set; }
         public string Token { get; set; }
-      
+        public string Image { get; set; }
     }
 }

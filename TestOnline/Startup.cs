@@ -57,7 +57,7 @@ namespace TestOnline
 
             services.AddDefaultIdentity<ApplicationUser>(config => {
                 config.SignIn.RequireConfirmedEmail = true;
-                config.User.RequireUniqueEmail = true;
+                //config.User.RequireUniqueEmail = true;
                 
             })
                .AddRoles<IdentityRole>()

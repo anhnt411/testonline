@@ -13,5 +13,6 @@ namespace TestOnlineEntity.Model.ViewModel
         public string FullName { get; set; }
         public string Address { get; set; }
         public bool Status { get; set; }
+        public string Image { get; set; }
     }
 }

@@ -69,7 +69,7 @@ namespace TestOnlineBusiness.Service
 
         }
 
-        public async Task<string> Login(LoginViewModel viewModel)
+        public async Task<object> Login(LoginViewModel viewModel)
         {
             try
             {
@@ -100,13 +100,21 @@ namespace TestOnlineBusiness.Service
                         new Claim("IsSuperUser",role.Contains(Constant.Role.SUPER_USER).ToString()),
                         new Claim(_options.ClaimsIdentity.RoleClaimType,role.FirstOrDefault())
                         }),
-                        Expires = DateTime.UtcNow.AddDays(1),
+                        Expires = DateTime.UtcNow.AddMinutes(180),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSetting.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
                     };
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var securityToken = tokenHandler.CreateToken(tokenDescriptor);
                     var token = tokenHandler.WriteToken(securityToken);
-                    return token;
+                    return new {
+                        Token = token,
+                        Expires = tokenDescriptor.Expires,
+                        UserName = viewModel.UserName,
+                        IsAdmin = role.Contains(Constant.Role.ADMIN),
+                        IsUser = role.Contains(Constant.Role.NORMAL_USER),
+                        IsSuperUser = role.Contains(Constant.Role.SUPER_USER)
+
+                    };
                 }
                 return null;
             }
@@ -170,6 +178,66 @@ namespace TestOnlineBusiness.Service
                 throw new HttpException(HttpStatusCode.Unauthorized, HttpStatusCode.Unauthorized.ToString());
             }
             return Convert.ToBoolean(userClaim.Value);
+        }
+
+        public async Task<ApplicationUser> GetUserInfo(string userName)
+        {
+            try
+            {
+                var user = await _userManager.FindByNameAsync(userName);
+                if (user == null)
+                {
+                    return null;
+                }
+                return user;
+              
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<bool> UpdateUser(string userId,ApplicationUserViewModel viewModel, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return false;
+                }
+                user.FullName = viewModel.FullName;
+                user.Address = viewModel.Address;
+                user.PhoneNumber = viewModel.PhoneNumber;
+                user.Image = viewModel.Image;
+                var result = await _userManager.UpdateAsync(user);
+                return result.Succeeded;
+
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> ChangePassword(string userId, ChangePasswordViewmodel viewModel)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null || !viewModel.NewPassword.Equals(viewModel.ConfirmNewPassword))
+                {
+                    return false;
+                }
+                var result = _userManager.ChangePasswordAsync(user, viewModel.Password, viewModel.NewPassword);
+                return result.IsCompletedSuccessfully;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
+            }
         }
     }
 }

@@ -29,7 +29,7 @@ namespace TestOnline.Controllers
         private IEmailSender _sender;
 
 
-        public UserController(ILogger<UserController> logger, IUserDomain userDomain, UserManager<ApplicationUser> userManager,IEmailSender sender)
+        public UserController(ILogger<UserController> logger, IUserDomain userDomain, UserManager<ApplicationUser> userManager, IEmailSender sender)
         {
             this._logger = logger;
             this._userDomain = userDomain;
@@ -48,7 +48,16 @@ namespace TestOnline.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-
+                var checkExit = await _userManager.FindByNameAsync(viewModel.UserName);
+                if (checkExit != null)
+                {
+                    return Ok(new ResultObject()
+                    {
+                        Message = "Tài khoản đã tồn tại",
+                        StatusCode = Enums.StatusCode.Forbidden,
+                        Result = viewModel.UserName
+                    });
+                }
                 var userId = await _userDomain.CreateUserAsync(viewModel);
                 var user = await _userManager.FindByIdAsync(userId);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -84,11 +93,11 @@ namespace TestOnline.Controllers
                 {
                     return BadRequest();
                 }
-                if(output.Equals("Xac thuc"))
+                if (output.Equals("Xac thuc"))
                 {
                     var kq = new ResultObject()
                     {
-                        Message = Constant.Message.GET_DATA_SUCCESSFULLY,
+                        Message = Constant.Message.EMAIL_NOT_CONFIRM,
                         StatusCode = Enums.StatusCode.Unauthorized,
                         Result = output
                     };
@@ -99,6 +108,7 @@ namespace TestOnline.Controllers
                     Message = Constant.Message.GET_DATA_SUCCESSFULLY,
                     StatusCode = Enums.StatusCode.Accepted,
                     Result = output
+
                 };
                 return Ok(result);
             }
@@ -154,12 +164,86 @@ namespace TestOnline.Controllers
 
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
             }
+        }
+
+        [HttpGet("userInfo/{userName}")]
+        public async Task<IActionResult> GetUserInfo(string userName)
+        {
+            try
+            {
+                var user = await _userDomain.GetUserInfo(userName);
+                if(user == null)
+                {
+                    return NotFoundErrorResult();
+                }
+                var output = new ResultObject()
+                {
+                    Message = Constant.Message.GET_DATA_SUCCESSFULLY,
+                    StatusCode = Enums.StatusCode.Ok,
+                    Result = user
+                };
+                return Ok(user);
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return FailedProcessingErorrResult();
+            }
+        }
+
+        [Authorize]
+        [HttpPut("update/{userId}")]
+        public async Task<IActionResult> UpdateUser([FromBody] ApplicationUserViewModel viewModel,[FromRoute] string userId)
+        {
+            try
+            {
+                var output = await _userDomain.UpdateUser(userId, viewModel);
+                if (!output)
+                {
+                    return FailedProcessingErorrResult();
+                }
+                return Ok(new ResultObject()
+                {
+                    Message = Constant.Message.SAVE_DATA_SUCCESSFULLY,
+                    StatusCode = Enums.StatusCode.Ok,
+                    Result = output
+                });
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return FailedProcessingErorrResult();
+            }
+        }
+
+        [HttpPut("ChangePassword/{userId}")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(string userId,ChangePasswordViewmodel viewModel)
+        {
+            try
+            {
+                var result = await _userDomain.ChangePassword(userId, viewModel);
+                if (!result)
+                {
+                    return FailedProcessingErorrResult();
+                }
+                return Ok(new ResultObject()
+                {
+                    Message = Constant.Message.SAVE_DATA_SUCCESSFULLY,
+                    StatusCode = Enums.StatusCode.Ok,
+                    Result = result
+                });
+
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return FailedProcessingErorrResult();
+            }
+        }
 
 
     }
-    } }
+}
