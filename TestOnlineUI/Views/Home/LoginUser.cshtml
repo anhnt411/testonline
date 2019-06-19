@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "LoginUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row register">
+    <div class="col-md-4"></div>
+    <div class="col-md-4 content">
+        <h3>THÍ SINH ĐĂNG NHẬP</h3>
+        <form autocomplete="off" id="loginUser">
+            <div class="form-group required">
+                <label>Tài khoản <span style="color: red">*</span></label>
+                <input class="form-control" formControlName="Username" placeholder="Nhập vào tên tài khoản">
+            </div>
+            <div class="form-group required">
+                <label>Mật khẩu  <span style="color: red">*</span></label>
+                <input type="password" class="form-control" formControlName="Password" placeholder="Nhập vào mật khẩu của bạn">
+            </div>
+            <button type="submit" class="btn btn-danger" [disabled]="!insertForm.valid">ĐĂNG NHẬP</button>
+        </form>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+

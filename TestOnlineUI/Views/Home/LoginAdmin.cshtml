@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "LoginAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row register">
+    <div class="col-md-4"></div>
+    <div class="col-md-4 content">
+        <h3>QUẢN TRỊ ĐĂNG NHẬP</h3>
+        @using (Html.BeginForm("LoginAdmin", "Home", FormMethod.Post, new { @id = "loginAdmin" }))
+        {
+            <div class="form-group required">
+                <label>Tài khoản <span style="color: red">*</span></label>
+                <input class="form-control" name="UserName" placeholder="Nhập vào tên tài khoản">
+            </div>
+            <div class="form-group required">
+                <label>Mật khẩu  <span style="color: red">*</span></label>
+                <input type="password" class="form-control" name="Password" placeholder="Nhập vào mật khẩu của bạn">
+            </div>
+            <button type="submit" class="btn btn-danger">ĐĂNG NHẬP</button>
+        }
+    </div>
+    <div class="col-md-4"></div>
+</div>

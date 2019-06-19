@@ -1,0 +1,29 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Confirm Email Address Sent</title>
+</head>
+<body>
+    @{
+        ViewBag.Title = "Confirm Email Address Sent";
+    }
+    <h2>@ViewBag.Title.</h2>
+
+    <div class="card">
+        <div class="box">
+            <h2>Thank You<br><span>Email Confirmed</span></h2>
+            <p>
+                You can now successfuly login. You have full access to our products and services.
+            </p>
+            <a class="btn btn-primary btn-block" href="/Home/LoginAdmin">LOGIN</a>
+        </div>
+    </div>
+</body>
+</html>

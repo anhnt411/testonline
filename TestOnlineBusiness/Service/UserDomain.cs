@@ -54,7 +54,8 @@ namespace TestOnlineBusiness.Service
                     Email = userViewModel.Email,
                     UserName = userViewModel.UserName,
                     Address = userViewModel.Address,
-                    PhoneNumber = userViewModel.PhoneNumber,                
+                    PhoneNumber = userViewModel.PhoneNumber,   
+                    FullName = userViewModel.FullName,
                     Status = true
                 };
                 var result = await _userManager.CreateAsync(user, userViewModel.Password);                    
@@ -84,37 +85,29 @@ namespace TestOnlineBusiness.Service
                     }
                     //Get role assigned to the user
                     var role = await _userManager.GetRolesAsync(user);
-                   
 
-                      
-                    IdentityOptions _options = new IdentityOptions();
 
-                    var tokenDescriptor = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(new Claim[]
-                        {
-                        new Claim("UserID",user.Id.ToString()),
-                        new Claim("UserName",user.UserName),    
-                        new Claim("IsAdmin",role.Contains(Constant.Role.ADMIN).ToString()),
-                        new Claim("IsUser",role.Contains(Constant.Role.NORMAL_USER).ToString()),
-                        new Claim("IsSuperUser",role.Contains(Constant.Role.SUPER_USER).ToString()),
-                        new Claim(_options.ClaimsIdentity.RoleClaimType,role.FirstOrDefault())
-                        }),
-                        Expires = DateTime.UtcNow.AddMinutes(180),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSetting.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
-                    };
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-                    var token = tokenHandler.WriteToken(securityToken);
-                    return new {
-                        Token = token,
-                        Expires = tokenDescriptor.Expires,
-                        UserName = viewModel.UserName,
-                        IsAdmin = role.Contains(Constant.Role.ADMIN),
-                        IsUser = role.Contains(Constant.Role.NORMAL_USER),
-                        IsSuperUser = role.Contains(Constant.Role.SUPER_USER)
 
-                    };
+                    //IdentityOptions _options = new IdentityOptions();
+
+                    //var tokenDescriptor = new SecurityTokenDescriptor
+                    //{
+                    //    Subject = new ClaimsIdentity(new Claim[]
+                    //    {
+                    //    new Claim("UserID",user.Id.ToString()),
+                    //    new Claim("UserName",user.UserName),    
+                    //    new Claim("IsAdmin",role.Contains(Constant.Role.ADMIN).ToString()),
+                    //    new Claim("IsUser",role.Contains(Constant.Role.NORMAL_USER).ToString()),
+                    //    new Claim("IsSuperUser",role.Contains(Constant.Role.SUPER_USER).ToString()),
+                    //    new Claim(_options.ClaimsIdentity.RoleClaimType,role.FirstOrDefault())
+                    //    }),
+                    //    Expires = DateTime.UtcNow.AddMinutes(180),
+                    //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSetting.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
+                    //};
+                    //var tokenHandler = new JwtSecurityTokenHandler();
+                    //var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+                    //var token = tokenHandler.WriteToken(securityToken);
+                    return user;
                 }
                 return null;
             }
