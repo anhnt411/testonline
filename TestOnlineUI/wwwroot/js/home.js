@@ -6,6 +6,8 @@
         registerEvent: function () {
 
             var prompt = true;
+            $('.loader').hide();
+
           
 
             $(document).ready(function () {
@@ -88,8 +90,53 @@
                         }
                     }
                 });
+                $('#unknowpass').validate({
+                    rules: {
+                        'Email': {
+                            required: true,
+                            email: true
+                        }
+                    },
+                    messages: {
+                        'Email': {
+                            required: "Nhập vào email của bạn",
+                            email: "Email không chính xác"
+                        }
+                    }
+                });
+                $('#resetPassword').validate({
+                    rules: {
+                        'Email': {
+                            required: true,
+                            email: true
+                        },
+                        'Password': {
+                            required: true,
+                            minlength: 6
+                        },
+                        'ConfirmPassword': {
+                            required: true,
+                            equalTo: "#Password"
+                        }
+                    },
+                    messages: {
+                        'Email': {
+                            required: "Nhập vào email của bạn",
+                            email: "Vui lòng nhập đúng định dạng email"
+                        },
+                        'Password': {
+                            required: "Nhập vào mật khẩu của bạn",
+                            minlength: "Mật khẩu cần tối thiểu 6 ký tự"
+                        },
+                        'ConfirmPassword': {
+                            required: "Xác nhận mật khẩu của bạn",
+                            equalTo: "Mật khẩu không khớp"
+
+                        }
+                    }
+                });
             })
-             
+          
             
       
 
@@ -124,6 +171,55 @@
                 displayMessage($('#error').val(), 'error');
             }
 
+
+            $(document).ready(function () {
+               
+                
+                    $('#confirmForgot').off('click').on('click', function (e) {
+                        e.preventDefault();
+
+                        prompt = false;
+                        if ($('#unknowpass').valid()) {
+                            $.ajax({
+                                url: '/Home/ForgotPassword',
+                                data: { email: $('#emailForgot').val() },
+                                dataType: 'json',
+                                type: 'post',
+                                beforeSend: function () {
+                                    $('.loader').show();
+                                },
+                                complete: function () {
+                                    $('.loader').hide();
+                                },
+                                success: function (res) {
+                                    console.log(res);
+                                    if (res.status == "-2") {
+                                        displayMessage('Có lỗi xảy ra', 'error')
+                                    }
+                                    if (res.status == "-1") {
+
+                                        displayMessage('Email không tồn tại', 'error')
+                                    }
+                                    if (res.status == "0") {
+                                        displayMessage('Email của bạn chưa được xác thực', 'warning')
+                                    }
+                                    if (res.status == "1") {
+                                        displayMessage('Kiểm tra email của bạn để đặt lại password', 'success')
+                                       
+                                    }
+                                }
+                            })
+                        }
+
+                       
+
+                    });
+                
+              
+            });
+
+
+
            
 
             $(document).ready(function () {
@@ -140,8 +236,6 @@
                     prompt = false;
                 });
             });
-
-
             
         }
     }

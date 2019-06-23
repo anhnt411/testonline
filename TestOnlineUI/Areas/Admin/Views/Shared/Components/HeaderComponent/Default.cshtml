@@ -1,0 +1,14 @@
+﻿@using TestOnlineEntity.Model.ViewModel
+@model ApplicationUser
+
+
+<li class="nav-item dropdown no-arrow">
+    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img src="~/upload_img/@Model.Image" alt="Alternate Text" width="30" /> @Model.FullName 
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown"> 
+            <a class="dropdown-item updateInfo" href="/Admin/Home/UpdateInfoUser" >Cập nhật thông tin</a>
+            <a class="dropdown-item changePassword" href="#changePassword" data-toggle="modal" data-target="#changePassword">Đổi mật khẩu</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/Home/SignOut" >Đăng xuất</a>
+        </div>
+</li>

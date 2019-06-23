@@ -13,6 +13,7 @@ using TestOnlineBusiness.Interface;
 using TestOnlineEntity.Model.ViewModel;
 using TestOnlineModel.ViewModel;
 using TestOnlineModel.ViewModel.User;
+using System.Threading;
 
 namespace TestOnlineUI.Controllers
 {
@@ -21,14 +22,16 @@ namespace TestOnlineUI.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IUserDomain _userDomain;
         private UserManager<ApplicationUser> _userManager;
+        private SignInManager<ApplicationUser> _signInManager;
         private IEmailSender _sender;
 
-        public HomeController(ILogger<UserController> logger, IUserDomain userDomain, UserManager<ApplicationUser> userManager, IEmailSender sender)
+        public HomeController(ILogger<UserController> logger, IUserDomain userDomain, UserManager<ApplicationUser> userManager, IEmailSender sender, SignInManager<ApplicationUser> signInManager)
         {
-            this._logger = logger;
+             this._logger = logger;
             this._userDomain = userDomain;
             this._userManager = userManager;
             this._sender = sender;
+            this._signInManager = signInManager;
         }
         public IActionResult Index()
         {
@@ -73,13 +76,14 @@ namespace TestOnlineUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult LoginAdmin()
+        public IActionResult LoginAdmin(string returnUrl)
         {
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoginAdmin(LoginViewModel viewModel)
+        public async Task<IActionResult> LoginAdmin(LoginViewModel viewModel,string returnUrl)
         {
             try
             {
@@ -89,7 +93,7 @@ namespace TestOnlineUI.Controllers
                     return View();
                 }
                 var output = await _userDomain.Login(viewModel);
-                if (output == null)
+                if (output == null) 
                 {
                     TempData["error"] = "Sai tên tài khoản hoặc mật khẩu";
                     return View();
@@ -99,7 +103,14 @@ namespace TestOnlineUI.Controllers
                     TempData["warning"] = "Vui lòng xác thực email của bạn";
                     return View();
                 }
-                return RedirectToAction("Index", "Home",new { area = "Admin"});
+                var user = (ApplicationUser)output;
+                await _signInManager.SignInAsync(user, false);
+                if (Url.IsLocalUrl(returnUrl))
+                {
+                     return Redirect(returnUrl);
+                }
+                return RedirectToAction("Index", "Home", new { area = "Admin"  });
+             
             }
             catch (Exception ex)
             {
@@ -161,6 +172,47 @@ namespace TestOnlineUI.Controllers
             return View();
         }
 
+        public IActionResult ResetPassword(string userId,string code)
+        {
+            try
+            {
+                if (code == null)
+                {
+                    return RedirectToAction("Index");
+                }
+                ViewBag.Code = code;
+                return View();
+
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return RedirectToAction("Index");
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewmodel viewmodel)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["error"] = "Có lỗi xảy ra";
+                return View();
+            }
+            var user = await _userManager.FindByEmailAsync(viewmodel.Email);
+            if(user == null)
+            {
+                TempData["error"] = "Email không đúng";
+                return View();
+            }
+            var result = await _userManager.ResetPasswordAsync(user, viewmodel.Code, viewmodel.Password);
+            if (result.Succeeded)
+            {
+                TempData["success"] = "Mật khẩu thay đổi thành công. Hãy đăng nhập";
+                return View();
+            }
+            TempData["error"] = "Có lỗi xảy ra";
+            return View();
+        }
+
         public IActionResult Confirm(string userId, string code)
         {
             if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
@@ -170,5 +222,86 @@ namespace TestOnlineUI.Controllers
             }
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new
+                {
+                    status = -2
+                });
+            }
+            var user = await _userManager.FindByEmailAsync(email);
+            if(user == null)
+            {
+                TempData["error"] = "Email không tồn tại trong hệ thống";
+                return  Json(new
+                {
+                    status = -1
+                });
+            }
+            var check = await _userManager.IsEmailConfirmedAsync(user);
+            if (!check )
+            {
+                return Json(new
+                {
+                    status = 0
+                });
+            }
+            string code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.Action("ResetPassword", "Home", new { userId = user.Id, Code = code }, protocol: Request.Scheme);
+            if (callbackUrl != null)
+            {
+                await _sender.SendEmailAsync(user.Email, "Reset Password", "Please reset your password by clicking this link: <a href=\"" + callbackUrl + "\">click here</a>");
+            }
+         
+
+            return Json(new
+            {
+                status = 1
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewmodel viewmodel)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["error"] = "Xảy ra lỗi";
+                return Json(new
+                {
+                    status = -2
+                });
+            }
+            var user = await _userManager.GetUserAsync(this.User);
+            var result = await _userManager.ChangePasswordAsync(user, viewmodel.Password, viewmodel.NewPassword);
+            if (result.Succeeded)
+            {
+                TempData["success"] = "Đổi mật khẩu thành công";
+                return Json(new
+                {
+
+                    status = 1
+                });
+            }
+            TempData["error"] = "Sai mật khẩu";
+            return Json(new
+            {
+
+                status = 0
+            });
+        }
+
+        public async Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("LoginAdmin","Home");
+        }
+       
+      
+       
+
     }
 }     

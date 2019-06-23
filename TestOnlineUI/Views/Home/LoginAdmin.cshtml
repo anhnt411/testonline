@@ -8,7 +8,7 @@
     <div class="col-md-4"></div>
     <div class="col-md-4 content">
         <h3>QUẢN TRỊ ĐĂNG NHẬP</h3>
-        @using (Html.BeginForm("LoginAdmin", "Home", FormMethod.Post, new { @id = "loginAdmin" }))
+        @using (Html.BeginForm("LoginAdmin", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,null, new { @id = "loginAdmin" }))
         {
             <div class="form-group required">
                 <label>Tài khoản <span style="color: red">*</span></label>
@@ -18,6 +18,7 @@
                 <label>Mật khẩu  <span style="color: red">*</span></label>
                 <input type="password" class="form-control" name="Password" placeholder="Nhập vào mật khẩu của bạn">
             </div>
+            <a href="#forgotPassword" class="forgot" data-toggle="modal" data-target="#forgotPassword">Quên mật khẩu ?</a>
             <button type="submit" class="btn btn-danger">ĐĂNG NHẬP</button>
         }
     </div>

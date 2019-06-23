@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.AspNetCore.Identity.UI.Services;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TestOnlineBusiness.Interface;
 using TestOnlineEntity.Model.ViewModel;
 using TestOnlineModel.ViewModel.User;
+using TestOnlineBase.Helper;
+
 
 namespace TestOnlineUI.Controllers
 {
@@ -21,7 +23,7 @@ namespace TestOnlineUI.Controllers
         private IEmailSender _sender;
 
 
-        public UserController(ILogger<UserController> logger, IUserDomain userDomain, UserManager<ApplicationUser> userManager, IEmailSender sender)
+        public UserController(ILogger<UserController> logger, IUserDomain userDomain,UserManager<ApplicationUser> userManager, IEmailSender sender)
         {
             this._logger = logger;
             this._userDomain = userDomain;

@@ -203,7 +203,7 @@ namespace TestOnlineBusiness.Service
                 user.FullName = viewModel.FullName;
                 user.Address = viewModel.Address;
                 user.PhoneNumber = viewModel.PhoneNumber;
-                user.Image = viewModel.Image;
+                //user.Image = viewModel.Image;
                 var result = await _userManager.UpdateAsync(user);
                 return result.Succeeded;
 

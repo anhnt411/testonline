@@ -7,8 +7,10 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
@@ -23,6 +25,7 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="ImageUpload\" />
     <Folder Include="Views\User\" />
+    <Folder Include="wwwroot\js\Plugin\" />
     <Folder Include="wwwroot\upload_img\" />
   </ItemGroup>
 
@@ -49,13 +52,25 @@
   <ItemGroup>
     <ProjectReference Include="..\TestOnlineBusiness\TestOnlineBusiness.csproj" />
     <ProjectReference Include="..\TestOnlineEntity\TestOnlineEntity.csproj" />
+    <ProjectReference Include="..\TestOnline\TestOnline.csproj" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <Reference Include="CKFinder">
+      <HintPath>wwwroot\js\Plugin\ckfinder\bin\Release\CKFinder.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Core">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.mvc.core\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System.Configuration">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Configuration.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NETCore.App" Version="2.2.5" />
   </ItemGroup>
 
 </Project>

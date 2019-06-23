@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using TestOnlineBase.EmailHelper;
 using TestOnlineBase.Helper;
 using TestOnlineBusiness.Interface;
@@ -24,6 +22,10 @@ using TestOnlineShared.Interface;
 using TestOnlineShared.Service;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace TestOnlineUI
 {
     public class Startup
@@ -40,16 +42,15 @@ namespace TestOnlineUI
         {
             services.Configure<ApplicationSettingViewModel>(Configuration.GetSection("ApplicationSettings"));
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
-            services.Configure<List<string>>(Configuration.GetSection("Menu:ListItem"));
+          
             AddService(services);
-            services.AddDefaultIdentity<ApplicationUser>(config =>
+            services.AddIdentity<ApplicationUser,IdentityRole>(config =>
             {
                 config.SignIn.RequireConfirmedEmail = true;
-                //config.User.RequireUniqueEmail = true;
+                config.User.RequireUniqueEmail = true;
 
             })
-              .AddRoles<IdentityRole>()
-              .AddEntityFrameworkStores<TestOnlineDbContext>();
+              .AddEntityFrameworkStores<TestOnlineDbContext>().AddDefaultTokenProviders();
 
             services.AddCors();
 
@@ -60,9 +61,29 @@ namespace TestOnlineUI
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+             
+
+
+
+
 
             }
           );
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = new PathString("/Home/LoginAdmin");
+                options.Cookie.Name = "TestOnlne";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.LoginPath = new PathString("/Home/LoginAdmin");
+                // ReturnUrlParameter requires 
+                //using Microsoft.AspNetCore.Authentication.Cookies;
+               // options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                options.SlidingExpiration = true;
+            });
 
 
             services.Configure<CookiePolicyOptions>(options =>
@@ -73,7 +94,7 @@ namespace TestOnlineUI
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,14 +103,17 @@ namespace TestOnlineUI
             SeedData.InitilizeDatabase(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+          
             app.UseCookiePolicy();
+        
             loggerFactory.AddSerilog();
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                         name: "areaRoute",
                         template: "{area:exists}/{controller=Home}/{action=index}/{id?}"
-                                );
+                                );  
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}/{id?}",
