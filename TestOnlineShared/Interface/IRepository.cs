@@ -5,11 +5,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using TestOnlineBase.Helper.PagingHelper;
 using TestOnlineShared.Model;
 
 namespace TestOnlineShared.Interface
 {
-    public interface IRepository<T>
+    public interface IRepository<T> where T : class
     {
         #region Methods
 
@@ -81,10 +82,12 @@ namespace TestOnlineShared.Interface
 
         Task<IEnumerable<SqlParameter>> GetOutPut(string storedProcedureName, SqlParameter[] parameters,
             Ref<CheckError> checkError = null);
-
         Task<bool> Delete(object id, Ref<CheckError> checkError = null);
         Task<bool> Delete(T entity, Ref<CheckError> checkError = null);
         Task<bool> DeleteAll(IList<T> list, Ref<CheckError> checkError = null);
+        //Task<IQueryable<T>> GetWith(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = "");
+        //Task<PaginatedList<T>> GetWithPaging(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+        //                               string includeProperties = "", int page = 1, int pageSize = 10);
 
         #endregion
     }

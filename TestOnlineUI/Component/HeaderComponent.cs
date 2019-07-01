@@ -22,7 +22,7 @@ namespace TestOnlineUI.Component
 
             var currentUser = await _userManager.GetUserAsync(this.UserClaimsPrincipal);
 
-            return View(currentUser);
+            return  View(currentUser);
         }
 
     }

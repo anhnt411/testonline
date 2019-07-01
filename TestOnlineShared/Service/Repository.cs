@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using TestOnlineBase.Helper.PagingHelper;
 using TestOnlineShared.Interface;
 using TestOnlineShared.Model;
 
@@ -727,6 +728,35 @@ namespace TestOnlineShared.Service
             }
         }
 
+        //public async Task<PaginatedList<T>> GetWithPaging(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+        //  string includeProperties = "", int page = 1, int pageSize = 2)
+        //{
+        //    var query = await GetWith(filter: filter, includeProperties: includeProperties);
+        //    if (orderBy != null)
+        //    {
+        //        query = orderBy(query);
+        //    }
+
+        //    return PaginatedList<T>.Create(query.AsNoTracking(), page, pageSize);
+        //}
+
+        //public async virtual Task<IQueryable<T>> GetWith(Expression<Func<T, bool>> filter = null,
+        //   Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+        //   string includeProperties = "")
+        //{
+        //    IQueryable<T> query = _dbSet;
+        //    if (filter != null)
+        //    {
+        //        query =  query.Where(filter);
+        //    }
+
+        //    foreach (var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        //    {
+        //        query = query.Include(includeProperty);
+        //    }
+
+        //    return orderBy != null ? orderBy(query) : query;
+        //}
         #endregion
     }
 }

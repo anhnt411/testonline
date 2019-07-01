@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using TestOnlineBase.Constant;
-using TestOnlineBase.Helper.FileHelper;
 using TestOnlineBase.Helper.PagingHelper;
 using TestOnlineBusiness.Interface;
 using TestOnlineEntity.Interface;
@@ -20,72 +16,65 @@ using TestOnlineModel.ViewModel.Admin;
 
 namespace TestOnlineBusiness.Service
 {
-    public class CategoryDomain : ICategoryDomain
+    public class TestUnitDomain : ITestUnitDomain
     {
         private readonly ITestOnlienUnitOfWork _unitOfWork;
-        private readonly ILogger<CategoryDomain> _logger;
-        private readonly PageSize _pageSize;
+        private readonly ILogger<TestUnitDomain> _logger;
 
-        public CategoryDomain(ITestOnlienUnitOfWork unitOfWork,ILogger<CategoryDomain> logger)
+        public TestUnitDomain(ITestOnlienUnitOfWork unitOfWork, ILogger<TestUnitDomain> logger)
         {
             this._unitOfWork = unitOfWork;
             this._logger = logger;
-            
+
         }
 
-        public async Task<bool> CreateCategory(TestCategoryViewModel viewModel, string userId,IFormFile file, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> CreateUnit(TestUnitViewModel viewModel, string userId, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
-                string imageName = null;
-                if(file == null)
-                {
-                    imageName = "result.png";
-                }
-                else
-                {
-                    imageName = UploadImageFile.UploadImage(file);
-                }
-                var category = new TestCategory()
+              
+                var unit = new TestUnit()
                 {
                     Id = Guid.NewGuid(),
                     Name = viewModel.Name,
-                    Description = viewModel.Description,
-                    Image = imageName,
+                    Address = viewModel.Address,
+                    PhoneNumber = viewModel.PhoneNumber,
                     CreatedDate = DateTime.Now,
                     CreatedBy = userId,
                     ModifiedDate = DateTime.Now,
                     ModifiedBy = userId,
-                    Status = true
+                    IsActive = true
                 };
-                _unitOfWork.TestCategories.Insert(category);
+                _unitOfWork.TestUnits.Insert(unit);
                 return await _unitOfWork.CommitAsync(cancellationToken) > 0;
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;
             }
         }
 
-        public async Task<bool> DeleteCategory(Guid categoryId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteUnit(Guid unitId, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
-                var category = await _unitOfWork.TestCategories.GetById(categoryId);
-                category.Status = false;
-                 _unitOfWork.TestCategories.Update(category);
-                
+                var unit = await _unitOfWork.TestUnits.GetById(unitId);
+                unit.IsActive = false;
+                _unitOfWork.TestUnits.Update(unit);
+
                 return await _unitOfWork.CommitAsync(cancellationToken) > 0;
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;
             }
         }
 
-        public async Task<IEnumerable<TestCategoryViewModel>> GetCategory(FilterModel filter,string userId)
+        public async Task<IEnumerable<TestUnitViewModel>> GetUnit(FilterModel filter, string userId)
         {
             try
             {
@@ -96,14 +85,14 @@ namespace TestOnlineBusiness.Service
 
                 if (filter.Filter == null || filter.Filter.Count == 0)
                 {
-                    filter.Filter = new List<FilterTypeModel>() { new FilterTypeModel() { Field = Constant.Filter.CategoryFilterDefault, IsActive = true } };
+                    filter.Filter = new List<FilterTypeModel>() { new FilterTypeModel() { Field = Constant.Filter.UnitFilterDefault, IsActive = true } };
                 }
 
                 if (filter.Sort == null || filter.Sort.Count == 0 || string.IsNullOrEmpty(filter.Sort[0].Field))
                 {
                     filter.Sort = new List<SortTypeModel>
                     {
-                         new SortTypeModel {Field = Constant.Filter.CategorySortDefault, Asc =  false, IsActive = true}
+                         new SortTypeModel {Field = Constant.Filter.UnitSortDefault, Asc =  false, IsActive = true}
                     };
                 }
 
@@ -112,7 +101,7 @@ namespace TestOnlineBusiness.Service
 
                 var skip = filter.Skip ?? 0;
                 var take = filter.Take ?? Constant.Filter.CategoryTakeDefault;
-                var isExport = filter.IsExport??false;
+                var isExport = filter.IsExport ?? false;
                 if (!string.IsNullOrEmpty(filter.MultipeFilter))
                 {
                     filterData = null;
@@ -128,57 +117,57 @@ namespace TestOnlineBusiness.Service
                     new SqlParameter {ParameterName = "@userId",Value = userId,DbType = DbType.String}
 
                 };
-                var source = await _unitOfWork.TestCategoryViewModels.Get(Constant.StoreProcedure.GET_CATEGORIES_LIST,prams);
+                var source = await _unitOfWork.TestUnitViewModels.Get(Constant.StoreProcedure.GET_CATEGORIES_LIST, prams);
                 return source;
 
-            }catch(Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return null; 
             }
-        }
-
-        
-
-        public async Task<TestCategoryViewModel> GetCategoryDetail(Guid categoryId)
-        {
-            try
-            {
-                var output = await _unitOfWork.TestCategories.GetById(categoryId);
-                return new TestCategoryViewModel()
-                {
-                    Id = output.Id,
-                    Name = output.Name,
-                    Description = output.Description,
-                    Image = output.Image
-                };
-            }catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
             }
         }
 
-        public async Task<bool> UpdateCategory(Guid categoryId,TestCategoryViewModel viewModel, string userId,IFormFile file, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TestUnitViewModel> GetUnitDetail(Guid unitId)
         {
             try
             {
-                string imageName;                
-                var category = await _unitOfWork.TestCategories.GetById(categoryId);
-                category.Name = viewModel.Name;
-                category.Description = viewModel.Description;
-                if (file != null)
+                var output = await _unitOfWork.TestUnits.GetById(unitId);
+                return new TestUnitViewModel()
                 {
-                    imageName = UploadImageFile.UploadImage(file);
-                    category.Image = imageName;
-                }
-             
-                category.ModifiedBy = userId;
-                category.ModifiedDate = DateTime.Now;
-                _unitOfWork.TestCategories.Update(category);
-                return await _unitOfWork.CommitAsync(cancellationToken ) > 0;
+                    Id = output.Id,
+                    Name = output.Name,
+                    Address = output.Address,
+                    PhoneNumber = output.PhoneNumber,
+                    CreatedDate = output.CreatedDate,
+                    CreatedBy = output.CreatedBy
+                   
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
 
-            }catch(Exception ex)
+        public async Task<bool> UpdateUnit(Guid unitId, TestUnitViewModel viewModel, string userId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            try
+            {
+               
+                var unit = await _unitOfWork.TestUnits.GetById(unitId);
+                unit.Name = viewModel.Name;
+                unit.PhoneNumber = viewModel.PhoneNumber;
+              
+
+                unit.ModifiedBy = userId;
+                unit.ModifiedDate = DateTime.Now;
+                _unitOfWork.TestUnits.Update(unit);
+                return await _unitOfWork.CommitAsync(cancellationToken) > 0;
+
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;

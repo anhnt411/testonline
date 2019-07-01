@@ -4,7 +4,10 @@
             adminjs.registerFunction();
         },
         registerFunction() {
+
+          
            
+
             var prompt = true;
             $('.loader').hide();
 
@@ -77,6 +80,46 @@
                     }
                 })
 
+                $('#addCategoryFrm').validate({
+                    rules: {
+                        'Name': {
+                            required: true
+                        },
+                        'file': {
+                           extension: "jpg|jpeg|gif|png|bmp"
+                        }
+                    },
+                    messages: {
+                        'Name': {
+                            required: "Vui lòng nhập vào tên chuyên mục"
+                        },
+                        'file': {
+
+                            extension: 'File không hợp lệ'
+                        }
+                    }
+                })
+
+                $('#updateCategoryFrm').validate({
+                    rules: {
+                        'Name': {
+                            required: true
+                        },
+                        'file': {
+                            extension: "jpg|jpeg|gif|png|bmp"
+                        }
+                    },
+                    messages: {
+                        'Name': {
+                            required: "Vui lòng nhập vào tên chuyên mục"
+                        },
+                        'file': {
+
+                            extension: 'File không hợp lệ'
+                        }
+                    }
+                })
+
             });
 
             var displayMessage = function (message, msgType) {
@@ -109,7 +152,7 @@
             if ($('#error').val()) {
                 displayMessage($('#error').val(), 'error');
             }
-
+           
             $(document).ready(function () {
                 $('#confirmChangePassword').off('click').on('click', function (e) {
                     e.preventDefault();
@@ -161,6 +204,14 @@
                 });
             })
 
+            
+
+            $(document).ready(function () {
+                $('#backListCategory').on('click', function () {
+                    window.location.href = '/Admin/TestCategory/Index';
+                });
+            })
+
             $(document).ready(function () {
 
                 $('input:not(:button,:submit),textarea,select').change(function () {
@@ -174,8 +225,24 @@
                 $('button:submit').click(function (e) {
                     prompt = false;
                 });
-            });
 
+                $('input:submit').click(function (e) {
+                    prompt = false;
+                });
+            });
+        },
+        GetListCategory: function (objectFilter) {
+            $.ajax({
+                url: "/Admin/TestCategory/GetListCategory",
+                type: 'post',
+                data: objectFilter,
+                success: function (response) {
+                    $('#listCategory').html(response);
+                },
+                error: function (ex) {
+                    console.log(ex);
+                }
+            })
         }
     }
     adminjs.init();

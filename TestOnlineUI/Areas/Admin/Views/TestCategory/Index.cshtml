@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    TempData["success"] = TempData["updatesuccess"];
+}
+
+@section title{
+    Danh sách chuyên mục
+}
+
+@section script{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
+    <script src="~/js/Category.js"></script>
+
+}
+
+<div class="row">
+    <div class="col-md-3">
+    <a href="~/Admin/TestCategory/Add" class="btn btn-danger">Thêm mới</a>
+    </div>
+    <div class="col-md-5"></div>
+    <div class="col-md-4">
+        <input type="text" name="name" id="searchCategoryContent" />
+        <button class="btn btn-danger" id="searchCategory">Tìm kiếm</button>
+    </div>
+
+</div>
+<div class="row">
+   <p style="color:red ; font-size:15px;" class="p-text"> Chuyên mục là một lĩnh vực: Môn học (Toán, Tiếng Anh,..), Kế Toán, Nhân sự, Bán hàng, Chăm sóc khách hàng, Lái xe.... Chuyên mục dùng để chứa các ngân hàng câu hỏi của cùng một lĩnh vực.</p>
+</div>
+
+
+<div id="listCategory">
+</div>
+<div id="pagination" class="pagination"></div>
+

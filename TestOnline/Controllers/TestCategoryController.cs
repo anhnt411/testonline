@@ -29,26 +29,26 @@ namespace TestOnline.Controllers
             this._user = user;
         }
 
-        [HttpGet("categories")]
-        public async Task<IActionResult> Get()
-        {
-            try
-            {
-                var output = await _category.GetCategory();
-                var result = new ResultObject()
-                {
-                    Message = Constant.Message.GET_DATA_SUCCESSFULLY,
-                    StatusCode = Enums.StatusCode.Ok,
-                    Result = output
-                };
-                return Ok(result);
+        //[HttpGet("categories")]
+        //public async Task<IActionResult> Get()
+        //{
+        //    try
+        //    {
+        //        var output = await _category.GetCategory();
+        //        var result = new ResultObject()
+        //        {
+        //            Message = Constant.Message.GET_DATA_SUCCESSFULLY,
+        //            StatusCode = Enums.StatusCode.Ok,
+        //            Result = output
+        //        };
+        //        return Ok(result);
 
-            }catch(Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return null;
-            }
-        }
+        //    }catch(Exception ex)
+        //    {
+        //        _logger.LogError(ex, ex.Message);
+        //        return null;
+        //    }
+        //}
 
         [HttpGet("category/{id}")]
         public async Task<IActionResult> CategoryDetail(Guid categoryId)
@@ -71,32 +71,32 @@ namespace TestOnline.Controllers
             }
         }
 
-        [HttpPost("category")]
-        public async Task<IActionResult> CreateCategory([FromBody] TestCategoryViewModel viewModel)
-        {
-            try
-            {
-                var userId = _user.GetUserId();
-                if(userId==null || _user.IsUser())
-                {
-                    return AuthorizedErorrResult();
-                }
-                var output = await _category.CreateCategory(viewModel, userId);
-                var result = new ResultObject()
-                {
-                    Message = Constant.Message.SAVE_DATA_SUCCESSFULLY,
-                    StatusCode = Enums.StatusCode.Ok,
-                    Result = output
-                };
-                return Ok(result);
+        //[HttpPost("category")]
+        //public async Task<IActionResult> CreateCategory([FromBody] TestCategoryViewModel viewModel)
+        //{
+        //    try
+        //    {
+        //        var userId = _user.GetUserId();
+        //        if(userId==null || _user.IsUser())
+        //        {
+        //            return AuthorizedErorrResult();
+        //        }
+        //        //var output = await _category.CreateCategory(viewModel, userId);
+        //        var result = new ResultObject()
+        //        {
+        //            Message = Constant.Message.SAVE_DATA_SUCCESSFULLY,
+        //            StatusCode = Enums.StatusCode.Ok,
+        //            Result = output
+        //        };
+        //        return Ok(result);
 
-            }catch(Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return FailedProcessingErorrResult();
+        //    }catch(Exception ex)
+        //    {
+        //        _logger.LogError(ex, ex.Message);
+        //        return FailedProcessingErorrResult();
 
-            }
-        }
+        //    }
+        //}
 
         [HttpPut("category/{categoryId}")]
         public async Task<IActionResult> UpdaetCategory([FromBody] TestCategoryViewModel viewModel,[FromRoute] Guid categoryId)
@@ -108,7 +108,7 @@ namespace TestOnline.Controllers
                 {
                     return AuthorizedErorrResult();
                 }
-                var output = await _category.UpdateCategory(categoryId,viewModel,userId);
+                var output = true;
                 var result = new ResultObject()
                 {
                     Message = Constant.Message.SAVE_DATA_SUCCESSFULLY,

@@ -25,6 +25,8 @@ using Serilog;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using TestOnlineBase.Constant;
+using System.Data.SqlClient;
 
 namespace TestOnlineUI
 {
@@ -42,6 +44,7 @@ namespace TestOnlineUI
         {
             services.Configure<ApplicationSettingViewModel>(Configuration.GetSection("ApplicationSettings"));
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            services.Configure<PageSize>(Configuration.GetSection("PageSize"));
           
             AddService(services);
             services.AddIdentity<ApplicationUser,IdentityRole>(config =>
@@ -104,22 +107,29 @@ namespace TestOnlineUI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
           
-            app.UseCookiePolicy();
+          
         
             loggerFactory.AddSerilog();
             app.UseAuthentication();
             app.UseMvc(routes =>
             {
+                
+
                 routes.MapRoute(
                         name: "areaRoute",
                         template: "{area:exists}/{controller=Home}/{action=index}/{id?}"
-                                );  
+                     
+                              );
+
+              
+                
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" });
 
             });
+            app.UseCookiePolicy();
 
         }
 

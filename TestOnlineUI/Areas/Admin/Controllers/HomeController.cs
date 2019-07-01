@@ -75,7 +75,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             {
                 imageName = UploadImageFile.UploadImage(file);
             }
-        
+            
           
             user.FullName = viewModel.FullName;
             user.PhoneNumber = viewModel.PhoneNumber;

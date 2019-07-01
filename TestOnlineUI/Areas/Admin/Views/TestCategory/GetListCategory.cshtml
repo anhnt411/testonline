@@ -1,0 +1,53 @@
+﻿@using TestOnlineModel.ViewModel.Admin
+@model IEnumerable<TestCategoryViewModel>
+
+<div class="row table">
+    <!-- /.panel-heading -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        STT
+                    </th>
+                    <th>
+                        <a href="#">Ảnh đại diện</a>
+                    </th>
+                    <th>
+                        Tên chuyên mục <a href="#" class="sortCategory" data-sortcategory="CategoryName"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                    </th>
+                    <th>
+                        <a href="#">Người sửa</a>
+                    </th>
+                    <th>
+                        Ngày sửa <a href="#" class="sortCategory" data-sortcategory="UpdatedDate"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                    </th>
+                    <th>
+                        <a href="#">Thao tác</a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var item in Model)
+                    {
+                      
+                        <tr class="rows" data-totalrow="@item.TotalRecord" id="rows" >
+                            <td>@item.STT </td>
+                            <td> <img src="~/upload_img/@item.Image" alt="Alternate Text" height="40" /></td>
+                            <td>@item.Name</td>
+                            <td>@item.UpdatedBy</td>
+                            <td>@item.UpdatedTime</td>
+                            <td><a href="/Admin/TestCategory/Update?categoryId=@item.Id"><i class="fas fa-pen-alt"></i></a>  <a href="#" class="deletecategory" data-idcategory="@item.Id"><i class="fas fa-trash-alt"></i></a></td>
+                        </tr>
+                    }
+                }
+
+
+            </tbody>
+        </table>
+
+        
+
+    </div>
+</div>

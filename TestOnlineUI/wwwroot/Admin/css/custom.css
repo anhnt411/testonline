@@ -29,3 +29,123 @@ input#txtImage {
 .display-img {
     margin-bottom: 6px;
 }
+
+table.table.table-striped.table-bordered.table-hover {
+    text-align: center;
+    width: 100%;
+
+}
+
+.table.table-striped a{
+    text-decoration :none;
+    color : black;
+}
+
+.row.table {
+    margin: 0px;
+}
+
+#listCategory {
+    margin-top: 10px;
+}
+
+input#searchCategoryContent {
+    width: 246px;
+    height: 37px;
+    border : 0.5px solid black;
+}
+
+button#searchCategory {
+    margin-bottom: 7px;
+}
+
+form_category_main {
+    width: 100%;
+}
+
+.form_category_main h4 {
+  
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 15px;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
+
+.heading_category {
+    border-bottom: 1px solid #fcab0e;
+    padding-bottom: 9px;
+    position: relative;
+}
+
+.heading_category span {
+        background: #9e6600 none repeat scroll 0 0;
+        bottom: -2px;
+        height: 3px;
+        left: 0;
+        position: absolute;
+        width: 75px;
+}
+
+.form_category {
+    border-radius: 7px;
+    padding: 6px;
+}
+
+
+.txtCategory[type="text"] {
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    padding: 10px 0 10px 5px;
+    width: 100%;
+}
+
+
+.txt2Category[type="submit"] {
+    background: #242424 none repeat scroll 0 0;
+    border: 1px solid #4f5c04;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 16px;
+    font-style: normal;
+    line-height: 35px;
+    margin: 10px 0;
+    padding: 0;
+    text-transform: uppercase;
+    width: 30%;
+}
+
+.txt2Category[type="button"] {
+    background: #242424 none repeat scroll 0 0;
+    border: 1px solid #4f5c04;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 16px;
+    font-style: normal;
+    line-height: 35px;
+    margin: 10px 0;
+    padding: 0;
+    text-transform: uppercase;
+    width: 30%;
+}
+
+.txt2Category:hover {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    color: #5793ef;
+    transition: all 0.5s ease 0s;
+}
+
+input#searchCategoryContent {
+    padding-left: 10px;
+}
+
+p.p-text {
+    margin-left: 2%;
+    width: 97%;
+    margin-top: 12px;
+}
+
+i.fas.fa-pen-alt {
+    color: #007bff;
+}
+

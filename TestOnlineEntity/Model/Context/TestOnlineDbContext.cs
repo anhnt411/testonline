@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using TestOnlineEntity.Model.Entity;
 using TestOnlineEntity.Model.ViewModel;
+using TestOnlineModel.ViewModel.Admin;
 
 namespace TestOnlineEntity.Model.Context
 {
@@ -13,6 +14,12 @@ namespace TestOnlineEntity.Model.Context
         public TestOnlineDbContext(DbContextOptions<TestOnlineDbContext> options):base(options)
         {
 
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            //builder.Query<TestCategoryViewModel>();
         }
 
         public DbSet<TestCategory> TestCategories { get; set; }
@@ -31,5 +38,11 @@ namespace TestOnlineEntity.Model.Context
 
         public DbSet<TestSchedule> TestSchedules { get; set; }
 
+        public DbSet<TestCategoryViewModel> TestCategoryViewModels { get; }
+
+        public DbSet<TestUnitViewModel> TestUnitViewModels { get; }
+
     }
+
+    
 }

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using TestOnlineEntity.Model.Entity;
+using TestOnlineModel.ViewModel.Admin;
 using TestOnlineShared.Interface;
+using TestOnlineShared.Service;
 
 namespace TestOnlineEntity.Interface
 {
@@ -25,5 +27,9 @@ namespace TestOnlineEntity.Interface
         IRepository<Question> Questions { get; set; }
 
         IRepository<ResultTest> ResultTests { get; set; }
+
+        IRepository<TestCategoryViewModel> TestCategoryViewModels { get; }
+
+        IRepository<TestUnitViewModel> TestUnitViewModels { get; }
     }
 }

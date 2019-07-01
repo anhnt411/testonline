@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using TestOnlineEntity.Interface;
 using TestOnlineEntity.Model.Entity;
+using TestOnlineModel.ViewModel.Admin;
 using TestOnlineShared.Interface;
 
 namespace TestOnlineEntity.Service
@@ -19,7 +20,9 @@ namespace TestOnlineEntity.Service
         public TestOnlineUnitOfWork(DbContext dbContext,IRepository<TestCategory> testCategory,IRepository<TestUnit> testUnit
                                     ,IRepository<QuestionGroup> questionGroups,IRepository<Question> questions,IRepository<Exam> exams
                                     ,IRepository<Member> members,IRepository<Answer> answers ,IRepository<TestSchedule> testSchedules
-                                    ,IRepository<ResultTest> resultTests
+                                    ,IRepository<ResultTest> resultTests,
+                                     IRepository<TestCategoryViewModel> testCategoryViewModel,
+                                     IRepository<TestUnitViewModel> testUnitViewModel
                                     )
         {
             this._dbContext = dbContext;
@@ -32,6 +35,8 @@ namespace TestOnlineEntity.Service
             this.Members = members;
             this.Answers = answers;
             this.ResultTests = resultTests;
+            this.TestCategoryViewModels = testCategoryViewModel;
+            this.TestUnitViewModels = testUnitViewModel;
         }
 
         public virtual IRepository<TestCategory> TestCategories { get; set; }       
@@ -43,7 +48,9 @@ namespace TestOnlineEntity.Service
         public virtual IRepository<TestSchedule> TestSchedules { get; set; }  
         public virtual IRepository<Question> Questions { get; set; }
         public virtual IRepository<ResultTest> ResultTests { get; set; }
- 
+        public virtual IRepository<TestCategoryViewModel> TestCategoryViewModels { get; }
+        public virtual IRepository<TestUnitViewModel> TestUnitViewModels { get; }
+
         public IDbContextTransaction BeginTransactionScope()
         {
             return _dbContext.Database.BeginTransaction();

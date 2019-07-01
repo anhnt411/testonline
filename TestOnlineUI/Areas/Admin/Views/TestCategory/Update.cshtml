@@ -1,0 +1,65 @@
+﻿@using TestOnlineModel.ViewModel.Admin
+@model TestCategoryViewModel
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+      
+}
+
+
+@section title{
+    Thay đổi chuyên mục
+}
+
+@section script{
+    <script>
+        $(document).ready(function () {
+            $('#txtImage').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('#fileName').html(fileName);
+                readURL(this);
+
+            });
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#myImage').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+
+        });
+    </script>
+}
+
+<div class="col-md-2">
+    
+</div>
+<div class="col-md-8">
+    <div class="form_category_main">
+        <h4 class="heading_category"><strong>Cập nhật chuyên mục </strong></h4>
+        <div class="form_category">
+            <form action="/Admin/TestCategory/Update" method="post" id="updateCategoryFrm" name="updateCategoryFrm" enctype="multipart/form-data">
+                <input type="text" value="@Model.Name" name="Name" class="txtCategory">
+                <input type="hidden" value="@Model.Id" name="Id" />
+                <input type="text" value="@Model.Description" placeholder="Nhập vào mô tả" name="Description" class="txtCategory">
+                <div class="form-group required">
+                    <label>Ảnh đại diện</label>
+                    <div class="display-img"><img id="myImage" src="~/upload_img/@Model.Image" alt="Alternate Text" width="100" /></div>
+                    <input class="form-control" id="txtImage" name="file" type="file">
+                </div>
+                <input type="submit" value="Xác nhận" name="submit" class="txt2Category">
+                <input type="button" value="Quay lại" name="submit" class="txt2Category" id="backListCategory">
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-md-2>"></div>
+

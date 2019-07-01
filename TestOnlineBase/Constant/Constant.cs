@@ -9,7 +9,7 @@ namespace TestOnlineBase.Constant
         #region StoreProcedure
         public class StoreProcedure
         {
-
+            public const string GET_CATEGORIES_LIST = "sp_GetTestCategory";
         }
         #endregion
 
@@ -31,12 +31,27 @@ namespace TestOnlineBase.Constant
 
         }
 
+        public static class Filter
+        {
+            public const string CategoryFilterDefault = "TestCategoryName";
+            public const string CategorySortDefault = "UpdatedDate";
+            public const int CategoryTakeDefault = 5;
+
+            public const string UnitFilterDefault = "TestUnitName";
+            public const string UnitSortDefault = "UpdatedDate";
+            public const int UnitTakeDefault = 5;
+
+        }
+
         public static class Role
         {
             public const string SUPER_USER = "SuperUSer";
             public const string ADMIN = "Admin";
             public const string NORMAL_USER = "User";
         }
+
+
+      
         #endregion
 
     }

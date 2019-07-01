@@ -7,8 +7,8 @@ namespace TestOnlineModel.ViewModel.Admin
 {
     public class TestCategoryViewModel
     {
-        [Key]
-        public Guid? Id { get; set; }
+       
+        public Guid Id { get; set; }
 
         [Required(ErrorMessage = "Name is required")]
         [MaxLength(300)]
@@ -17,5 +17,17 @@ namespace TestOnlineModel.ViewModel.Admin
         public string Image { get; set; }
 
         public string Description { get; set; }
+
+        public string UpdatedBy { get; set; }
+
+        public string UpdateById { get; set; }
+
+        public DateTime UpdatedTime { get; set; }
+
+        public int TotalRecord { get; set; }
+
+        public long STT { get; set; }
+
+        public bool? Status { get; set; }
     }
 }

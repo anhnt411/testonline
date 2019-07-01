@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TestOnlineBase\TestOnlineBase.csproj" />
+    <ProjectReference Include="..\TestOnlineModel\TestOnlineModel.csproj" />
     <ProjectReference Include="..\TestOnlineShared\TestOnlineShared.csproj" />
   </ItemGroup>
 
