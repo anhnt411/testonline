@@ -128,9 +128,15 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 }
                 var user = await _userManager.GetUserAsync(this.User);
                 var result = await _member.AddListMember(unitId, file, user.Id);
-                if (result) { }
-
+                if (!result) {
+                    TempData["error"] = "Có lỗi xảy re";
+                    await SetViewBag(unitId);
+                    return View();
+                }
+                TempData["error"] = "Thêm mới thành công";
+                await SetViewBag(unitId);
                 return View();
+                
 
             }catch(Exception ex)
             {

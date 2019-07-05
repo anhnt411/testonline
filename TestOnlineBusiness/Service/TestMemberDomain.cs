@@ -8,6 +8,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
 using TestOnlineBase.Constant;
 using TestOnlineBase.Helper;
 using TestOnlineBase.Helper.RandomHelper;
@@ -40,49 +41,56 @@ namespace TestOnlineBusiness.Service
         {
             try
             {
-                var listUser = new List<ApplicationUser>();
-                using (var stream = new MemoryStream())
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
-                    await file.CopyToAsync(stream, cancellationToken);
-                    using (var package = new ExcelPackage(stream))
+                    var listUser = new List<ApplicationUser>();
+                    using (var stream = new MemoryStream())
                     {
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                        var rowCount = worksheet.Dimension.Rows;
-
-                        for (int row = 2; row <= rowCount; row++)
+                        await file.CopyToAsync(stream, cancellationToken);
+                        using (var package = new ExcelPackage(stream))
                         {
-                            var password = RandomHelper.RandomPassword();
-                            DateTime? date = new DateTime();
-                            var valueDate = worksheet.Cells[row, 5].Value.ToString().Trim();
-                            if (IsDateTime(valueDate))
+                            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                            var rowCount = worksheet.Dimension.Rows;
+
+                            for (int row = 2; row <= rowCount; row++)
                             {
-                                date = Convert.ToDateTime(valueDate);
+                                var password = RandomHelper.RandomPassword();
+                                DateTime? date = new DateTime();
+                                var valueDate = worksheet.Cells[row, 5].Value.ToString().Trim();
+                                if (IsDateTime(valueDate))
+                                {
+                                    date = Convert.ToDateTime(valueDate);
+                                }
+                                date = DateTime.MinValue;
+                                var user = new ApplicationUser()
+                                {
+                                    Email = worksheet.Cells[row, 3].Value.ToString().Trim(),
+                                    CreatedBy = userId,
+                                    UnitId = unitId,
+                                    FullName = worksheet.Cells[row, 2].Value.ToString().Trim(),
+                                    PhoneNumber = worksheet.Cells[row, 4].Value.ToString().Trim(),
+                                    DateOfBirth = date,
+                                    Status = true,
+                                    EmailConfirmed = true,
+                                    Address = worksheet.Cells[row, 6].Value.ToString().Trim(),
+                                    UserName = RandomHelper.RandomUserName(),
+                                    MemberPass = password
+                                };
+                                var result = await _userManager.CreateAsync(user, password);
+                                await _userManager.AddToRoleAsync(user, Constant.Role.NORMAL_USER);
                             }
-                            date = DateTime.MinValue;
-                            var user = new ApplicationUser()
-                            {
-                                Email = worksheet.Cells[row, 3].Value.ToString().Trim(),
-                                CreatedBy = userId,
-                                UnitId = unitId,
-                                FullName = worksheet.Cells[row, 2].Value.ToString().Trim(),
-                                PhoneNumber = worksheet.Cells[row, 4].Value.ToString().Trim(),
-                                DateOfBirth = date,
-                                Status = true,
-                                EmailConfirmed = true,
-                                Address = worksheet.Cells[row, 6].Value.ToString().Trim(),
-                                UserName = RandomHelper.RandomUserName(),
-                                MemberPass = password
-                            };
-                            var result = await _userManager.CreateAsync(user, password);
-                            await _userManager.AddToRoleAsync(user, Constant.Role.NORMAL_USER);
                         }
+                        scope.Complete();
                     }
+
+
                     return true;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
+                
                 return false;
             }
 
