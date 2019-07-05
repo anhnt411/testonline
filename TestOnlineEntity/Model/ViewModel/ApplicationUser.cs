@@ -13,6 +13,10 @@ namespace TestOnlineEntity.Model.ViewModel
         public string FullName { get; set; }
         public string Address { get; set; }
         public bool Status { get; set; }
+        public Guid? UnitId { get; set; }
         public string Image { get; set; }
+        public DateTime? DateOfBirth { get; set; }
+        public string MemberPass { get; set; }
+    
     }
 }

@@ -10,6 +10,8 @@ namespace TestOnlineBase.Constant
         public class StoreProcedure
         {
             public const string GET_CATEGORIES_LIST = "sp_GetTestCategory";
+            public const string GET_UNITS_LIST = "sp_GetTestUnit";
+
         }
         #endregion
 
@@ -38,7 +40,7 @@ namespace TestOnlineBase.Constant
             public const int CategoryTakeDefault = 5;
 
             public const string UnitFilterDefault = "TestUnitName";
-            public const string UnitSortDefault = "UpdatedDate";
+            public const string UnitSortDefault = "CreatedDate";
             public const int UnitTakeDefault = 5;
 
         }

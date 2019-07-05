@@ -1,7 +1,8 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    TempData["success"] = TempData["updateunitsuccess"];
 }
 
 @section title{
@@ -27,7 +28,6 @@
 <div class="row">
     <p style="color:red ; font-size:15px;" class="p-text"> Đơn vị là một nhóm học viên, nhân viên như phòng Kế toán, phòng Kinh doanh, Lớp 12A.</p>
 </div>
-
 
 <div id="listUnit">
 </div>

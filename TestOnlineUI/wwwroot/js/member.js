@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
-    var unit = {
+    var member = {
         init: function () {
-            unit.registerEvent();
+            member.registerEvent();
         },
         registerEvent: function () {
 
@@ -15,15 +15,15 @@
 
 
 
-            function GetListUnit(objectFilter) {
-
+            function GetListMember(objectFilter) {
+                var id = '';
                 $.ajax({
-                    url: "/Admin/TestUnit/GetListUnit",
+                    url: "/Admin/TestMember/GetListMember?MemberId ="+id,
                     type: 'post',
                     data: objectFilter,
                     success: function (response) {
 
-                        $('#listUnit').html(response);
+                        $('#listMember').html(response);
                         totalRecord = $('#rows').data('totalrow');
                         totalPage = Math.ceil(totalRecord / 5);
                         console.log(totalPage);
@@ -39,7 +39,7 @@
 
                                 dataFilter.skip = (page - 1) * 5;
                                 dataFilter.take = 5;
-                                GetListUnit(dataFilter);
+                                GetListMember(dataFilter);
                             }
                         })
 
@@ -81,14 +81,14 @@
                 "take": 5,
                 "isExport": false
             };
-            GetListUnit(dataFilter);
+            GetListMember(dataFilter);
 
 
 
             $(document).ready(function () {
-                $('#searchUnit').on('click', function () {
+                $('#searchMember').on('click', function () {
 
-                    var searchValue = $('#searchUnitContent').val();
+                    var searchValue = $('#searchMemberContent').val();
                     dataFilter.multipeFilter = searchValue;
                     dataFilter.sort[0].field = '';
                     $('#pagination').empty();
@@ -96,18 +96,18 @@
                     $('#pagination').removeData("twbs-pagination");
 
                     $('#pagination').unbind("page");
-                    GetListUnit(dataFilter);
+                    GetListMember(dataFilter);
 
                 });
             })
 
-            $(document).on('click', ".deleteunit", function () {
+            $(document).on('click', ".deleteMember", function () {
                 if (confirm('Bạn có muốn xóa đơn vị này không')) {
-                    var id = $(this).data('idunit');
+                    var id = $(this).data('idMember');
                     console.log(id);
 
                     $.ajax({
-                        url: "/Admin/TestUnit/DeleteUnit?unitid=" + id,
+                        url: "/Admin/TestMember/DeleteMember?Memberid=" + id,
                         type: 'get',
                         success: function (response) {
                             if (response.status == 0) {
@@ -116,8 +116,8 @@
                             if (response.status == 1) {
 
                                 var filter = {};
-                                GetListUnit(filter);
-                                window.location.href="/Admin/TestUnit/Index"
+                                GetListMember(filter);
+                                window.location.href = "/Admin/TestMember/Index"
                             }
                         },
                         error: function (err) {
@@ -128,28 +128,28 @@
                 }
             })
 
-            $(document).on("click", ".sortUnit", function () {
+            $(document).on("click", ".sortMember", function () {
 
-                var sortName = $(this).data('sortunit');
+                var sortName = $(this).data('sortMember');
                 dataFilter.sort[0].field = sortName;
-                if (sortName == "UnitName") {
+                if (sortName == "MemberName") {
                     dataFilter.sort[0].asc = currentNameSortAsc;
-                    GetListUnit(dataFilter);
+                    GetListMember(dataFilter);
                     currentNameSortAsc = !currentNameSortAsc;
                 }
                 if (sortName == "CreatedDate") {
                     dataFilter.sort[0].asc = currentDateSortAsc;
-                    GetListUnit(dataFilter);
+                    GetListMember(dataFilter);
                     currentDateSortAsc = !currentDateSortAsc;
                 }
                 if (sortName == "Address") {
                     dataFilter.sort[0].asc = currentAddressSortAsc;
-                    GetListUnit(dataFilter);
+                    GetListMember(dataFilter);
                     currentAddressSortAsc = !currentAddressSortAsc;
                 }
                 if (sortName == "PhoneNumber") {
                     dataFilter.sort[0].asc = currentPhoneNumberSortAsc;
-                    GetListUnit(dataFilter);
+                    GetListMember(dataFilter);
                     currentPhoneNumberSortAsc = !currentPhoneNumberSortAsc;
                 }
 
@@ -161,6 +161,6 @@
         }
 
     }
-    unit.init();
+    member.init();
 
 })

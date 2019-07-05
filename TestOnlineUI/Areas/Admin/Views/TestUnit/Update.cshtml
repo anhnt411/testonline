@@ -1,0 +1,40 @@
+﻿@using TestOnlineModel.ViewModel.Admin
+@model TestUnitViewModel
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+@section title{
+    Danh sách đơn vị
+}
+
+
+
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <div class="form_unit_main">
+        <h4 class="heading_unit"><strong>Cập nhật </strong></h4>
+        <div class="form_unit">
+            <form action="~/Admin/TestUnit/Update" method="post" id="updateunitfrm" name="updateUnitFrm" enctype="multipart/form-data">
+                <input type="hidden" value="@Model.Id" name="Id" />
+                <input type="text" placeholder="Vui lòng nhập vào tên đơn vị" value="@Model.Name" name="Name" class="txtUnit">
+                <input type="text" placeholder="Nhập vào địa chỉ" value="@Model.Address" name="Address" class="txtUnit">
+                <input type="text" placeholder="Nhập vào số điện thoại" value="@Model.PhoneNumber" name="PhoneNumber" class="txtUnit">
+                <input type="submit" value="Xác nhận" name="submit" class="txt2Unit">
+                <input type="button" value="Quay lại" name="submit" class="txt2Unit" id="backListUnit">
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="col-md-2>"></div>
+

@@ -1,0 +1,49 @@
+﻿
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+
+
+@section title{
+    Thêm mới thành viên
+}
+
+
+
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <div class="form_member_main">
+        <h4 class="heading_member"><strong>Thêm Mới Danh Sách Thành Viên </strong></h4>
+        <div class="form_member">
+            @{
+                <form asp-controller="TestMember" asp-action="AddListMember" asp-area="Admin" method="post" id="addmemberfrm" name="addmemberFrm" role="form" enctype="multipart/form-data">
+                    <span>Đơn vị </span>
+                    <div class="dropdown">
+                        <select name="TestUnitId">
+                            @{
+                                foreach (var item in ViewBag.ListUnit)
+                                {
+                                    if (item.Id == ViewBag.Unit.Id)
+                                    {
+                                        <option selected value="@item.Id">@item.Name</option>
+                                    }
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="fileExcel">  Chọn file <span style="color:red;">*</span> </div><div> <input type="file"> </div>                     
+                    <input type="submit" value="Xác nhận" name="submit" class="txt2Member">
+                    <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListMember">
+
+                </form>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-md-2>"></div>
+

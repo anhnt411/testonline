@@ -37,6 +37,11 @@ namespace TestOnlineBusiness.Service
         {
             try
             {
+                var exits = await _unitOfWork.TestCategories.CheckExist(x => x.CreatedBy == userId && x.Name == viewModel.Name);
+                if (exits)
+                {
+                    return false;
+                }
                 string imageName = null;
                 if(file == null)
                 {
@@ -163,7 +168,12 @@ namespace TestOnlineBusiness.Service
         {
             try
             {
-                string imageName;                
+                string imageName;
+                var exits = await _unitOfWork.TestCategories.CheckExist(x => x.CreatedBy == userId && x.Name == viewModel.Name);
+                if (exits)
+                {
+                    return false;
+                }
                 var category = await _unitOfWork.TestCategories.GetById(categoryId);
                 category.Name = viewModel.Name;
                 category.Description = viewModel.Description;

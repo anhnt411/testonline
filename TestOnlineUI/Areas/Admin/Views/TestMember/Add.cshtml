@@ -1,0 +1,60 @@
+﻿
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+   
+}
+
+
+@section title{
+    Thêm mới thành viên
+}
+
+
+
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <div class="form_member_main">
+        <h4 class="heading_member"><strong>Thêm Mới </strong></h4>
+        <div class="form_member">
+            @{ 
+            <form asp-controller="TestMember" asp-action="Add" asp-area="Admin" method="post" id="addmemberfrm" name="addmemberFrm" role="form" enctype="multipart/form-data">
+                <span>Đơn vị </span>
+                <div class="dropdown">
+                    <select name="TestUnitId">
+                        @{
+                            foreach (var item in ViewBag.ListUnit)
+                            {
+                                if (item.Id == ViewBag.Unit.Id)
+                                {
+                                    <option selected value="@item.Id">@item.Name</option>
+                                }
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+
+
+                Họ tên <span style="color:red;">*</span> <input type="text" placeholder="Vui lòng nhập vào họ tên" name="Name" class="txtMember">
+                <div>Email <span style="color:red;">*</span></div>  <input type="text" placeholder="Vui lòng nhập vào email" name="Email" class="txtMember">
+                <div>SDT    </div> <input type="text" placeholder="Vui lòng nhập vào số điện thoại " name="Phone" class="txtMember">
+                <span>Ngày sinh </span>
+                <div class="dateMember">
+                    <input type="date" placeholder="Vui lòng nhập vào ngày sinh" name="DateOfBirth" class="txtMember">
+                </div>
+                <span>Địa chỉ</span><input type="text" placeholder="Nhập vào địa chỉ" name="Address" class="txtMember">
+
+                <input type="submit" value="Xác nhận" name="submit" class="txt2Member">
+                <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListMember">
+
+            </form>
+                }
+        </div>
+    </div>
+</div>
+<div class="col-md-2>"></div>
+

@@ -27,7 +27,7 @@ namespace TestOnlineEntity.Service
         {
             this._dbContext = dbContext;
             this.TestCategories = testCategory;
-            this.TestUnits = TestUnits;
+            this.TestUnits = testUnit;
             this.QuestionGroups = questionGroups;
             this.Questions = questions;
             this.Exams = exams;

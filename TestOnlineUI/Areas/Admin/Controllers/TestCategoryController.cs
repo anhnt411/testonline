@@ -131,7 +131,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 var result = await _category.CreateCategory(viewmodel, user.Id, file);
                 if (!result)
                 {
-                    TempData["error"] = "Có lỗi xảy ra";
+                    TempData["error"] = "Có lỗi xảy ra.Thử lại với tên chuyên mục khác";
                     return View();
                 }
                 TempData["success"] = "Đã thêm mới chuyên mục";

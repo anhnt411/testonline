@@ -142,6 +142,8 @@ namespace TestOnlineUI
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUserDomain, UserDomain>();
             services.AddScoped<ICategoryDomain, CategoryDomain>();
+            services.AddScoped<ITestUnitDomain, TestUnitDomain>();
+            services.AddScoped<ITestMemberDomain, TestMemberDomain>();
             services.AddSingleton<TestOnlineBase.Helper.IEmailSender, EmailSender>();
 
         }

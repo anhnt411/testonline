@@ -5,8 +5,8 @@
         },
         registerFunction() {
 
-          
-           
+
+            console.log('ok');
 
             var prompt = true;
             $('.loader').hide();
@@ -120,6 +120,107 @@
                     }
                 })
 
+                $('#addunitfrm').validate({
+                    rules: {
+                        'Name': {
+                            required: true
+                        },
+                        'PhoneNumber': {
+                            digits: true,
+                            minlength: 10,
+                            maxlength: 10
+                        }
+                    },
+                    messages: {
+                        'Name': {
+                            required: "Vui lòng nhập vào tên chuyên mục"
+                        },
+                        'PhoneNumber': {
+                            digits: "Nhập vào số điện thoại hợp lệ có 10 số",
+                            minlength: "Nhập vào số điện thoại hợp lệ có 10 số",
+                            maxlength: "Nhập vào số điện thoại hợp lệ có 10 số"
+                        }
+                    }
+                })
+
+                $('#addunitfrm').validate({
+                    rules: {
+                        'Name': {
+                            required: true
+                        },
+                        'PhoneNumber': {
+                            digits: true,
+                            minlength: 10,
+                            maxlength: 10
+                        }
+                    },
+                    messages: {
+                        'Name': {
+                            required: "Vui lòng nhập vào tên chuyên mục"
+                        },
+                        'PhoneNumber': {
+                            digits: "Nhập vào số điện thoại hợp lệ có 10 số",
+                            minlength: "Nhập vào số điện thoại hợp lệ có 10 số",
+                            maxlength: "Nhập vào số điện thoại hợp lệ có 10 số"
+                        }
+                    }
+                })
+
+                $('#updateunitfrm').validate({
+                    rules: {
+                        'Name': {
+                            required: true
+                        },
+                        'PhoneNumber': {
+                            digits: true,
+                            minlength: 10,
+                            maxlength: 10
+                        }
+                    },
+                    messages: {
+                        'Name': {
+                            required: "Vui lòng nhập vào tên chuyên mục"
+                        },
+                        'PhoneNumber': {
+                            digits: "Nhập vào số điện thoại hợp lệ có 10 số",
+                            minlength: "Nhập vào số điện thoại hợp lệ có 10 số",
+                            maxlength: "Nhập vào số điện thoại hợp lệ có 10 số"
+                        }
+                    }
+                })
+
+                $('#addmemberfrm').validate({
+                    rules: {
+                        'Name': {
+                            required: true
+                        },
+                        'PhoneNumber': {
+                            digits: true,
+                            minlength: 10,
+                            maxlength: 10
+                        },
+                        'Email': {
+                            required: true,
+                            email: true
+                        }
+                    },
+                    messages: {
+                        'Name': {
+                            required: "Vui lòng nhập vào họ tên"
+                        },
+                        'PhoneNumber': {
+                            digits: "Nhập vào số điện thoại hợp lệ có 10 số",
+                            minlength: "Nhập vào số điện thoại hợp lệ có 10 số",
+                            maxlength: "Nhập vào số điện thoại hợp lệ có 10 số"
+                        },
+                        'Email': {
+                            required: "Nhập vào email đúng định dạng",
+                            email: "Vui lòng nhập đúng định dạng email"
+                        }
+                    }
+                })
+
+               
             });
 
             var displayMessage = function (message, msgType) {
@@ -209,6 +310,12 @@
             $(document).ready(function () {
                 $('#backListCategory').on('click', function () {
                     window.location.href = '/Admin/TestCategory/Index';
+                });
+            })
+
+            $(document).ready(function () {
+                $('#backListUnit').on('click', function () {
+                    window.location.href = '/Admin/TestUnit/Index';
                 });
             })
 

@@ -70,45 +70,49 @@ namespace TestOnlineBusiness.Service
 
         }
 
-        public async Task<object> Login(LoginViewModel viewModel)
+        public async Task<object> Login(LoginViewModel viewModel)   
         {
             try
             {
               
                 var user = await _userManager.FindByNameAsync(viewModel.UserName);
-                if (user != null && await _userManager.CheckPasswordAsync(user, viewModel.PassWord))
+                if (user.Status)
                 {
-                    if(!await _userManager.IsEmailConfirmedAsync(user))
+                    if (user != null && await _userManager.CheckPasswordAsync(user, viewModel.PassWord))
                     {
-                        var content = "Xac thuc";
-                        return content;
+                        if (!await _userManager.IsEmailConfirmedAsync(user))
+                        {
+                            var content = "Xac thuc";
+                            return content;
+                        }
+                        //Get role assigned to the user
+                        var role = await _userManager.GetRolesAsync(user);
+
+
+
+                        //IdentityOptions _options = new IdentityOptions();
+
+                        //var tokenDescriptor = new SecurityTokenDescriptor
+                        //{
+                        //    Subject = new ClaimsIdentity(new Claim[]
+                        //    {
+                        //    new Claim("UserID",user.Id.ToString()),
+                        //    new Claim("UserName",user.UserName),    
+                        //    new Claim("IsAdmin",role.Contains(Constant.Role.ADMIN).ToString()),
+                        //    new Claim("IsUser",role.Contains(Constant.Role.NORMAL_USER).ToString()),
+                        //    new Claim("IsSuperUser",role.Contains(Constant.Role.SUPER_USER).ToString()),
+                        //    new Claim(_options.ClaimsIdentity.RoleClaimType,role.FirstOrDefault())
+                        //    }),
+                        //    Expires = DateTime.UtcNow.AddMinutes(180),
+                        //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSetting.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
+                        //};
+                        //var tokenHandler = new JwtSecurityTokenHandler();
+                        //var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+                        //var token = tokenHandler.WriteToken(securityToken);
+                        return user;
                     }
-                    //Get role assigned to the user
-                    var role = await _userManager.GetRolesAsync(user);
-
-
-
-                    //IdentityOptions _options = new IdentityOptions();
-
-                    //var tokenDescriptor = new SecurityTokenDescriptor
-                    //{
-                    //    Subject = new ClaimsIdentity(new Claim[]
-                    //    {
-                    //    new Claim("UserID",user.Id.ToString()),
-                    //    new Claim("UserName",user.UserName),    
-                    //    new Claim("IsAdmin",role.Contains(Constant.Role.ADMIN).ToString()),
-                    //    new Claim("IsUser",role.Contains(Constant.Role.NORMAL_USER).ToString()),
-                    //    new Claim("IsSuperUser",role.Contains(Constant.Role.SUPER_USER).ToString()),
-                    //    new Claim(_options.ClaimsIdentity.RoleClaimType,role.FirstOrDefault())
-                    //    }),
-                    //    Expires = DateTime.UtcNow.AddMinutes(180),
-                    //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSetting.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
-                    //};
-                    //var tokenHandler = new JwtSecurityTokenHandler();
-                    //var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-                    //var token = tokenHandler.WriteToken(securityToken);
-                    return user;
                 }
+              
                 return null;
             }
             catch (Exception ex)

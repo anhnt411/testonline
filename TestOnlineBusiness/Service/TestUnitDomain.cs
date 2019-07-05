@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +33,11 @@ namespace TestOnlineBusiness.Service
         {
             try
             {
-              
+                var check = await _unitOfWork.TestUnits.CheckExist(x => x.CreatedBy == userId && x.Name == viewModel.Name);
+                if (check)
+                {
+                    return false;
+                }
                 var unit = new TestUnit()
                 {
                     Id = Guid.NewGuid(),
@@ -41,11 +46,13 @@ namespace TestOnlineBusiness.Service
                     PhoneNumber = viewModel.PhoneNumber,
                     CreatedDate = DateTime.Now,
                     CreatedBy = userId,
-                    ModifiedDate = DateTime.Now,
-                    ModifiedBy = userId,
+                     UpdatedDate= DateTime.Now,
+                    UpdatedBy = userId,
                     IsActive = true
                 };
+               
                 _unitOfWork.TestUnits.Insert(unit);
+                
                 return await _unitOfWork.CommitAsync(cancellationToken) > 0;
 
             }
@@ -72,6 +79,19 @@ namespace TestOnlineBusiness.Service
                 _logger.LogError(ex, ex.Message);
                 return false;
             }
+        }
+
+        public async Task<IEnumerable<TestUnitViewModel>> GetAll()
+        {
+           var output  = await _unitOfWork.TestUnits.Get(x => x.IsActive == true);
+            var unitList = output.Select(x => new TestUnitViewModel()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Address = x.Address,
+                Status = x.IsActive
+            });
+            return unitList;
         }
 
         public async Task<IEnumerable<TestUnitViewModel>> GetUnit(FilterModel filter, string userId)
@@ -117,7 +137,7 @@ namespace TestOnlineBusiness.Service
                     new SqlParameter {ParameterName = "@userId",Value = userId,DbType = DbType.String}
 
                 };
-                var source = await _unitOfWork.TestUnitViewModels.Get(Constant.StoreProcedure.GET_CATEGORIES_LIST, prams);
+                var source = await _unitOfWork.TestUnitViewModels.Get(Constant.StoreProcedure.GET_UNITS_LIST, prams);
                 return source;
 
             }
@@ -128,7 +148,7 @@ namespace TestOnlineBusiness.Service
             }
         }
 
-        public async Task<TestUnitViewModel> GetUnitDetail(Guid unitId)
+        public async Task<TestUnitViewModel> GetUnitDetail(Guid? unitId)
         {
             try
             {
@@ -155,14 +175,18 @@ namespace TestOnlineBusiness.Service
         {
             try
             {
-               
+                var check = await _unitOfWork.TestUnits.CheckExist(x => x.CreatedBy == userId && x.Name == viewModel.Name);
+                if (check)
+                {
+                    return false;
+                }
                 var unit = await _unitOfWork.TestUnits.GetById(unitId);
                 unit.Name = viewModel.Name;
                 unit.PhoneNumber = viewModel.PhoneNumber;
               
 
-                unit.ModifiedBy = userId;
-                unit.ModifiedDate = DateTime.Now;
+                unit.UpdatedBy = userId;
+                unit.UpdatedDate = DateTime.Now;
                 _unitOfWork.TestUnits.Update(unit);
                 return await _unitOfWork.CommitAsync(cancellationToken) > 0;
 

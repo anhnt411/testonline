@@ -21,5 +21,13 @@ namespace TestOnlineModel.ViewModel.Admin
         public string CreatedBy { get; set; }
 
         public DateTime CreatedDate { get; set; }
+
+        public int TotalRecord { get; set; }
+
+        public long STT { get; set; }
+
+        public bool? Status { get; set; }
+
+        public string CreatedById { get; set; }
     }
 }
