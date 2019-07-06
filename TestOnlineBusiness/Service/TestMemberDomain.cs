@@ -55,24 +55,25 @@ namespace TestOnlineBusiness.Service
                             for (int row = 2; row <= rowCount; row++)
                             {
                                 var password = RandomHelper.RandomPassword();
-                                DateTime? date = new DateTime();
-                                var valueDate = worksheet.Cells[row, 5].Value.ToString().Trim();
-                                if (IsDateTime(valueDate))
+                                DateTime? date = DateTime.Now;
+                                var valueDate = (worksheet.Cells[row, 5].Value == null) ? null : (worksheet.Cells[row, 5].Value);
+                                if ( valueDate != null)
                                 {
                                     date = Convert.ToDateTime(valueDate);
                                 }
-                                date = DateTime.MinValue;
+                                
+
                                 var user = new ApplicationUser()
                                 {
                                     Email = worksheet.Cells[row, 3].Value.ToString().Trim(),
                                     CreatedBy = userId,
                                     UnitId = unitId,
                                     FullName = worksheet.Cells[row, 2].Value.ToString().Trim(),
-                                    PhoneNumber = worksheet.Cells[row, 4].Value.ToString().Trim(),
+                                    PhoneNumber = (worksheet.Cells[row, 4].Value == null) ? null : (worksheet.Cells[row, 4].Value.ToString().Trim()),
                                     DateOfBirth = date,
                                     Status = true,
                                     EmailConfirmed = true,
-                                    Address = worksheet.Cells[row, 6].Value.ToString().Trim(),
+                                    Address = (worksheet.Cells[row, 6].Value == null) ? null :( worksheet.Cells[row, 6].Value.ToString().Trim()),
                                     UserName = RandomHelper.RandomUserName(),
                                     MemberPass = password
                                 };

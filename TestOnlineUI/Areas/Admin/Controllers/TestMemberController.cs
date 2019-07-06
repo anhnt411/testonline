@@ -129,11 +129,11 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 var user = await _userManager.GetUserAsync(this.User);
                 var result = await _member.AddListMember(unitId, file, user.Id);
                 if (!result) {
-                    TempData["error"] = "Có lỗi xảy re";
+                    TempData["error"] = "Có lỗi xảy ra";
                     await SetViewBag(unitId);
                     return View();
                 }
-                TempData["error"] = "Thêm mới thành công";
+                TempData["success"] = "Thêm mới thành công";
                 await SetViewBag(unitId);
                 return View();
                 
