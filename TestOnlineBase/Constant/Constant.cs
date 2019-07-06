@@ -11,6 +11,7 @@ namespace TestOnlineBase.Constant
         {
             public const string GET_CATEGORIES_LIST = "sp_GetTestCategory";
             public const string GET_UNITS_LIST = "sp_GetTestUnit";
+            public const string GET_MEMBER_LIST = "sp_GetTestMember";
 
         }
         #endregion

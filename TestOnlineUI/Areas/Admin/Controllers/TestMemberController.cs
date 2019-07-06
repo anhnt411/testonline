@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using TestOnlineBase.Helper.PagingHelper;
 using TestOnlineBusiness.Interface;
 using TestOnlineEntity.Model.Entity;
 using TestOnlineEntity.Model.ViewModel;
@@ -129,7 +130,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 var user = await _userManager.GetUserAsync(this.User);
                 var result = await _member.AddListMember(unitId, file, user.Id);
                 if (!result) {
-                    TempData["error"] = "Có lỗi xảy ra";
+                    TempData["error"] = "Có lỗi xảy ra.Kiểm tra lại file của bạn";
                     await SetViewBag(unitId);
                     return View();
                 }
@@ -146,6 +147,24 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 return View();
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetListMember(FilterModel model,Guid unitId)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(this.User);
+                var members = await _member.GetListMember(model,unitId, user.Id);
+                return PartialView(members);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return View("Error.cshtml");
+            }
+
+        }
+
 
         public async Task SetViewBag(Guid? unitId)
         {

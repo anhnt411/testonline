@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -11,11 +13,13 @@ using System.Threading.Tasks;
 using System.Transactions;
 using TestOnlineBase.Constant;
 using TestOnlineBase.Helper;
+using TestOnlineBase.Helper.PagingHelper;
 using TestOnlineBase.Helper.RandomHelper;
 using TestOnlineBusiness.Interface;
 using TestOnlineEntity.Interface;
 using TestOnlineEntity.Model.Entity;
 using TestOnlineEntity.Model.ViewModel;
+using TestOnlineModel.ViewModel.Admin;
 
 namespace TestOnlineBusiness.Service
 {
@@ -119,6 +123,60 @@ namespace TestOnlineBusiness.Service
                 var result = await _userManager.CreateAsync(user, password);
                 await _userManager.AddToRoleAsync(user, Constant.Role.NORMAL_USER);
                 return user.Id;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<TestMemberViewModel>> GetListMember(FilterModel filter, Guid unitId,string userId)
+        {
+            try
+            {
+                if (filter == null)
+                {
+                    filter = new FilterModel();
+                }
+
+                if (filter.Filter == null || filter.Filter.Count == 0)
+                {
+                    filter.Filter = new List<FilterTypeModel>() { new FilterTypeModel() { Field = Constant.Filter.UnitFilterDefault, IsActive = true } };
+                }
+
+                if (filter.Sort == null || filter.Sort.Count == 0 || string.IsNullOrEmpty(filter.Sort[0].Field))
+                {
+                    filter.Sort = new List<SortTypeModel>
+                    {
+                         new SortTypeModel {Field = Constant.Filter.UnitSortDefault, Asc =  false, IsActive = true}
+                    };
+                }
+
+                var filterData = ApiUtils.ListToDataTable(filter.Filter);
+                var sortData = ApiUtils.ListToDataTable(filter.Sort);
+
+                var skip = filter.Skip ?? 0;
+                var take = filter.Take ?? Constant.Filter.CategoryTakeDefault;
+                var isExport = filter.IsExport ?? false;
+                if (!string.IsNullOrEmpty(filter.MultipeFilter))
+                {
+                    filterData = null;
+                }
+                SqlParameter[] prams =
+                {
+                    new SqlParameter{ParameterName = "@filter", Value = filterData , SqlDbType = SqlDbType.Structured,TypeName = "dbo.FilterType"},
+                    new SqlParameter {ParameterName = "@sort",Value = sortData, SqlDbType = SqlDbType.Structured,TypeName = "dbo.SortType"},
+                    new SqlParameter {ParameterName = "@skip",Value = skip ,DbType = DbType.Int32},
+                    new SqlParameter {ParameterName = "@take",Value = take,DbType = DbType.Int32},
+                    new SqlParameter {ParameterName = "@multipeFilter",Value = filter.MultipeFilter as Object ?? DBNull.Value,DbType = DbType.String },
+                    new SqlParameter {ParameterName = "@isExport",Value = isExport,DbType = DbType.Boolean},
+                    new SqlParameter {ParameterName = "@userId",Value = userId,DbType = DbType.String},
+                    new SqlParameter {ParameterName = "@unitId",Value = unitId,DbType = DbType.Guid}
+                };
+                var source = await _unitOfWork.TestMemberViewModels.Get(Constant.StoreProcedure.GET_MEMBER_LIST, prams);
+                return source;
 
             }
             catch (Exception ex)
