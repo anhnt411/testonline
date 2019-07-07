@@ -45,6 +45,9 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             }
             
             ViewBag.Unit = unit;
+            var result = await _unit.GetAll();
+            ViewBag.ListUnit = result.ToList();
+            
             return View();
         }
 
@@ -110,6 +113,30 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UpdateMember(string memberId)
+        {
+            try
+            {
+                var member = await _member.GetMemberDetail(memberId);
+                var unit = await _unit.GetUnitDetail(member.UnitId);
+                ViewBag.Unit = unit;
+                ViewBag.ListUnit = await _unit.GetAll();
+                if (member == null)
+                {
+
+                    return View("Error.cshtml");
+                }
+
+                return View(member);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return View("Error.cshtml");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddListMember(Guid unitId,IFormFile file)
         {
@@ -164,6 +191,8 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             }
 
         }
+
+
 
 
         public async Task SetViewBag(Guid? unitId)

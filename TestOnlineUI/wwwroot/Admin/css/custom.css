@@ -177,3 +177,7 @@ i.fas.fa-pen-alt {
 .fileExcel {
     margin-bottom: 10px;
 }
+
+select#selectUnitId {
+    height: 38px;
+}

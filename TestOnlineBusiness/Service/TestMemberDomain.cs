@@ -114,6 +114,7 @@ namespace TestOnlineBusiness.Service
                     FullName = member.Name,
                     PhoneNumber = member.Phone,
                     DateOfBirth = member.DateOfBirth,
+                 
                     Status = true,
                     EmailConfirmed = true,
                     Address = member.Address,
@@ -183,6 +184,59 @@ namespace TestOnlineBusiness.Service
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
+            }
+        }
+
+        public async Task<TestMemberViewModel> GetMemberDetail(string memberId)
+        {
+            try
+            {
+                var member = await _userManager.FindByIdAsync(memberId);
+                if(member == null)
+                {
+                    return null;
+                }
+                return new TestMemberViewModel() {
+                    Id = member.Id,
+                    FullName = member.FullName,
+                    Address = member.Address,
+                    DateOfBirth = member.DateOfBirth,
+                    Email = member.Email,
+                    PhoneNumber = member.PhoneNumber,
+                    Status = member.Status,
+                    UnitId = member.UnitId
+                };
+
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<bool> UpdateMember(string memberId, TestMemberViewModel model)
+        {
+            try
+            {
+        
+                var member = await _userManager.FindByIdAsync(memberId);
+                member.UnitId = model.UnitId;
+                member.FullName = model.FullName;
+                member.Address = model.Address;
+                member.DateOfBirth = model.DateOfBirth;
+                member.PhoneNumber = model.PhoneNumber;
+                var a =  await _userManager.UpdateAsync(member);
+                if (a.Succeeded)
+                {
+                    return true;
+                }
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
             }
         }
 

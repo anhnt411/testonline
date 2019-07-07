@@ -9,16 +9,18 @@
             var currentDateSortAsc = true;
             var currentAddressSortAsc = true;
             var currentPhoneNumberSortAsc = true;
+            var currentEmailSortAsc = true;
+
             var totalPage = 0;
             var totalRecord = 0;
 
 
 
 
-            function GetListMember(objectFilter) {
+            function GetListMember(objectFilter,unitId) {
                 var id = '';
                 $.ajax({
-                    url: "/Admin/TestMember/GetListMember?MemberId ="+id,
+                    url: "/Admin/TestMember/GetListMember?unitId=" + unitId,
                     type: 'post',
                     data: objectFilter,
                     success: function (response) {
@@ -39,7 +41,7 @@
 
                                 dataFilter.skip = (page - 1) * 5;
                                 dataFilter.take = 5;
-                                GetListMember(dataFilter);
+                                GetListMember(dataFilter, unitId);
                             }
                         })
 
@@ -55,6 +57,9 @@
 
             //function paging (totalRow, callback) {
             //    var totalPage = Math.ceil(totalRow / 5);
+
+            var unitId = $("#selectUnitId option:selected").val();
+            console.log(unitId);
 
             var dataFilter = {
                 "filter": [
@@ -81,14 +86,15 @@
                 "take": 5,
                 "isExport": false
             };
-            GetListMember(dataFilter);
+            GetListMember(dataFilter, unitId);
 
 
 
             $(document).ready(function () {
                 $('#searchMember').on('click', function () {
 
-                    var searchValue = $('#searchMemberContent').val();
+                    var unitId = $("#selectUnitId option:selected").val();
+                    var searchValue = $("#selectUnitId option:selected").text();
                     dataFilter.multipeFilter = searchValue;
                     dataFilter.sort[0].field = '';
                     $('#pagination').empty();
@@ -96,7 +102,7 @@
                     $('#pagination').removeData("twbs-pagination");
 
                     $('#pagination').unbind("page");
-                    GetListMember(dataFilter);
+                    GetListMember(dataFilter, unitId);
 
                 });
             })
@@ -130,27 +136,35 @@
 
             $(document).on("click", ".sortMember", function () {
 
-                var sortName = $(this).data('sortMember');
+                var sortName = $(this).data('sortmember');
+
+                var unitId = $("#selectUnitId option:selected").val();
                 dataFilter.sort[0].field = sortName;
-                if (sortName == "MemberName") {
+                if (sortName == "FullName") {
                     dataFilter.sort[0].asc = currentNameSortAsc;
-                    GetListMember(dataFilter);
+                    GetListMember(dataFilter, unitId);
                     currentNameSortAsc = !currentNameSortAsc;
                 }
-                if (sortName == "CreatedDate") {
+                if (sortName == "DateOfBirth") {
                     dataFilter.sort[0].asc = currentDateSortAsc;
-                    GetListMember(dataFilter);
+                    GetListMember(dataFilter, unitId);
                     currentDateSortAsc = !currentDateSortAsc;
                 }
                 if (sortName == "Address") {
                     dataFilter.sort[0].asc = currentAddressSortAsc;
-                    GetListMember(dataFilter);
+                    GetListMember(dataFilter, unitId);
                     currentAddressSortAsc = !currentAddressSortAsc;
                 }
                 if (sortName == "PhoneNumber") {
                     dataFilter.sort[0].asc = currentPhoneNumberSortAsc;
-                    GetListMember(dataFilter);
+                    GetListMember(dataFilter, unitId);
                     currentPhoneNumberSortAsc = !currentPhoneNumberSortAsc;
+                }
+
+                if (sortName == "Email") {
+                    dataFilter.sort[0].asc = currentEmailSortAsc;
+                    GetListMember(dataFilter, unitId);
+                    currentEmailSortAsc = !currentEmailSortAsc;
                 }
 
             })

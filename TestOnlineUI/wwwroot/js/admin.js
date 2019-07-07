@@ -320,6 +320,14 @@
             })
 
             $(document).ready(function () {
+                
+                $('#backListMember').on('click', function () {
+                    var id = $(this).data('memberunitid');
+                    window.location.href = '/Admin/TestMember/Index?unitId='+id;
+                });
+            })
+
+            $(document).ready(function () {
 
                 $('input:not(:button,:submit),textarea,select').change(function () {
                     window.onbeforeunload = function () {

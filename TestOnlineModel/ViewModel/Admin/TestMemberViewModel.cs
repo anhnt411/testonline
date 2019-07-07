@@ -8,7 +8,7 @@ namespace TestOnlineModel.ViewModel.Admin
     public class TestMemberViewModel
     {
         [Key]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [Required(ErrorMessage = "Name is required")]
         [MaxLength(300)]
@@ -23,6 +23,8 @@ namespace TestOnlineModel.ViewModel.Admin
         public DateTime? DateOfBirth { get; set; }
 
         public int TotalRecord { get; set; }
+        
+        public Guid? UnitId { get; set; }
 
         public long STT { get; set; }
 

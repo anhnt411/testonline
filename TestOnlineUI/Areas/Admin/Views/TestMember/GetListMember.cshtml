@@ -11,19 +11,19 @@
                         STT
                     </th>
                     <th>
-                        Tên đơn vị <a href="#" class="sortUnit" data-sortunit="UnitName"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                        Họ tên <a href="#" class="sortMember" data-sortmember="FullName"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
                     </th>
                     <th>
-                        Địa chỉ <a href="#" class="sortUnit" data-sortunit="Address"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                        Số điện thoại <a href="#" class="sortMember" data-sortmember="PhoneNumber"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
                     </th>
                     <th>
-                        Số điện thoại <a href="#" class="sortUnit" data-sortunit="PhoneNumber"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                        Email <a href="#" class="sortMember" data-sortmember="Email"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
                     </th>
                     <th>
-                        <a href="#">Người tạo</a>
+                        Ngày sinh <a href="#" class="sortMember" data-sortmember="DateOfBirth"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15" /></a>
                     </th>
                     <th>
-                        Ngày tạo <a href="#" class="sortUnit" data-sortunit="CreatedDate"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                        Địa chỉ <a href="#" class="sortMember" data-sortmember="Address"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
                     </th>
                     <th>
                         <a href="#">Thao tác</a>
@@ -38,11 +38,11 @@
                         <tr class="rows" data-totalrow="@item.TotalRecord" id="rows">
                             <td>@item.STT </td>
                             <td>@item.FullName</td>
-                            <td>@item.Email</td>
                             <td>@item.PhoneNumber</td>
+                            <td>@item.Email</td>
                             <td>@item.DateOfBirth</td>
                             <td>@item.Address</td>
-                            <td><a href="~/Admin/TestMember/Index?unitId=@item.Id"><i class="fas fa-list"></i></a>   <a href="/Admin/TestUnit/Update?unitId=@item.Id"><i class="fas fa-pen-alt"></i></a>  <a href="#" class="deleteunit" data-idunit="@item.Id"><i class="fas fa-trash-alt"></i></a></td>
+                            <td><a href="/Admin/TestMember/UpdateMember?memberId=@item.Id"><i class="fas fa-pen-alt"></i></a>  <a href="#" class="deletemember" data-idmember="@item.Id"><i class="fas fa-trash-alt"></i></a></td>
                         </tr>
                     }
                 }

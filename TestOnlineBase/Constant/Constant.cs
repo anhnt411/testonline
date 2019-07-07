@@ -44,6 +44,10 @@ namespace TestOnlineBase.Constant
             public const string UnitSortDefault = "CreatedDate";
             public const int UnitTakeDefault = 5;
 
+            public const string MemberFilterDefault = "TestUnitName";
+            public const string MemberSortDefault = "FullName";
+            public const int MemberTakeDefault = 5;
+
         }
 
         public static class Role

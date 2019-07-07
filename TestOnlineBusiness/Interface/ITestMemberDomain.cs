@@ -15,5 +15,7 @@ namespace TestOnlineBusiness.Interface
         Task<IEnumerable<TestMemberViewModel>> GetListMember(FilterModel filter, Guid unitId,string userId);
         Task<string> CreateMember(Member member, string userId);
         Task<bool> AddListMember(Guid unitId, IFormFile file,string userId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<TestMemberViewModel> GetMemberDetail(string memberId);
+        Task<bool> UpdateMember(string memberId, TestMemberViewModel model);
     }
 }

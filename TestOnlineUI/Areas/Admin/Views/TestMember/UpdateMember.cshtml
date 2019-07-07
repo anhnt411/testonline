@@ -1,4 +1,5 @@
-﻿
+﻿@using TestOnlineModel.ViewModel.Admin
+@model TestMemberViewModel
 
 @{
     ViewData["Title"] = "Add";
@@ -8,7 +9,7 @@
 
 
 @section title{
-    Thêm mới thành viên
+    Cập nhật thành viên
 }
 
 @section script{
@@ -26,14 +27,14 @@
         <h4 class="heading_member"><strong>Thêm Mới </strong></h4>
         <div class="form_member">
             @{
-                <form asp-controller="TestMember" asp-action="Add" asp-area="Admin" method="post" id="addmemberfrm" name="addmemberFrm" role="form" enctype="multipart/form-data">
+                <form asp-controller="TestMember" asp-action="UpdateMember" asp-area="Admin" method="post" id="updatememberfrm" name="updatememberFrm" role="form" enctype="multipart/form-data">
                     <span>Đơn vị </span>
                     <div class="dropdown">
-                        <select name="TestUnitId" id="selectUnitId">
+                        <select name="UnitId" id="selectUnitId">
                             @{
                                 foreach (var item in ViewBag.ListUnit)
                                 {
-                                   
+
                                     <option value="@item.Id">@item.Name</option>
                                 }
                             }
@@ -42,14 +43,14 @@
 
 
 
-                    Họ tên <span style="color:red;">*</span> <input type="text" placeholder="Vui lòng nhập vào họ tên" name="Name" class="txtMember">
-                    <div>Email <span style="color:red;">*</span></div>  <input type="text" placeholder="Vui lòng nhập vào email" name="Email" class="txtMember">
-                    <div>SDT    </div> <input type="text" placeholder="Vui lòng nhập vào số điện thoại " name="Phone" class="txtMember">
+                    Họ tên <span style="color:red;">*</span> <input type="text" placeholder="Vui lòng nhập vào họ tên" value="@Model.FullName" name="Name" class="txtMember">
+                    <div>Email <span style="color:red;">*</span></div>  <input type="text" value="@Model.Email" readonly placeholder="Vui lòng nhập vào email" name="Email" class="txtMember">
+                    <div>SDT    </div> <input type="text" placeholder="Vui lòng nhập vào số điện thoại" value="@Model.PhoneNumber" name="Phone" class="txtMember">
                     <span>Ngày sinh </span>
                     <div class="dateMember">
-                        <input type="date" placeholder="Vui lòng nhập vào ngày sinh" name="DateOfBirth" class="txtMember">
+                        <input id="dateMemberPicker" type="date" placeholder="Vui lòng nhập vào ngày sinh" value="@Model.DateOfBirth" name="DateOfBirth" class="txtMember">
                     </div>
-                    <span>Địa chỉ</span><input type="text" placeholder="Nhập vào địa chỉ" name="Address" class="txtMember">
+                    <span>Địa chỉ</span><input type="text" placeholder="Nhập vào địa chỉ" value="@Model.Address" name="Address" class="txtMember">
 
                     <input type="submit" value="Xác nhận" name="submit" class="txt2Member">
                     <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListMember" data-memberunitid="@ViewBag.Unit.Id">
