@@ -133,6 +133,24 @@ namespace TestOnlineBusiness.Service
             }
         }
 
+        public async Task<bool> DeleteMember(string memberId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            try
+            {
+                var member = await _userManager.FindByIdAsync(memberId);
+                member.Status = false;
+                var result = await _userManager.UpdateAsync(member);
+
+                return result.Succeeded;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
+            }
+        }
+
         public async Task<IEnumerable<TestMemberViewModel>> GetListMember(FilterModel filter, Guid unitId,string userId)
         {
             try
@@ -144,14 +162,14 @@ namespace TestOnlineBusiness.Service
 
                 if (filter.Filter == null || filter.Filter.Count == 0)
                 {
-                    filter.Filter = new List<FilterTypeModel>() { new FilterTypeModel() { Field = Constant.Filter.UnitFilterDefault, IsActive = true } };
+                    filter.Filter = new List<FilterTypeModel>() { new FilterTypeModel() { Field = Constant.Filter.MemberFilterDefault, IsActive = true } };
                 }
 
                 if (filter.Sort == null || filter.Sort.Count == 0 || string.IsNullOrEmpty(filter.Sort[0].Field))
                 {
                     filter.Sort = new List<SortTypeModel>
                     {
-                         new SortTypeModel {Field = Constant.Filter.UnitSortDefault, Asc =  false, IsActive = true}
+                         new SortTypeModel {Field = Constant.Filter.MemberSortDefault, Asc =  false, IsActive = true}
                     };
                 }
 
@@ -214,17 +232,17 @@ namespace TestOnlineBusiness.Service
             }
         }
 
-        public async Task<bool> UpdateMember(string memberId, TestMemberViewModel model)
+        public async Task<bool> UpdateMember(string memberId, Member model)
         {
             try
             {
         
                 var member = await _userManager.FindByIdAsync(memberId);
-                member.UnitId = model.UnitId;
-                member.FullName = model.FullName;
+                member.UnitId = model.TestUnitId;
+                member.FullName = model.Name;
                 member.Address = model.Address;
                 member.DateOfBirth = model.DateOfBirth;
-                member.PhoneNumber = model.PhoneNumber;
+                member.PhoneNumber = model.Phone;
                 var a =  await _userManager.UpdateAsync(member);
                 if (a.Succeeded)
                 {

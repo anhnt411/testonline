@@ -107,9 +107,10 @@
                 });
             })
 
-            $(document).on('click', ".deleteMember", function () {
-                if (confirm('Bạn có muốn xóa đơn vị này không')) {
-                    var id = $(this).data('idMember');
+            $(document).on('click', ".deletemember", function () {
+                if (confirm('Bạn có muốn xóa thành viên này không')) {
+                    var id = $(this).data('idmember');
+                    var unitId = $(this).data('unitid');
                     console.log(id);
 
                     $.ajax({
@@ -123,7 +124,7 @@
 
                                 var filter = {};
                                 GetListMember(filter);
-                                window.location.href = "/Admin/TestMember/Index"
+                                window.location.href = "/Admin/TestMember/Index?unitId=" + unitId;
                             }
                         },
                         error: function (err) {

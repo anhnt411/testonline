@@ -220,6 +220,37 @@
                     }
                 })
 
+                $('#updatememberfrm').validate({
+                    rules: {
+                        'Name': {
+                            required: true
+                        },
+                        'PhoneNumber': {
+                            digits: true,
+                            minlength: 10,
+                            maxlength: 10
+                        },
+                        'Email': {
+                            required: true,
+                            email: true
+                        }
+                    },
+                    messages: {
+                        'Name': {
+                            required: "Vui lòng nhập vào họ tên"
+                        },
+                        'PhoneNumber': {
+                            digits: "Nhập vào số điện thoại hợp lệ có 10 số",
+                            minlength: "Nhập vào số điện thoại hợp lệ có 10 số",
+                            maxlength: "Nhập vào số điện thoại hợp lệ có 10 số"
+                        },
+                        'Email': {
+                            required: "Nhập vào email đúng định dạng",
+                            email: "Vui lòng nhập đúng định dạng email"
+                        }
+                    }
+                })
+
                
             });
 

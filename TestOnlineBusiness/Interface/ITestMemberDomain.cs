@@ -16,6 +16,7 @@ namespace TestOnlineBusiness.Interface
         Task<string> CreateMember(Member member, string userId);
         Task<bool> AddListMember(Guid unitId, IFormFile file,string userId, CancellationToken cancellationToken = default(CancellationToken));
         Task<TestMemberViewModel> GetMemberDetail(string memberId);
-        Task<bool> UpdateMember(string memberId, TestMemberViewModel model);
+        Task<bool> UpdateMember(string memberId, Member model);
+        Task<bool> DeleteMember(string memberId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

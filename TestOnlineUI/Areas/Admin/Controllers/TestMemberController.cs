@@ -138,6 +138,39 @@ namespace TestOnlineUI.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> UpdateMember(Member member)
+        {
+            try
+            {
+
+                if (!ModelState.IsValid)
+                {
+                    TempData["error"] = "Có lỗi xảy ra";                 
+                    return View(member.Id);
+                }
+           
+                var result = await _member.UpdateMember(member.Id, member);
+                if (!result)
+                {
+                    TempData["error"] = "Có lỗi xảy ra. ";
+                    return View(member.Id);
+                    
+                }
+                TempData["updatemembersuccess"] = "Cập nhật thành viên thành công";
+
+                return RedirectToAction("Index",new { unitId = member.TestUnitId});
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, ex.Message);
+                TempData["error"] = "Có lỗi xảy ra. ";
+                return View(member.Id);
+            }
+        }
+
+        [HttpPost]
         public async Task<IActionResult> AddListMember(Guid unitId,IFormFile file)
         {
             try
@@ -192,7 +225,32 @@ namespace TestOnlineUI.Areas.Admin.Controllers
 
         }
 
-
+        public async Task<IActionResult> DeleteMember (string memberId)
+        {
+            try
+            {
+                var result = await _member.DeleteMember(memberId);
+                if (!result)
+                {
+                    return Json(new
+                    {
+                        status = 0
+                    });
+                }
+                return Json(new
+                {
+                    status = 1
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Json(new
+                {
+                    status = 0
+                });
+            }
+        }
 
 
         public async Task SetViewBag(Guid? unitId)
