@@ -46,7 +46,7 @@ table.table.table-striped.table-bordered.table-hover {
     margin: 0px;
 }
 
-#listCategory,#listUnit,#listMember {
+#listCategory, #listUnit, #listMember {
     margin-top: 10px;
 }
 
@@ -56,7 +56,7 @@ input#searchCategoryContent {
     border: 0.5px solid black;
 }
 
-input#searchUnitContent,input#searchMemberContent {
+input#searchUnitContent, input#searchMemberContent {
     width: 246px;
     height: 37px;
     border: 0.5px solid black;
@@ -66,15 +66,15 @@ button#searchCategory {
     margin-bottom: 7px;
 }
 
-button#searchUnit,button#searchMember {
+button#searchUnit, button#searchMember {
     margin-bottom: 7px;
 }
 
-form_category_main,form_unit_main,form_member_main {
+form_category_main, form_unit_main, form_member_main {
     width: 100%;
 }
 
-.form_category_main h4,.form_unit_main h4,.form_member_main h4 {
+.form_category_main h4, .form_unit_main h4, .form_member_main h4 {
     font-size: 20px;
     font-weight: 300;
     margin-bottom: 15px;
@@ -82,13 +82,13 @@ form_category_main,form_unit_main,form_member_main {
     text-transform: uppercase;
 }
 
-.heading_category,.heading_unit, .heading_member {
+.heading_category, .heading_unit, .heading_member {
     border-bottom: 1px solid #fcab0e;
     padding-bottom: 9px;
     position: relative;
 }
 
-    .heading_category span,.heading_unit span,.heading_member span {
+    .heading_category span, .heading_unit span, .heading_member span {
         background: #9e6600 none repeat scroll 0 0;
         bottom: -2px;
         height: 3px;
@@ -97,13 +97,13 @@ form_category_main,form_unit_main,form_member_main {
         width: 75px;
     }
 
-.form_category,.form_unit,.form_member {
+.form_category, .form_unit, .form_member {
     border-radius: 7px;
     padding: 6px;
 }
 
 
-.txtCategory[type="text"], .txtUnit[type="text"],.txtMember[type="text"] {
+.txtCategory[type="text"], .txtUnit[type="text"], .txtMember[type="text"] {
     border: 1px solid #ccc;
     margin: 10px 0;
     padding: 10px 0 10px 5px;
@@ -125,7 +125,7 @@ form_category_main,form_unit_main,form_member_main {
     width: 30%;
 }
 
-.txt2Category[type="button"], .txt2Unit[type="button"],.txt2Member[type="button"] {
+.txt2Category[type="button"], .txt2Unit[type="button"], .txt2Member[type="button"] {
     background: #242424 none repeat scroll 0 0;
     border: 1px solid #4f5c04;
     border-radius: 25px;
@@ -139,7 +139,7 @@ form_category_main,form_unit_main,form_member_main {
     width: 30%;
 }
 
-.txt2Category:hover,txt2Unit:hover,txt2Member:hover {
+.txt2Category:hover, txt2Unit:hover, txt2Member:hover {
     background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
     color: #5793ef;
     transition: all 0.5s ease 0s;
@@ -147,10 +147,12 @@ form_category_main,form_unit_main,form_member_main {
 
 input#searchCategoryContent {
     padding-left: 10px;
+    margin-left: 57px;
 }
 
-input#searchUnitContent,input#searchMemberContent {
+input#searchUnitContent, input#searchMemberContent {
     padding-left: 10px;
+    margin-left: 58px;
 }
 
 p.p-text {
@@ -165,7 +167,7 @@ i.fas.fa-pen-alt {
 
 .dropdown {
     width: 150px;
-    margin-top: 9px;
+    margin-top: -8px;
     height: 39px;
 }
 
@@ -174,10 +176,13 @@ i.fas.fa-pen-alt {
     height: 41px;
     margin-top: 12px;
 }
+
 .fileExcel {
     margin-bottom: 10px;
 }
 
 select#selectUnitId {
     height: 38px;
+    margin-left: 38px;
+    width: 180px;
 }

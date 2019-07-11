@@ -25,5 +25,7 @@ namespace TestOnlineEntity.Model.Entity
         public string UpdatedBy { get; set; }
 
         public bool IsActive { get; set; }
+
+        public string Description { get; set; }
     }
 }

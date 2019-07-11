@@ -23,7 +23,8 @@ namespace TestOnlineEntity.Service
                                     ,IRepository<ResultTest> resultTests,
                                      IRepository<TestCategoryViewModel> testCategoryViewModel,
                                      IRepository<TestUnitViewModel> testUnitViewModel,
-                                     IRepository<TestMemberViewModel> testMemberViewModel
+                                     IRepository<TestMemberViewModel> testMemberViewModel,
+                                     IRepository<QuestionGroupViewModel> questionGroupViewModel
             
                                     )
         {
@@ -40,6 +41,7 @@ namespace TestOnlineEntity.Service
             this.TestCategoryViewModels = testCategoryViewModel;
             this.TestUnitViewModels = testUnitViewModel;
             this.TestMemberViewModels = testMemberViewModel;
+            this.QuestionGroupViewModels = questionGroupViewModel;
         }
 
         public virtual IRepository<TestCategory> TestCategories { get; set; }       
@@ -54,6 +56,8 @@ namespace TestOnlineEntity.Service
         public virtual IRepository<TestCategoryViewModel> TestCategoryViewModels { get; }
         public virtual IRepository<TestUnitViewModel> TestUnitViewModels { get; }
         public virtual IRepository<TestMemberViewModel> TestMemberViewModels { get; }
+
+        public virtual IRepository<QuestionGroupViewModel> QuestionGroupViewModels { get; }
 
         public IDbContextTransaction BeginTransactionScope()
         {

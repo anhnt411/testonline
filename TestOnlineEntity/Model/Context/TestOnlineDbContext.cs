@@ -44,6 +44,8 @@ namespace TestOnlineEntity.Model.Context
 
         public DbSet<TestMemberViewModel> TestMemberViewModels { get; }
 
+        public DbSet<QuestionGroupViewModel> QuestionGroupViewModels { get; }
+
     }
 
     
