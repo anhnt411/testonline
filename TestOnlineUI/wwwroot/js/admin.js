@@ -251,6 +251,19 @@
                     }
                 })
 
+                $('#addquestionbank').validate({
+                    rules: {
+                        'Name': {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        'Name': {
+                            required: "Vui lòng nhập vào tên nhóm câu hỏi"
+                        }
+                    }
+                })
+
                
             });
 

@@ -167,7 +167,7 @@ i.fas.fa-pen-alt {
 
 .dropdown {
     width: 150px;
-    margin-top: -8px;
+    margin-top: 6px;
     height: 39px;
 }
 
@@ -183,6 +183,41 @@ i.fas.fa-pen-alt {
 
 select#selectUnitId {
     height: 38px;
-    margin-left: 38px;
+    margin-left: 0px;
     width: 180px;
+}
+
+select#selectCategoryId {
+    height: 38px;
+    width: 180px;
+    margin-left: 40px;
+}
+
+a#addQuestionBank {
+    color: #fff;
+}
+
+button#searchQuestionBank {
+    margin-top: -8px;
+}
+
+.text-questionbank p {
+    margin-left: 16px;
+    width: 97%;
+    margin-top: 9px;
+    color: red;
+}
+
+select#selectCategoryId {
+    margin-left: 0px;
+    margin-bottom: 0px;
+    width: 188px;
+}
+
+ul.navbar-nav.ml-auto.ml-md-0 {
+    margin-top: -12px;
+}
+
+.namequestiongroup {
+    margin-top: 8px;
 }

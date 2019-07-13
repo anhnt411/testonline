@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     var questionGroup = {
         init: function () {
-            member.registerEvent();
+            questionGroup.registerEvent();
         },
         registerEvent: function () {
 
@@ -17,8 +17,8 @@
 
 
 
-            function GetListMember(objectFilter, unitId) {
-                var id = '';
+            function GetListQuestionGroup(objectFilter, unitId) {
+                var categoryId = '';
                 $.ajax({
                     url: "/Admin/QuestionBank/GetListQuestionGroup?categoryId=" + categoryId,
                     type: 'post',
@@ -86,7 +86,7 @@
                 "take": 5,
                 "isExport": false
             };
-            GetListQuestion(dataFilter, unitId);
+            GetListQuestionGroup(dataFilter, unitId);
 
 
 
@@ -102,7 +102,7 @@
                     $('#pagination').removeData("twbs-pagination");
 
                     $('#pagination').unbind("page");
-                    GetListMember(dataFilter, unitId);
+                    GetListQuestionGroup(dataFilter, unitId);
 
                 });
             })

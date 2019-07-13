@@ -31,11 +31,28 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             this._userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await SetViewBag();
             return View();
         }
         
+
+        public async Task<IActionResult> AddQuestionGroup(Guid categoryId)
+        {
+            try
+            {
+                ViewBag.CategoryId = categoryId;
+                await SetViewBag();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return View("Error.cshtml");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddQuestionGroup(QuestionGroupViewModel model)
         {
@@ -51,8 +68,9 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 {
                     return View("error.cshtml");
                 }
-                var output = _questionBank.AddQuestionBank(model, user.Id);
-                if (output == null)
+                var output = await _questionBank.AddQuestionBank(model, user.Id);
+
+                if (!output)
                 {
                     TempData["error"] = "Có lỗi xảy ra";
                     return View();
@@ -84,6 +102,23 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 return View("Error.cshtml");
             }
 
+        }
+
+        public async Task SetViewBag()
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(this.User);
+                var listCategory = await _category.GetAllCategory(user.Id);
+
+                ViewBag.ListCategory = listCategory;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return;
+            }
+           
         }
     }
 }

@@ -1,0 +1,72 @@
+﻿
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+  
+    var listCategory = ViewBag.ListCategory;
+    
+
+}
+
+
+@section title{
+    Thêm mới ngân hàng câu hỏi
+}
+
+@section script{
+    <script>
+          $('#selectCategoryId option[value=@ViewBag.CategoryId]').attr('selected','selected');
+    </script>
+}
+
+
+
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <div class="form_member_main">
+        <h4 class="heading_member"><strong>Thêm Mới </strong></h4>
+        <div class="form_member">
+            @{
+                <form asp-controller="QuestionBank" asp-action="AddQuestionGroup" asp-area="Admin" method="post" id="addquestionbank" name="addquestionbank" role="form" enctype="multipart/form-data">
+
+                    <div> <span> Chuyên mục </span> <span style="color:red;">*</span></div>
+                    <div class="dropdown">
+                        <select name="CategoryId" id="selectCategoryId">
+                            @{
+                                foreach (var item in listCategory)
+                                {
+
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+
+                    <div class="namequestiongroup">
+                        <span> Tên ngân hàng câu hỏi </span> <span style="color:red;">*</span>
+                    </div>
+                    <input type="text" placeholder="Vui lòng nhập vào tên nhóm câu hỏi" name="Name" class="txtMember">
+
+
+                    <div>
+                        <div>Mô tả </div>
+                        <textarea type="text" placeholder="Vui lòng nhập vào mô tả" name="Description" class="txtMember"></textarea>
+                    </div>
+
+                    
+
+                    
+
+                    <input type="submit" value="Xác nhận" name="submit" class="txt2Member">
+                    <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListQuestionGroup">
+
+                </form>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-md-2>"></div>
+

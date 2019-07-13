@@ -81,7 +81,7 @@ namespace TestOnlineBusiness.Service
             }
         }
 
-        public async Task<IEnumerable<TestUnitViewModel>> GetAll()
+        public async Task<IEnumerable<TestUnitViewModel>> GetAll(string userId)
         {
            var output  = await _unitOfWork.TestUnits.Get(x => x.IsActive == true);
             var unitList = output.Select(x => new TestUnitViewModel()

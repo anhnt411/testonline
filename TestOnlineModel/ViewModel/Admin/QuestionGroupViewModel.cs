@@ -10,6 +10,8 @@ namespace TestOnlineModel.ViewModel.Admin
 
         public string Name { get; set; }
 
+        public int? NumberOfQuestion { get; set; }
+
         public string Description { get; set; }
 
         public Guid CategoryId { get; set; }
@@ -22,7 +24,9 @@ namespace TestOnlineModel.ViewModel.Admin
 
         public string CreatedBy { get; set; }
 
-        public string CreatedDate { get; set; }
+        public string CreatedById { get; set; }
+
+        public DateTime? CreatedDate { get; set; }
 
         
 

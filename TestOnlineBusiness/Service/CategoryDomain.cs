@@ -90,6 +90,17 @@ namespace TestOnlineBusiness.Service
             }
         }
 
+        public async Task<IEnumerable<TestCategory>> GetAllCategory(string userId)
+        {
+            var listCategory = await _unitOfWork.TestCategories.Get(x => x.CreatedBy == userId && x.Status == true);
+            
+            if (!listCategory.Any())
+            {
+                return null;
+            }
+            return listCategory;
+        }
+
         public async Task<IEnumerable<TestCategoryViewModel>> GetCategory(FilterModel filter,string userId)
         {
             try

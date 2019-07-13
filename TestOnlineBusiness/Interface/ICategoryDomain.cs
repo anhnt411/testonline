@@ -18,6 +18,8 @@ namespace TestOnlineBusiness.Interface
         Task<bool> CreateCategory(TestCategoryViewModel viewModel, string userId,IFormFile file, CancellationToken cancellationToken = default(CancellationToken));
         Task<bool> DeleteCategory(Guid categoryId, CancellationToken cancellationToken = default(CancellationToken));
         Task<TestCategoryViewModel> GetCategoryDetail(Guid categoryId);
+
+        Task<IEnumerable<TestCategory>> GetAllCategory(string userId);
          
     }
 }

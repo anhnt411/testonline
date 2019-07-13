@@ -38,6 +38,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(Guid unitId)
         {
+            var user = await _userManager.GetUserAsync(this.User);
             var unit = await _unit.GetUnitDetail(unitId);  
             if(unit == null)
             {
@@ -45,7 +46,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             }
             
             ViewBag.Unit = unit;
-            var result = await _unit.GetAll();
+            var result = await _unit.GetAll(user.Id);
             ViewBag.ListUnit = result.ToList();
             
             return View();
@@ -53,6 +54,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Add(Guid unitId)
         {
+            var user = await _userManager.GetUserAsync(this.User);
             var unit = await _unit.GetUnitDetail(unitId);
             if (unit == null)
             {
@@ -61,7 +63,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
            
             ViewBag.Unit = unit;
              
-            ViewBag.ListUnit = await _unit.GetAll();
+            ViewBag.ListUnit = await _unit.GetAll(user.Id);
             return View();
         }
 
@@ -101,6 +103,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
 
         public async Task<IActionResult> AddListMember(Guid unitId)
         {
+            var user = await _userManager.GetUserAsync(this.User);
             var unit = await _unit.GetUnitDetail(unitId);
             if (unit == null)
             {
@@ -109,7 +112,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
 
             ViewBag.Unit = unit;
 
-            ViewBag.ListUnit = await _unit.GetAll();
+            ViewBag.ListUnit = await _unit.GetAll(user.Id);
             return View();
         }
 
@@ -118,10 +121,11 @@ namespace TestOnlineUI.Areas.Admin.Controllers
         {
             try
             {
+                var user = await _userManager.GetUserAsync(this.User);
                 var member = await _member.GetMemberDetail(memberId);
                 var unit = await _unit.GetUnitDetail(member.UnitId);
                 ViewBag.Unit = unit;
-                ViewBag.ListUnit = await _unit.GetAll();
+                ViewBag.ListUnit = await _unit.GetAll(user.Id);
                 if (member == null)
                 {
 
@@ -255,11 +259,13 @@ namespace TestOnlineUI.Areas.Admin.Controllers
 
         public async Task SetViewBag(Guid? unitId)
         {
+            var user = await _userManager.GetUserAsync(this.User);
+
             var unit = await _unit.GetUnitDetail(unitId);
            
             ViewBag.Unit = unit;
 
-            ViewBag.ListUnit = await _unit.GetAll();
+            ViewBag.ListUnit = await _unit.GetAll(user.Id);
         }
     }
 }

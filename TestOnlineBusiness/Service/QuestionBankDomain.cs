@@ -26,17 +26,17 @@ namespace TestOnlineBusiness.Service
 
         }
 
-        public async Task<Guid?> AddQuestionBank(QuestionGroupViewModel model,string userId)
+        public async Task<bool> AddQuestionBank(QuestionGroupViewModel model,string userId)
         {
             try
             {
                 var category = await _unitOfWork.TestCategories.GetOne(x => x.Id == model.CategoryId);
 
-                var listQuestionBank =  await _unitOfWork.QuestionGroups.CheckExist(x => x.CategoryId == category.Id && x.Name == category.Name && x.IsActive == true);
+                var listQuestionBank =  await _unitOfWork.QuestionGroups.CheckExist(x => x.CategoryId == category.Id && x.Name == model.Name && x.IsActive == true);
 
                 if (listQuestionBank)
                 {
-                    return null;
+                    return false;
                 }
 
                 var questionGroup = new QuestionGroup()
@@ -51,17 +51,12 @@ namespace TestOnlineBusiness.Service
 
                 };
 
-                 _unitOfWork.QuestionGroups.Insert(questionGroup);
-                 return questionGroup.Id;
-
-                
-                
-           
-                
+                _unitOfWork.QuestionGroups.Insert(questionGroup);
+                return await _unitOfWork.CommitAsync() > 0;          
             }catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return null;
+                return false;
             }
         }
 
@@ -76,14 +71,14 @@ namespace TestOnlineBusiness.Service
 
                 if (filter.Filter == null || filter.Filter.Count == 0)
                 {
-                    filter.Filter = new List<FilterTypeModel>() { new FilterTypeModel() { Field = Constant.Filter.UnitFilterDefault, IsActive = true } };
+                    filter.Filter = new List<FilterTypeModel>() { new FilterTypeModel() { Field = Constant.Filter.QuestionGroupFilterDefault, IsActive = true } };
                 }
 
                 if (filter.Sort == null || filter.Sort.Count == 0 || string.IsNullOrEmpty(filter.Sort[0].Field))
                 {
                     filter.Sort = new List<SortTypeModel>
                     {
-                         new SortTypeModel {Field = Constant.Filter.UnitSortDefault, Asc =  false, IsActive = true}
+                         new SortTypeModel {Field = Constant.Filter.QuestionGroupSortDefault, Asc =  false, IsActive = true}
                     };
                 }
 
@@ -91,7 +86,7 @@ namespace TestOnlineBusiness.Service
                 var sortData = ApiUtils.ListToDataTable(filter.Sort);
 
                 var skip = filter.Skip ?? 0;
-                var take = filter.Take ?? Constant.Filter.CategoryTakeDefault;
+                var take = filter.Take ?? Constant.Filter.QuestionGroupTakeDefault;
                 var isExport = filter.IsExport ?? false;
                 if (!string.IsNullOrEmpty(filter.MultipeFilter))
                 {

@@ -49,6 +49,10 @@ namespace TestOnlineBase.Constant
             public const string MemberSortDefault = "FullName";
             public const int MemberTakeDefault = 5;
 
+            public const string QuestionGroupFilterDefault = "QuestionGroupName";
+            public const string QuestionGroupSortDefault = "CreatedDate";
+            public const int QuestionGroupTakeDefault = 5;
+
         }
 
         public static class Role

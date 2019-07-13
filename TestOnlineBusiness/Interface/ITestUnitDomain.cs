@@ -16,6 +16,6 @@ namespace TestOnlineBusiness.Interface
         Task<bool> CreateUnit(TestUnitViewModel viewModel, string userId, CancellationToken cancellationToken = default(CancellationToken));
         Task<bool> DeleteUnit(Guid unitId, CancellationToken cancellationToken = default(CancellationToken));
         Task<TestUnitViewModel> GetUnitDetail(Guid? unitId);
-        Task<IEnumerable<TestUnitViewModel>> GetAll();
+        Task<IEnumerable<TestUnitViewModel>> GetAll(string userId);
     }
 }

@@ -9,7 +9,7 @@ namespace TestOnlineBusiness.Interface
 {
     public interface IQuestionBankDomain
     {
-        Task<Guid?> AddQuestionBank(QuestionGroupViewModel model,string userId);
+        Task<bool> AddQuestionBank(QuestionGroupViewModel model,string userId);
         Task<IEnumerable<QuestionGroupViewModel>> GetListQuestionGroup(FilterModel filter, string userId);
     }
 }
