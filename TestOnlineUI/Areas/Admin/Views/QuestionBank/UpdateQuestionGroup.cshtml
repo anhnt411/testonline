@@ -1,0 +1,74 @@
+﻿@using TestOnlineEntity.Model.Entity
+@model  QuestionGroup
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+
+    var listCategory = ViewBag.ListCategory;
+    TempData["error"] = TempData["errorgroupupdate"];
+
+
+}
+
+
+@section title{
+    Cập nhật nhóm câu hỏi
+}
+
+@section script{
+    <script>
+        $('#selectCategoryId option[value=@Model.CategoryId]').attr('selected', 'selected');
+
+      
+    </script>
+}
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <div class="form_member_main">
+        <h4 class="heading_member"><strong>Cập nhật </strong></h4>
+        <div class="form_member">
+            @{
+                <form asp-controller="QuestionBank" asp-action="UpdateQuestionGroup" asp-area="Admin" method="post" id="updatequestionbank" name="updatequestionbank" role="form" enctype="multipart/form-data">
+
+                    <div> <span> Chuyên mục </span> <span style="color:red;">*</span></div>
+                    <div class="dropdown">
+                        <select name="CategoryId" id="selectCategoryId">
+                            @{
+                                foreach (var item in listCategory)
+                                {
+
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+
+                    <div class="namequestiongroup">
+                        <span> Tên ngân hàng câu hỏi </span> <span style="color:red;">*</span>
+                    </div>
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                    <input type="text" placeholder="Vui lòng nhập vào tên nhóm câu hỏi" name="Name" class="txtMember" value="@Model.Name">
+
+
+                    <div>
+                        <div>Mô tả </div>
+                        <textarea id="textareagroup" type="text" placeholder="Vui lòng nhập vào mô tả" name="Description" class="txtMember">@Model.Description</textarea>
+                    </div>
+
+
+
+
+
+                    <input type="submit" value="Xác nhận" name="submit" class="txt2Member">
+                    <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListQuestionGroup">
+
+                </form>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-md-2>"></div>
+

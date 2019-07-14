@@ -121,10 +121,14 @@
                                 window.location.href = "/home/error";
                             }
                             if (response.status == 1) {
+                                $('#pagination').empty();
 
+                                $('#pagination').removeData("twbs-pagination");
+
+                                $('#pagination').unbind("page");
                                 var filter = {};
                                 GetListMember(filter);
-                                window.location.href = "/Admin/TestMember/Index?unitId=" + unitId;
+                              
                             }
                         },
                         error: function (err) {

@@ -11,22 +11,22 @@
                         STT
                     </th>
                     <th>
-                        Nhóm câu hỏi <a href="#" class="sortMember" data-sortmember="FullName"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                        Nhóm câu hỏi <a href="#" class="sortQuestionGroup" data-sortquestiongroup="QuestionGroupName"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
                     </th>
                     <th>
-                        Số câu hỏi <a href="#" class="sortMember" data-sortmember="PhoneNumber"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                        Số câu hỏi <a href="#" class="sortQuestionGroup" data-sortquestiongroup="NumberOfQuestion"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
                     </th>
                     <th>
-                        Chuyên mục <a href="#" class="sortMember" data-sortmember="Email"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                        Chuyên mục <a href="#" class="sortQuestionGroup" data-sortquestiongroup="CategoryName"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
                     </th>
                     <th>
-                        Mô tả <a href="#" class="sortMember" data-sortmember="DateOfBirth"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15" /></a>
+                        Mô tả <a href="#" class="sortQuestionGroup" data-sortquestiongroup="Description"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15" /></a>
                     </th>
                     <th>
-                        Người tạo <a href="#" class="sortMember" data-sortmember="Address"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                        Người tạo <a href="#" class="sortQuestionGroup" data-sortquestiongroup="Address"></a>
                     </th>
                     <th>
-                        Ngày tạo <a href="#" class="sortMember" data-sortmember="Address"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
+                        Ngày tạo <a href="#" class="sortQuestionGroup" data-sortquestiongroup="CreatedDate"><img src="https://img.icons8.com/material-two-tone/24/000000/sort.png" height="15"></a>
                     </th>
                     <th>
                         <a href="#">Thao tác</a>
@@ -41,11 +41,12 @@
                         <tr class="rows" data-totalrow="@item.TotalRecord" id="rows">
                             <td>@item.STT </td>
                             <td>@item.Name</td>
+                            <td>@item.NumberOfQuestion</td>
                             <td>@item.CategoryName</td>
                             <td>@item.Description</td>
                             <td>@item.CreatedBy</td>
                             <td>@item.CreatedDate</td>
-                            <td><a href="/Admin/TestMember/UpdateMember?memberId=@item.Id"><i class="fas fa-pen-alt"></i></a>  <a href="#" class="deletemember" data-unitid="@item.CategoryId" data-idmember="@item.Id"><i class="fas fa-trash-alt"></i></a></td>
+                            <td><a href="~/Admin/Question/Index?questionGroupId=@item.Id"><i class="fas fa-list"></i></a> <a href="/Admin/QuestionBank/UpdateQuestionGroup?questionGroupId=@item.Id"><i class="fas fa-pen-alt"></i></a>  <a href="#" class="deletequestiongroup" data-categoryid="@item.CategoryId" data-idquestiongroup="@item.Id"><i class="fas fa-trash-alt"></i></a></td>
                         </tr>
                     }
                 }

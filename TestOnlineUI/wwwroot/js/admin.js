@@ -372,6 +372,12 @@
             })
 
             $(document).ready(function () {
+                $('#backListQuestionGroup').on('click', function () {
+                    window.location.href = '/Admin/QuestionBank/Index';
+                })
+            })
+
+            $(document).ready(function () {
 
                 $('input:not(:button,:submit),textarea,select').change(function () {
                     window.onbeforeunload = function () {

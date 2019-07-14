@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using TestOnlineBase.Helper.PagingHelper;
 using TestOnlineBusiness.Interface;
+using TestOnlineEntity.Model.Entity;
 using TestOnlineEntity.Model.ViewModel;
 using TestOnlineModel.ViewModel.Admin;
 
@@ -53,6 +54,56 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UpdateQuestionGroup(Guid questionGroupId)
+        {
+            try
+            {
+                var questionGroup = await _questionBank.GetQuestionGroupDetail(questionGroupId);
+                await SetViewBag();
+                return View(questionGroup);
+
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return View("error.cshtml");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateQuestionGroup(QuestionGroup model)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(this.User);
+                if(user == null)
+                {
+                    return View("error.cshtml");
+                }
+                var result = await _questionBank.UpdateQuestionBank(model, user.Id);
+                if (!result)
+                {
+                   
+                    TempData["errorgroupupdate"] = "Nhóm câu hỏi này đã tồn tại";
+                    return RedirectToAction("UpdateQuestionGroup",new { questionGroupId = model.Id});
+                }
+              
+                TempData["updategroupsuccess"] = "Cập nhật thành công";
+                return RedirectToAction("Index");
+
+
+
+
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                await SetViewBag();
+                TempData["error"] = "Có lỗi xảy ra";
+                return View(model.Id);
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddQuestionGroup(QuestionGroupViewModel model)
         {
@@ -61,7 +112,8 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 if (!ModelState.IsValid)
                 {
                     TempData["error"] = "Có lỗi xảy ra";
-                    return View();
+                    await SetViewBag();
+                    return View(model.CategoryId);
                 }
                  var user = await _userManager.GetUserAsync(this.User);
                 if(user == null)
@@ -73,17 +125,46 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 if (!output)
                 {
                     TempData["error"] = "Có lỗi xảy ra";
-                    return View();
+                    await SetViewBag();
+                    return View(model.CategoryId);
                 }
 
                 TempData["success"] = "Thêm mới thành công";
-                return View();
+                await SetViewBag();
+                return View(model.CategoryId);
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 TempData["error"] = "Có lỗi xảy ra";
                 return View();
+            }
+        }
+
+        public async Task<IActionResult> DeleteGroup(Guid questionGroupId)
+        {
+            try
+            {
+                var result = await _questionBank.DeleteQuestionBank(questionGroupId);
+                if (!result)
+                {
+                    return Json(new
+                    {
+                        status = 0
+                    });
+                }
+                return Json(new
+                {
+                    status = 1
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Json(new
+                {
+                    status = 0
+                });
             }
         }
 

@@ -5,11 +5,11 @@
         },
         registerEvent: function () {
 
-            var currentNameSortAsc = true;
+            var currentGroupNameSortAsc = true;
             var currentDateSortAsc = true;
-            var currentAddressSortAsc = true;
-            var currentPhoneNumberSortAsc = true;
-            var currentEmailSortAsc = true;
+            var currentCategorySortAsc = true;
+            var currentDescriptionSortAsc = true;
+            var currentNumberSortAsc = true;
 
             var totalPage = 0;
             var totalRecord = 0;
@@ -17,15 +17,15 @@
 
 
 
-            function GetListQuestionGroup(objectFilter, unitId) {
-                var categoryId = '';
+            function GetListQuestionGroup(objectFilter) {
+             
                 $.ajax({
-                    url: "/Admin/QuestionBank/GetListQuestionGroup?categoryId=" + categoryId,
+                    url: "/Admin/QuestionBank/GetListQuestionGroup",
                     type: 'post',
                     data: objectFilter,
                     success: function (response) {
 
-                        $('#listMember').html(response);
+                        $('#listQuestionBank').html(response);
                         totalRecord = $('#rows').data('totalrow');
                         totalPage = Math.ceil(totalRecord / 5);
                         console.log(totalPage);
@@ -41,7 +41,7 @@
 
                                 dataFilter.skip = (page - 1) * 5;
                                 dataFilter.take = 5;
-                                GetListQuestion(dataFilter, unitId);
+                                GetListQuestionGroup(dataFilter);
                             }
                         })
 
@@ -58,8 +58,7 @@
             //function paging (totalRow, callback) {
             //    var totalPage = Math.ceil(totalRow / 5);
 
-            var unitId = $("#selectCategoryId option:selected").val();
-            console.log(unitId);
+           
 
             var dataFilter = {
                 "filter": [
@@ -86,45 +85,97 @@
                 "take": 5,
                 "isExport": false
             };
-            GetListQuestionGroup(dataFilter, unitId);
+            GetListQuestionGroup(dataFilter);
 
 
 
             $(document).ready(function () {
-                $('#searchQuestionGroup').on('click', function () {
+                $('#searchQuestionBank').on('click', function () {
 
-                    var unitId = $("#selectCategoryId option:selected").val();
+                    var categoryId = $("#selectCategoryId option:selected").val();
                     var searchValue = $("#selectCategoryId option:selected").text();
-                    dataFilter.multipeFilter = searchValue;
-                    dataFilter.sort[0].field = '';
-                    $('#pagination').empty();
+                    if (categoryId != "0") {
+                        dataFilter.multipeFilter = searchValue;
+                        dataFilter.sort[0].field = '';
+                        $('#pagination').empty();
 
-                    $('#pagination').removeData("twbs-pagination");
+                        $('#pagination').removeData("twbs-pagination");
 
-                    $('#pagination').unbind("page");
-                    GetListQuestionGroup(dataFilter, unitId);
+                        $('#pagination').unbind("page");
+                        GetListQuestionGroup(dataFilter);
+                    }
+                    else {
+                        dataFilter.sort[0].field = '';
+                        dataFilter.multipeFilter = '';
+                        $('#pagination').empty();
+
+                        $('#pagination').removeData("twbs-pagination");
+
+                        $('#pagination').unbind("page");
+                        GetListQuestionGroup(dataFilter);
+                    }
+                   
 
                 });
             })
 
+      
+            $(document).on("click", ".sortQuestionGroup", function () {
+
+                var sortName = $(this).data('sortquestiongroup');
+
+            
+                dataFilter.sort[0].field = sortName;
+                if (sortName == "QuestionGroupName") {
+                    dataFilter.sort[0].asc = currentGroupNameSortAsc;
+                    GetListQuestionGroup(dataFilter);
+                    currentGroupNameSortAsc = !currentGroupNameSortAsc;
+                }
+                if (sortName == "NumberOfQuestion") {
+                    dataFilter.sort[0].asc = currentNumberSortAsc;
+                    GetListQuestionGroup(dataFilter);
+                    currentNumberSortAsc = !currentNumberSortAsc;
+                }
+                if (sortName == "CategoryName") {
+                    dataFilter.sort[0].asc = currentCategorySortAsc;
+                    GetListQuestionGroup(dataFilter);
+                    currentCategorySortAsc = !currentCategorySortAsc;
+                }
+                if (sortName == "Description") {
+                    dataFilter.sort[0].asc = currentDescriptionSortAsc;
+                    GetListQuestionGroup(dataFilter);
+                    currentDescriptionSortAsc = !currentDescriptionSortAsc;
+                }
+
+                if (sortName == "CreatedDate") {
+                    dataFilter.sort[0].asc = currentDateSortAsc;
+                    GetListQuestionGroup(dataFilter);
+                    currentDateSortAsc = !currentDateSortAsc;
+                }
+
+            })
+
             $(document).on('click', ".deletequestiongroup", function () {
-                if (confirm('Bạn có muốn xóa thành viên này không')) {
+                if (confirm('Bạn có muốn xóa nhóm câu hỏi này không ?')) {
                     var id = $(this).data('idquestiongroup');
-                    var unitId = $(this).data('categoryid');
-                    console.log(id);
+                   
 
                     $.ajax({
-                        url: "/Admin/QuestionBank/DeleteQuestionGroup?Groupid=" + id,
+                        url: "/Admin/QuestionBank/DeleteGroup?questionGroupId=" + id,
                         type: 'get',
                         success: function (response) {
                             if (response.status == 0) {
                                 window.location.href = "/home/error";
                             }
                             if (response.status == 1) {
+                                $('#pagination').empty();
 
+                                $('#pagination').removeData("twbs-pagination");
+
+                                $('#pagination').unbind("page");
                                 var filter = {};
-                                GetListMember(filter);
-                                window.location.href = "/Admin/QuestionBank/Index";
+                                GetListQuestionGroup(filter);
+                                
                             }
                         },
                         error: function (err) {
@@ -133,41 +184,6 @@
                     })
 
                 }
-            })
-
-            $(document).on("click", ".sortQuestionGroup", function () {
-
-                var sortName = $(this).data('sortquestiongroup');
-
-                var unitId = $("#selectCategoryId option:selected").val();
-                dataFilter.sort[0].field = sortName;
-                if (sortName == "FullName") {
-                    dataFilter.sort[0].asc = currentNameSortAsc;
-                    GetListMember(dataFilter, unitId);
-                    currentNameSortAsc = !currentNameSortAsc;
-                }
-                if (sortName == "DateOfBirth") {
-                    dataFilter.sort[0].asc = currentDateSortAsc;
-                    GetListMember(dataFilter, unitId);
-                    currentDateSortAsc = !currentDateSortAsc;
-                }
-                if (sortName == "Address") {
-                    dataFilter.sort[0].asc = currentAddressSortAsc;
-                    GetListMember(dataFilter, unitId);
-                    currentAddressSortAsc = !currentAddressSortAsc;
-                }
-                if (sortName == "PhoneNumber") {
-                    dataFilter.sort[0].asc = currentPhoneNumberSortAsc;
-                    GetListMember(dataFilter, unitId);
-                    currentPhoneNumberSortAsc = !currentPhoneNumberSortAsc;
-                }
-
-                if (sortName == "Email") {
-                    dataFilter.sort[0].asc = currentEmailSortAsc;
-                    GetListMember(dataFilter, unitId);
-                    currentEmailSortAsc = !currentEmailSortAsc;
-                }
-
             })
 
 

@@ -114,10 +114,14 @@
                                 window.location.href = "/home/error";
                             }
                             if (response.status == 1) {
+                                $('#pagination').empty();
 
+                                $('#pagination').removeData("twbs-pagination");
+
+                                $('#pagination').unbind("page");
                                 var filter = {};
                                 GetListUnit(filter);
-                                window.location.href="/Admin/TestUnit/Index"
+                              
                             }
                         },
                         error: function (err) {

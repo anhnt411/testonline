@@ -111,7 +111,11 @@
                                 window.location.href = "/home/error";
                             }
                             if (response.status == 1) {
-                               
+                                $('#pagination').empty();
+
+                                $('#pagination').removeData("twbs-pagination");
+
+                                $('#pagination').unbind("page");
                                 var filter = {};
                                 GetListCategory(filter);
                             }

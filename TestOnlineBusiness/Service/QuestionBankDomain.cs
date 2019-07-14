@@ -30,11 +30,12 @@ namespace TestOnlineBusiness.Service
         {
             try
             {
-                var category = await _unitOfWork.TestCategories.GetOne(x => x.Id == model.CategoryId);
 
-                var listQuestionBank =  await _unitOfWork.QuestionGroups.CheckExist(x => x.CategoryId == category.Id && x.Name == model.Name && x.IsActive == true);
 
-                if (listQuestionBank)
+                var listQuestionBank = await _unitOfWork.QuestionGroups.GetOne(x => x.CategoryId == model.CategoryId && x.CreatedBy == userId && x.IsActive == true && x.Name == model.Name);
+
+
+                if (listQuestionBank != null)
                 {
                     return false;
                 }
@@ -53,6 +54,25 @@ namespace TestOnlineBusiness.Service
 
                 _unitOfWork.QuestionGroups.Insert(questionGroup);
                 return await _unitOfWork.CommitAsync() > 0;          
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteQuestionBank(Guid questionGroupId)
+        {
+            try
+            {
+                var questionGroup = await _unitOfWork.QuestionGroups.GetById(questionGroupId);
+                if(questionGroup == null)
+                {
+                    return false;
+                }
+                questionGroup.IsActive = false;
+                _unitOfWork.QuestionGroups.Update(questionGroup);
+                return await _unitOfWork.CommitAsync() > 0;
             }catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
@@ -111,6 +131,57 @@ namespace TestOnlineBusiness.Service
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
+            }
+        }
+
+        public async Task<QuestionGroup> GetQuestionGroupDetail(Guid questionGroupId)
+        {
+            try
+            {
+                var detail = await _unitOfWork.QuestionGroups.GetById(questionGroupId);
+                return detail;
+
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<bool> UpdateQuestionBank(QuestionGroup model, string userId)
+        {
+            try
+            {
+                var questionGroup = await _unitOfWork.QuestionGroups.GetById(model.Id);
+                if(questionGroup.Name == model.Name)
+                {
+                    questionGroup.Description = model.Description;
+                    questionGroup.UpdatedBy = userId;
+                    questionGroup.UpdatedDate = DateTime.Now;
+                    _unitOfWork.QuestionGroups.Update(questionGroup);
+                    return await _unitOfWork.CommitAsync() > 0;
+                }
+                var listQuestionBank = await _unitOfWork.QuestionGroups.GetOne(x => x.CategoryId == model.CategoryId && x.CreatedBy == userId && x.IsActive == true && x.Name == model.Name);
+
+
+                if (listQuestionBank != null)
+                {
+                    return false;
+                }
+              
+                questionGroup.Name = model.Name;
+                questionGroup.Description = model.Description;
+                questionGroup.UpdatedBy = userId;
+                questionGroup.UpdatedDate = DateTime.Now;
+
+                _unitOfWork.QuestionGroups.Update(questionGroup);
+
+                return await _unitOfWork.CommitAsync() > 0;
+
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
             }
         }
     }
