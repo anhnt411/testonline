@@ -18,5 +18,7 @@ namespace TestOnlineBusiness.Interface
         Task<bool> DeleteQuestionBank(Guid questionGroupId);
 
         Task<QuestionGroup> GetQuestionGroupDetail(Guid questionGroupId);
+
+        Task<IEnumerable<QuestionGroup>> GetAll(string userId);
     }
 }

@@ -1,0 +1,108 @@
+﻿
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var list = ViewBag.ListQuestionGroup;
+}
+
+
+@section title{
+    Thêm mới câu hỏi
+}
+
+@section script{
+    <script>
+        $('#selectGroupId option[value=@ViewBag.QuestionGroup.Id]').attr('selected','selected');
+    </script>
+    <script src="~/js/Plugin/ckeditor/ckeditor.js"></script>
+    <script src="~/js/Plugin/ckeditor/adapters/jquery.js"></script>
+    <script>
+        $("#questionContent").ckeditor();
+        $("#answerContent1").ckeditor();
+         $("#answerContent2").ckeditor();
+    </script>
+}
+
+
+
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <div class="form_member_main">
+        <h4 class="heading_member"><strong>Thêm Mới </strong></h4>
+        <div class="form_member">
+            @{
+                        <form id="addquestionfrm" name="addquestionFrm" role="form" enctype="multipart/form-data">
+
+                            <div> <span> Nhóm câu hỏi </span> <span style="color:red;">*</span></div>
+                            <div class="dropdown">
+                                <select name="QuestionGroupId" id="selectGroupId">
+                                    @{
+                                        foreach (var item in list)
+                                        {
+
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+
+                            </div>
+
+                            <div> <span> Loại câu hỏi</span> <span style="color:red;">*</span></div>
+                            <div class="dropdown">
+                                <select name="QuestionTypeKey" id="selectGroupId">
+                                    <option value="1" selected> Chọn một </option>
+                                    <option value="2"> Chọn nhiều </option>
+                                </select>
+
+                            </div>
+
+                            <div class="editor">
+                                <div class="editor_content">
+                                    <span> Nội dung câu hỏi </span> <span style="color:red;">*</span>
+                                </div>
+                                <textarea id="questionContent" name="Description"></textarea>
+                                <hr />
+                            </div>
+                         
+                            <div class="editor">
+                                <div class="editor_content">
+                                    <span> Đáp án A </span> <span style="color:red;">*</span>
+                                </div>
+                                <textarea id="answerContent1" name="Content" class="textarea"></textarea>
+                                <select name="IsCorrect" class="isCorrect">
+                                    <option value="false" selected>Sai</option>
+                                    <option value="true">Đúng</option>
+                                </select>
+                                <br />
+                                <button class="addanswer">+</button><button class="removeanswer">-</button>
+                                <hr />
+                            </div>
+                            
+                            <div class="editor">
+                                <div class="editor_content">
+                                    <span> Đáp án B </span> <span style="color:red;">*</span>
+                                </div>
+                                <textarea id="answerContent2" name="Content"></textarea>
+                                <select name="IsCorrect" class="isCorrect">
+                                    <option value="false" selected>Sai</option>
+                                    <option value="true">Đúng</option>
+                                </select>
+                                <br />
+                                <button class="addanswer">+</button><button class="removeanswer">-</button>
+                                <hr />
+                            </div>
+                          
+                            
+
+                            <input type="submit" value="Xác nhận" name="submit" class="txt2Member">
+                            <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListMember" data-memberunitid="@ViewBag.QuestionGroup.Id">
+
+                        </form>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-md-2>"></div>
+

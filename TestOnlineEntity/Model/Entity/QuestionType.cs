@@ -11,6 +11,8 @@ namespace TestOnlineEntity.Model.Entity
     {
         [Key]
         public Guid Id { get; set; }
+
+        public int TypeKey { get; set; }
         [Required]
         public string Name { get; set; }
     }

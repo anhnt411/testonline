@@ -221,3 +221,26 @@ ul.navbar-nav.ml-auto.ml-md-0 {
 .namequestiongroup {
     margin-top: 8px;
 }
+
+select#selectGroupId {
+    width: 217px;
+    height: 35px;
+}
+
+button#searchQuestion {
+    margin-top: -5px;
+}
+
+hr{
+    border: 1px solid red;
+}
+
+select.isCorrect {
+    border: 1px solid red;
+    margin-top: 3px;
+}
+
+.editor button {
+    width: 31px;
+    margin-top: 6px;
+}

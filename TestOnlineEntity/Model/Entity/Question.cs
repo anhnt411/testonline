@@ -13,11 +13,11 @@ namespace TestOnlineEntity.Model.Entity
         [Key]
         public Guid Id { get; set; }
 
-        public Guid QuestionTypeId { get; set; }
+        public int QuestionTypeKey { get; set; }
 
         public Guid QuestionGroupId { get; set; }
 
-        public Guid? ExamId { get; set; }
+      
         [Required]
         public string Description { get; set; }
 

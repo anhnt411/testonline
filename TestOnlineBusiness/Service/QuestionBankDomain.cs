@@ -80,6 +80,24 @@ namespace TestOnlineBusiness.Service
             }
         }
 
+        public async Task<IEnumerable<QuestionGroup>> GetAll(string userId)
+        {
+            try
+            {
+                var listQuestionGroup = await _unitOfWork.QuestionGroups.Get(x => x.IsActive == true && x.CreatedBy == userId);
+                if(listQuestionGroup == null)
+                {
+                    return null;
+                }
+                return listQuestionGroup;
+
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
         public  async Task<IEnumerable<QuestionGroupViewModel>> GetListQuestionGroup(FilterModel filter, string userId)
         {
             try

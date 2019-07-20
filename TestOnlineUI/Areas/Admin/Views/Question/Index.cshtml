@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    //TempData["success"] = TempData["updatesuccess"];
+    var list = ViewBag.ListQuestionGroup;
+    TempData["success"] = TempData["updatequestionsuccess"];
+}
+
+@section title{
+    Danh sách câu hỏi
+
+
+}
+
+@section script{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
+    <script src="~/js/member.js"></script>
+    <script>
+          $('#selectGroupId option[value=@ViewBag.QuestionGroup.Id]').attr('selected','selected');
+    </script>
+
+}
+
+<div class="row">
+    <div class="col-md-5">
+        <a href="~/Admin/Question/Add?groupQuestionId=@ViewBag.QuestionGroup.Id" class="btn btn-danger">Thêm mới</a>
+        <a href="~/Admin/Question/AddListQuestion?groupQuestionId=@ViewBag.QuestionGroup.Id" class="btn btn-danger">Thêm mới câu hỏi từ file Excel</a>
+    </div>
+    <div class="col-md-3"></div>
+    <div class="col-md-4">
+        <select name="QuestionGroupId" id="selectGroupId">
+            @{
+                foreach (var item in list)
+                {
+
+                    <option value="@item.Id">@item.Name</option>
+                }
+            }
+        </select>
+        <button class="btn btn-danger" id="searchQuestion">Tìm kiếm</button>
+    </div>
+
+</div>
+
+
+
+<div id="listQuestion">
+</div>
+<div id="pagination" class="pagination"></div>
+
