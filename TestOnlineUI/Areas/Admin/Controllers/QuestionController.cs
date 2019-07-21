@@ -61,5 +61,18 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             ViewBag.ListQuestionGroup = result.ToList();
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(string Description)
+        {
+            try
+            {
+                return Content("OK");
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }
 }

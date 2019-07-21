@@ -25,6 +25,7 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="ImageUpload\" />
     <Folder Include="Views\User\" />
+    <Folder Include="wwwroot\img\CkEditorImg\" />
     <Folder Include="wwwroot\js\Plugin\" />
     <Folder Include="wwwroot\upload_img\" />
   </ItemGroup>

@@ -222,7 +222,7 @@ ul.navbar-nav.ml-auto.ml-md-0 {
     margin-top: 8px;
 }
 
-select#selectGroupId {
+select#selectGroupId,select#selectType {
     width: 217px;
     height: 35px;
 }

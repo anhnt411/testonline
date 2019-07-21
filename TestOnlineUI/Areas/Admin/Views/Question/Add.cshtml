@@ -17,11 +17,9 @@
     </script>
     <script src="~/js/Plugin/ckeditor/ckeditor.js"></script>
     <script src="~/js/Plugin/ckeditor/adapters/jquery.js"></script>
-    <script>
-        $("#questionContent").ckeditor();
-        $("#answerContent1").ckeditor();
-         $("#answerContent2").ckeditor();
-    </script>
+    <script src="~/js/question.js"></script>
+      
+    
 }
 
 
@@ -33,7 +31,7 @@
         <h4 class="heading_member"><strong>Thêm Mới </strong></h4>
         <div class="form_member">
             @{
-                        <form id="addquestionfrm" name="addquestionFrm" role="form" enctype="multipart/form-data">
+                        <form method="post" action="~/Admin/Question/Add" id="addquestionfrm" name="addquestionFrm" role="form" enctype="multipart/form-data">
 
                             <div> <span> Nhóm câu hỏi </span> <span style="color:red;">*</span></div>
                             <div class="dropdown">
@@ -51,7 +49,7 @@
 
                             <div> <span> Loại câu hỏi</span> <span style="color:red;">*</span></div>
                             <div class="dropdown">
-                                <select name="QuestionTypeKey" id="selectGroupId">
+                                <select name="QuestionTypeKey" id="selectType">
                                     <option value="1" selected> Chọn một </option>
                                     <option value="2"> Chọn nhiều </option>
                                 </select>
@@ -66,33 +64,36 @@
                                 <hr />
                             </div>
                          
-                            <div class="editor">
-                                <div class="editor_content">
-                                    <span> Đáp án A </span> <span style="color:red;">*</span>
+                            <div class="answer_content">
+                                <div class="editor">
+                                    <div class="editor_content">
+                                        <span> Đáp án A </span> <span style="color:red;">*</span>
+                                    </div>
+                                    <textarea id="answerContent1" name="Content" class="ckeditor"></textarea>
+                                    <select name="IsCorrect" class="isCorrect">
+                                        <option value="false" selected>Sai</option>
+                                        <option value="true">Đúng</option>
+                                    </select>
+                                    <br />
+                                    <button class="addanswer">+</button><button class="removeanswer">-</button>
+                                    <hr />
                                 </div>
-                                <textarea id="answerContent1" name="Content" class="textarea"></textarea>
-                                <select name="IsCorrect" class="isCorrect">
-                                    <option value="false" selected>Sai</option>
-                                    <option value="true">Đúng</option>
-                                </select>
-                                <br />
-                                <button class="addanswer">+</button><button class="removeanswer">-</button>
-                                <hr />
-                            </div>
-                            
-                            <div class="editor">
-                                <div class="editor_content">
-                                    <span> Đáp án B </span> <span style="color:red;">*</span>
+
+                                <div class="editor">
+                                    <div class="editor_content">
+                                        <span> Đáp án B </span> <span style="color:red;">*</span>
+                                    </div>
+                                    <textarea id="answerContent2" name="Content" class="ckeditor"></textarea>
+                                    <select name="IsCorrect" class="isCorrect">
+                                        <option value="false" selected>Sai</option>
+                                        <option value="true">Đúng</option>
+                                    </select>
+                                    <br />
+                                    <button class="addanswer">+</button><button class="removeanswer">-</button>
+                                    <hr />
                                 </div>
-                                <textarea id="answerContent2" name="Content"></textarea>
-                                <select name="IsCorrect" class="isCorrect">
-                                    <option value="false" selected>Sai</option>
-                                    <option value="true">Đúng</option>
-                                </select>
-                                <br />
-                                <button class="addanswer">+</button><button class="removeanswer">-</button>
-                                <hr />
                             </div>
+                          
                           
                             
 
