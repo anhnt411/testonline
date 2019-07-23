@@ -31,7 +31,7 @@
         <h4 class="heading_member"><strong>Thêm Mới </strong></h4>
         <div class="form_member">
             @{
-                        <form method="post"  id="addquestionfrm" name="addquestionFrm" role="form" enctype="multipart/form-data">
+                        <div  id="addquestionfrm" name="addquestionFrm" role="form" enctype="multipart/form-data">
 
                             <div> <span> Nhóm câu hỏi </span> <span style="color:red;">*</span></div>
                             <div class="dropdown">
@@ -60,7 +60,7 @@
                                 <div class="editor_content">
                                     <span> Nội dung câu hỏi </span> <span style="color:red;">*</span>
                                 </div>
-                                <textarea id="questionContent" name="Description"></textarea>
+                                <textarea id="questionContent" name="Description" ></textarea>
                                 <hr />
                             </div>
                          
@@ -97,10 +97,10 @@
                           
                             
 
-                            <input type="submit" value="Xác nhận" name="submit" class="txt2Member">
+                            <input type="button" id="addQuestionBtn" value="Xác nhận" name="submit" class="txt2Member">
                             <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListMember" data-memberunitid="@ViewBag.QuestionGroup.Id">
 
-                        </form>
+                        </div>
             }
         </div>
     </div>

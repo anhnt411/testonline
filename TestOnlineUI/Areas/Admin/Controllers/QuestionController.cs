@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TestOnlineBusiness.Interface;
 using TestOnlineEntity.Model.ViewModel;
+using TestOnlineModel.ViewModel.Admin;
 
 namespace TestOnlineUI.Areas.Admin.Controllers
 {
@@ -63,11 +64,11 @@ namespace TestOnlineUI.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(string Description)
+        public async Task<IActionResult> Add(QuestionViewModel question)
         {
             try
             {
-                return Content("OK");
+                return null;
             }
             catch (Exception)
             {
