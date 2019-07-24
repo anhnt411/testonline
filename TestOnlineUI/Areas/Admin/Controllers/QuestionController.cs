@@ -63,12 +63,43 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AddListQuestion(Guid groupQuestionId)
+        {
+            var user = await _userManager.GetUserAsync(this.User);
+            var questionGroup = await _bank.GetQuestionGroupDetail(groupQuestionId);
+            if (questionGroup == null)
+            {
+                return View("error.cshtml");
+            }
+
+            ViewBag.QuestionGroup = questionGroup;
+            var result = await _bank.GetAll(user.Id);
+            ViewBag.ListQuestionGroup = result.ToList();
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Add(QuestionViewModel question)
         {
             try
             {
-                return null;
+                var user = await _userManager.GetUserAsync(this.User);
+                var result = await _question.AddQuestion(question,user.Id);
+                TempData["success"] = "Thêm mới câu hỏi thành công";
+                if (result)
+                {
+                    return Json(new
+                    {
+                        status = 1
+                    });
+                }
+
+
+                return Json(new
+                {
+                    status = 0
+                }); ;
             }
             catch (Exception)
             {

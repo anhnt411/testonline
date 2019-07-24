@@ -4,7 +4,38 @@
             question.registerEvent();
         },
         registerEvent: function () {
-         
+
+            var displayMessage = function (message, msgType) {
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "positionClass": "toast-top-right",
+                    "onClick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "8000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                toastr[msgType](message);
+            };
+
+            if ($('#success').val()) {
+                displayMessage($('#success').val(), 'success');
+            }
+            if ($('#info').val()) {
+                displayMessage($('#info').val(), 'info');
+            }
+            if ($('#warning').val()) {
+                displayMessage($('#warning').val(), 'warning');
+            }
+            if ($('#error').val()) {
+                displayMessage($('#error').val(), 'error');
+            }
+
             function toLetters(num) {
                 "use strict";
                 var mod = num % 26,
@@ -78,14 +109,19 @@
                 if (checkValidQuestion() == true) {
                     var questionContent = CKEDITOR.instances['questionContent'].getData();
                     var questionGroupId = $('#selectGroupId').val();
-                    var questionTypeId = $('selectType').val();
+                    var questionTypeId = $('#selectType').val();
                     var listAnswer = [];
-                    var listCkeditor = $('.ckeditor');
+                   
                     var listisCorrect = $('.isCorrect');
-                    var count = listCkeditor.length;
+                    var listId = [];
+                    $('.ckeditor').each(function () {
+                        listId.push($(this).attr('id'));
+                    });
+                    var count = listisCorrect.length;
                     for (i = 0; i < count; i++) {
-                        var content = CKEDITOR.instances[listCkeditor[0].attr('id')].getData();
-                        var iscorrect = $('#' + listisCorrect[0].attr('id')).val();
+                   
+                        var content = CKEDITOR.instances[listId[i]].getData();
+                        var iscorrect = $(listisCorrect[i]).val();
                         var item = {
                             'Description': content,
                             'IsCorrect': iscorrect
@@ -104,26 +140,21 @@
                         data: { question: object },
                         dataType: 'json',
                         type: 'post',
-                        beforeSend: function () {
-                            $('.loader').show();
-                        },
-                        complete: function () {
-                            $('.loader').hide();
-                        },
                         success: function (res) {
-                            console.log(res);
-                            if (res.status == "-2") {
-                                displayMessage('Có lỗi xảy ra', 'error')
-                            }
-
+                            
+                          
                             if (res.status == "0") {
-                                displayMessage('Có lỗi xảy ra', 'warning')
+                                console.log(res);
                             }
                             if (res.status == "1") {
-                                $('#Password').val('');
-                                $('#NewPassword').val('');
-                                $('#ConfirmNewPassword').val('');
-                                displayMessage('Thay đổi mật khẩu thành công', 'success')
+                               
+                                CKEDITOR.instances['questionContent'].setData('');
+
+                                for ( i = 0; i < count ; i++){
+                                 CKEDITOR.instances[listId[i]].setData('');
+                                }
+
+                                displayMessage('Thêm mới câu hỏi thành công', 'success')
 
                             }
                         }

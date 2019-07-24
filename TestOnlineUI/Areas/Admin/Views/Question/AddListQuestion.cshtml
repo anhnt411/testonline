@@ -1,0 +1,55 @@
+﻿
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var list = ViewBag.ListQuestionGroup;
+}
+
+
+@section title{
+    Thêm mới danh sách câu hỏi
+}
+
+@section script{
+    <script>
+        $('#selectGroupId option[value=@ViewBag.QuestionGroup.Id]').attr('selected','selected');
+    </script>
+    <script src="~/js/question.js"></script>
+
+
+}
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <div class="form_member_main">
+        <h4 class="heading_member"><strong>Thêm Mới </strong></h4>
+        <div class="form_member">
+            @{
+                        <form method="post" action="~/Admin/Question/AddList" id="addquestionfrm" name="addquestionFrm" role="form" enctype="multipart/form-data">
+
+                            <div> <span> Nhóm câu hỏi </span> <span style="color:red;">*</span></div>
+                            <div class="dropdown">
+                                <select name="QuestionGroupId" id="selectGroupId">
+                                    @{
+                                        foreach (var item in list)
+                                        {
+
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+
+                            </div>
+
+                            <div class="fileExcel">  Chọn file <span style="color:red;">*</span> </div><div> <input type="file" name="file"> </div>
+                            <input type="submit"  value="Xác nhận" name="submit" class="txt2Member">
+                            <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListGroup" data-memberunitid="@ViewBag.QuestionGroup.Id">
+
+                        </form>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-md-2>"></div>
+
