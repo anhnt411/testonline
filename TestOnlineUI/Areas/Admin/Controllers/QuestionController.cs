@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -102,6 +103,19 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 }); ;
             }
             catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddListQuestion(Guid questionGroupId, IFormFile file)
+        {
+            try
+            {
+                var result = await _question.AddListQuestion(questionGroupId, file);
+                return null;
+            }catch(Exception ex)
             {
                 return null;
             }

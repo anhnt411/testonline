@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +24,43 @@ namespace TestOnlineBusiness.Service
         {
             this._unitOfWork = unitOfWork;
             this._logger = logger;
+        }
+
+        public async Task<bool> AddListQuestion(Guid questiongroupId, IFormFile file, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+
+                    using (var stream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(stream, cancellationToken);
+                        using (var package = new ExcelPackage(stream))
+                        {
+                            ExcelWorksheet worksheet = package.Workbook.Worksheets["Sheet1"];
+                            var rowCount = worksheet.Dimension.Rows;
+                            var image = worksheet.Drawings.Count;
+                            for (int row = 3; row <= rowCount; row++)
+                            {
+                                var testValue = worksheet.Cells[row, 1].Value;
+                                var testValue2 = worksheet.Cells[row, 2].Value;
+                                var valueDate = (worksheet.Cells[row, 1].Value == null) ? null : (worksheet.Cells[row, 5].Value);
+
+                            }
+                        }
+                        scope.Complete();
+
+                    }
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
+            }
+          
         }
 
         public async Task<bool> AddQuestion(QuestionViewModel viewModel,string userId, CancellationToken cancellationToken = default)
