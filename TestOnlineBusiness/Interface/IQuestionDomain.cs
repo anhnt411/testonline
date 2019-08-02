@@ -11,6 +11,6 @@ namespace TestOnlineBusiness.Interface
     public interface IQuestionDomain
     {
         Task<bool> AddQuestion(QuestionViewModel viewModel,string userId, CancellationToken cancellationToken = default(CancellationToken));
-        Task<bool> AddListQuestion(Guid questiongroupId, IFormFile file, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> AddListQuestion(Guid questiongroupId, IFormFile file,string userId, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

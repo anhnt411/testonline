@@ -244,3 +244,7 @@ select.isCorrect {
     width: 31px;
     margin-top: 6px;
 }
+
+label#file-error {
+    display: block;
+}

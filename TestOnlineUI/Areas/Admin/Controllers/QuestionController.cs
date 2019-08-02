@@ -100,7 +100,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 return Json(new
                 {
                     status = 0
-                }); ;
+                }); 
             }
             catch (Exception)
             {
@@ -113,10 +113,35 @@ namespace TestOnlineUI.Areas.Admin.Controllers
         {
             try
             {
-                var result = await _question.AddListQuestion(questionGroupId, file);
-                return null;
-            }catch(Exception ex)
+                var user = await _userManager.GetUserAsync(this.User);
+                var result = await _question.AddListQuestion(questionGroupId, file,user.Id);
+              
+                var questionGroup = await _bank.GetQuestionGroupDetail(questionGroupId);
+                if (questionGroup == null)
+                {
+                    return View("error.cshtml");
+                }
+
+                ViewBag.QuestionGroup = questionGroup;
+                var result1 = await _bank.GetAll(user.Id);
+                ViewBag.ListQuestionGroup = result1.ToList();
+                if (result)
+                {
+                    TempData["success"] = "Thêm mới danh sách câu hỏi thành công";
+
+                }
+                else
+                {
+                    TempData["error"] = "Xảy ra lỗi";
+                }
+                return View();
+
+
+
+            }
+            catch(Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return null;
             }
         }

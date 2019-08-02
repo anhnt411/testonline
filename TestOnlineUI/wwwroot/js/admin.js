@@ -100,6 +100,22 @@
                     }
                 })
 
+                $('#addlistquestionfrm').validate({
+                    rules: {
+
+                        'file': {
+                            extension: "xls|xlsx"
+                        }
+                    },
+                    messages: {
+
+                        'file': {
+
+                            extension: 'File không hợp lệ'
+                        }
+                    }
+                })
+
                 $('#updateCategoryFrm').validate({
                     rules: {
                         'Name': {
@@ -349,7 +365,91 @@
                 });
             })
 
-            
+            function checkValidQuestion() {
+                var k = 1;
+                var questionContent = $('.ckeditor');
+                questionContent.each(function () {
+                    var id = $(this).attr('id');
+
+                    var value = CKEDITOR.instances[id].getData();
+
+                    if (value == "") {
+                        k = 0;
+                        return false;
+                    }
+
+                })
+                if (k == 0) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+
+            }
+
+            $(document).on('click', '#addQuestionBtn', function () {
+
+                if (checkValidQuestion() == false) {
+                    alert('Vui lòng điền đầy đủ câu hỏi và đáp án');
+                }
+                if (checkValidQuestion() == true) {
+                    var questionContent = CKEDITOR.instances['questionContent'].getData();
+                    var questionGroupId = $('#selectGroupId').val();
+                    var questionTypeId = $('#selectType').val();
+                    var listAnswer = [];
+
+                    var listisCorrect = $('.isCorrect');
+                    var listId = [];
+                    $('.ckeditor').each(function () {
+                        listId.push($(this).attr('id'));
+                    });
+                    var count = listisCorrect.length;
+                    for (i = 0; i < count; i++) {
+
+                        var content = CKEDITOR.instances[listId[i]].getData();
+                        var iscorrect = $(listisCorrect[i]).val();
+                        var item = {
+                            'Description': content,
+                            'IsCorrect': iscorrect
+                        };
+                        listAnswer.push(item);
+                    }
+                    var object = {
+                        'QuestionTypeKey': questionTypeId,
+                        'QuestionGroupId': questionGroupId,
+                        'Description': questionContent,
+                        'Answers': listAnswer
+                    };
+
+                    $.ajax({
+                        url: '/Admin/Question/Add',
+                        data: { question: object },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function (res) {
+
+
+                            if (res.status == "0") {
+                                displayMessage('Xảy ra lỗi , chắc chắn rằng câu hỏi của bạn là hợp lệ', 'error')
+                            }
+                            if (res.status == "1") {
+
+                                CKEDITOR.instances['questionContent'].setData('');
+
+                                for (i = 0; i < count; i++) {
+                                    CKEDITOR.instances[listId[i]].setData('');
+                                }
+
+                                displayMessage('Thêm mới câu hỏi thành công', 'success')
+
+                            }
+                        }
+                    })
+                }
+
+
+            })
 
             $(document).ready(function () {
                 $('#backListCategory').on('click', function () {
@@ -409,6 +509,8 @@
                 }
             })
         }
+
+         
     }
     adminjs.init();
 });

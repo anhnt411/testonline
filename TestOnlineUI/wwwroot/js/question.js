@@ -5,36 +5,36 @@
         },
         registerEvent: function () {
 
-            var displayMessage = function (message, msgType) {
-                toastr.options = {
-                    "closeButton": true,
-                    "debug": false,
-                    "positionClass": "toast-top-right",
-                    "onClick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "8000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                };
-                toastr[msgType](message);
-            };
+            //var displayMessage = function (message, msgType) {
+            //    toastr.options = {
+            //        "closeButton": true,
+            //        "debug": false,
+            //        "positionClass": "toast-top-right",
+            //        "onClick": null,
+            //        "showDuration": "300",
+            //        "hideDuration": "1000",
+            //        "timeOut": "8000",
+            //        "extendedTimeOut": "1000",
+            //        "showEasing": "swing",
+            //        "hideEasing": "linear",
+            //        "showMethod": "fadeIn",
+            //        "hideMethod": "fadeOut"
+            //    };
+            //    toastr[msgType](message);
+            //};
 
-            if ($('#success').val()) {
-                displayMessage($('#success').val(), 'success');
-            }
-            if ($('#info').val()) {
-                displayMessage($('#info').val(), 'info');
-            }
-            if ($('#warning').val()) {
-                displayMessage($('#warning').val(), 'warning');
-            }
-            if ($('#error').val()) {
-                displayMessage($('#error').val(), 'error');
-            }
+            //if ($('#success').val()) {
+            //    displayMessage($('#success').val(), 'success');
+            //}
+            //if ($('#info').val()) {
+            //    displayMessage($('#info').val(), 'info');
+            //}
+            //if ($('#warning').val()) {
+            //    displayMessage($('#warning').val(), 'warning');
+            //}
+            //if ($('#error').val()) {
+            //    displayMessage($('#error').val(), 'error');
+            //}
 
             function toLetters(num) {
                 "use strict";
@@ -101,68 +101,7 @@
 
             });
 
-            $(document).on('click', '#addQuestionBtn', function () {
-              
-                if (checkValidQuestion() == false) {
-                    alert('Vui lòng điền đầy đủ câu hỏi và đáp án');
-                }
-                if (checkValidQuestion() == true) {
-                    var questionContent = CKEDITOR.instances['questionContent'].getData();
-                    var questionGroupId = $('#selectGroupId').val();
-                    var questionTypeId = $('#selectType').val();
-                    var listAnswer = [];
-                   
-                    var listisCorrect = $('.isCorrect');
-                    var listId = [];
-                    $('.ckeditor').each(function () {
-                        listId.push($(this).attr('id'));
-                    });
-                    var count = listisCorrect.length;
-                    for (i = 0; i < count; i++) {
-                   
-                        var content = CKEDITOR.instances[listId[i]].getData();
-                        var iscorrect = $(listisCorrect[i]).val();
-                        var item = {
-                            'Description': content,
-                            'IsCorrect': iscorrect
-                        };
-                        listAnswer.push(item);
-                    }
-                    var object = {
-                        'QuestionTypeKey': questionTypeId,
-                        'QuestionGroupId': questionGroupId,
-                        'Description': questionContent,
-                        'Answers': listAnswer
-                    };
-
-                    $.ajax({
-                        url: '/Admin/Question/Add',
-                        data: { question: object },
-                        dataType: 'json',
-                        type: 'post',
-                        success: function (res) {
-                            
-                          
-                            if (res.status == "0") {
-                                console.log(res);
-                            }
-                            if (res.status == "1") {
-                               
-                                CKEDITOR.instances['questionContent'].setData('');
-
-                                for ( i = 0; i < count ; i++){
-                                 CKEDITOR.instances[listId[i]].setData('');
-                                }
-
-                                displayMessage('Thêm mới câu hỏi thành công', 'success')
-
-                            }
-                        }
-                    })
-                }
-                
-               
-            })
+          
 
 
 
@@ -182,28 +121,7 @@
                                 </div>`;
             }
 
-            function checkValidQuestion() {
-                var k = 1;
-                var questionContent = $('.ckeditor');
-                questionContent.each(function () {
-                    var id = $(this).attr('id');
-                  
-                    var value = CKEDITOR.instances[id].getData();
-
-                    if (value == "") {
-                        k = 0;
-                        return false;
-                    }
-                   
-                })
-                if (k == 0) {
-                    return false;
-                }
-                else {
-                    return true;
-                }
-              
-            }
+           
          
 
             function toLetters(num) {

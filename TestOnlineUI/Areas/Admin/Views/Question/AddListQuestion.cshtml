@@ -26,7 +26,7 @@
         <h4 class="heading_member"><strong>Thêm Mới </strong></h4>
         <div class="form_member">
             @{
-                        <form method="post" action="~/Admin/Question/AddListQuestion" id="addquestionfrm" name="addquestionFrm" role="form" enctype="multipart/form-data">
+                        <form method="post" action="~/Admin/Question/AddListQuestion" id="addlistquestionfrm" name="addlistquestionFrm" role="form" enctype="multipart/form-data">
 
                             <div> <span> Nhóm câu hỏi </span> <span style="color:red;">*</span></div>
                             <div class="dropdown">
@@ -42,7 +42,7 @@
 
                             </div>
 
-                            <div class="fileExcel">  Chọn file <span style="color:red;">*</span> </div><div> <input type="file" name="file"> </div>
+                            <div class="fileExcel">  Chọn file <span style="color:red;">*</span> </div><div> <input type="file" name="file"> <br /> </div>
                             <input type="submit"  value="Xác nhận" name="submit" class="txt2Member">
                             <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListGroup" data-memberunitid="@ViewBag.QuestionGroup.Id">
 
