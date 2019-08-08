@@ -248,3 +248,7 @@ select.isCorrect {
 label#file-error {
     display: block;
 }
+
+.row.table.question {
+    margin-top: 20px;
+}

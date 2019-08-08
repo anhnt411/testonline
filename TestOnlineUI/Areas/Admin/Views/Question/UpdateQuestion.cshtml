@@ -1,0 +1,163 @@
+﻿@using TestOnlineModel.ViewModel.Admin
+@model QuestionDetailViewModel
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var list = ViewBag.ListQuestionGroup;
+    var listAnswer = Model.Answers.ToList();
+    int i = 0;
+}
+
+
+@section title{
+    Thêm mới câu hỏi
+}
+
+@section script{
+    <script>
+        $('#selectGroupId option[value=@Model.QuestionGroupId]').attr('selected', 'selected');
+        $('#selectType option[value=@Model.QuestionTypeKey]').attr('selected', 'selected');
+    </script>
+    <script src="~/js/Plugin/ckeditor/ckeditor.js"></script>
+    <script src="~/js/Plugin/ckeditor/adapters/jquery.js"></script>
+    <script src="~/js/question.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+             function toLetters(num) {
+                "use strict";
+                var mod = num % 26,
+                    pow = num / 26 | 0,
+                    out = mod ? String.fromCharCode(64 + mod) : (--pow, 'Z');
+                return pow ? toLetters(pow) + out : out;
+            }
+
+              var questiontext = $('#questionmap').text();
+
+            CKEDITOR.instances['questionContent'].setData(questiontext);
+            var listId = [];
+            $('.ckeditor').each(function () {
+                listId.push($(this).attr('id'));
+            });
+            var listmap = $('.map');
+            var listname = $('.nameanswer');
+
+            for (i = 0; i < listId.length; i++) {
+                var ok = $(listmap[i]).text();
+               
+                CKEDITOR.instances[listId[i]].setData(ok);
+                $(listname[i]).text('Đáp Án ' + toLetters(i + 1))
+
+            }
+        })
+        
+
+
+    </script>
+
+
+}
+
+
+
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <div class="form_member_main">
+        <h4 class="heading_member"><strong>Cập nhật </strong></h4>
+        <div class="form_member">
+            
+                <div id="updatequestionfrm" name="updatequestionFrm" role="form" enctype="multipart/form-data">
+
+                    <div> <span> Nhóm câu hỏi </span> <span style="color:red;">*</span></div>
+                    <div class="dropdown">
+                        <select name="QuestionGroupId" id="selectGroupId">
+                            @{
+                                foreach (var item in list)
+                                {
+
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+
+                    </div>
+
+
+
+                    <div> <span> Loại câu hỏi</span> <span style="color:red;">*</span></div>
+                    <div class="dropdown">
+                        <select name="QuestionTypeKey" id="selectType">
+                            <option value="1" selected> Chọn một </option>
+                            <option value="2"> Chọn nhiều </option>
+                        </select>
+
+                    </div>
+
+                    <input type="hidden" id="questionId" value="@Model.Id" />
+                    <div class="editor">
+                        <div class="editor_content">
+                            <span> Nội dung câu hỏi </span> <span style="color:red;">*</span>
+                        </div>
+                        <div style="display:none;" id="questionmap">@Html.Raw(Model.Description)</div>
+                        <textarea id="questionContent" name="Description"></textarea>
+                        <hr />
+                    </div>
+
+                    <div class="answer_content">
+                        @foreach (var item in listAnswer)
+                        {
+                            <div class="editor">
+                                <div class="editor_content">
+                                    <span class="nameanswer"></span> <span style="color:red;">*</span>
+                                </div>
+                                 <div style="display:none;" class="map">
+                                     @Html.Raw(item.Content)
+                                 </div>
+                                    <textarea id="@item.AnswerId" name="Content" class="ckeditor"></textarea>
+                                    <select name="IsCorrect" class="isCorrect">
+                                        @{
+                                            if (item.IsCorrect)
+                                            {
+                                                <option value="false">Sai</option>
+                                                <option value="true" selected>Đúng</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="false" selected> Sai</option>
+                                                <option value="true">Đúng</option>
+                                            }
+                                        }
+
+
+                                    </select>
+                                    <br />
+                                    <button class="addanswer">+</button><button class="removeanswer">-</button>
+                                    <hr />
+                            </div>
+
+
+
+
+                             }
+                    </div>
+
+
+
+
+                    <input type="button" id="updateQuestionBtn" value="Xác nhận" name="submit" class="txt2Member">
+                    <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListMember" data-memberunitid="@Model.QuestionGroupId">
+
+                </div>
+            
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-2>"></div>
+
+

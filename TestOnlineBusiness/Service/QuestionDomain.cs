@@ -4,6 +4,8 @@ using OfficeOpenXml;
 using OfficeOpenXml.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -11,7 +13,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
+using TestOnlineBase.Constant;
 using TestOnlineBase.Helper.FileHelper;
+using TestOnlineBase.Helper.PagingHelper;
 using TestOnlineBusiness.Interface;
 using TestOnlineEntity.Interface;
 using TestOnlineEntity.Model.Entity;
@@ -101,6 +105,7 @@ namespace TestOnlineBusiness.Service
                         var answer = new Answer()
                         {
                             Id = Guid.NewGuid(),
+                        
                             Content = item.Description,
                             IsActive = true,
                             QuestionId = question.Id,
@@ -459,5 +464,128 @@ namespace TestOnlineBusiness.Service
                 return false;
             }
         }
+
+        public async Task<IEnumerable<QuestionListViewModel>> GetListQuestion(FilterModel filter, Guid questionGroupId, string userId)
+        {
+            try
+            {
+                if (filter == null)
+                {
+                    filter = new FilterModel();
+                }
+
+                if (filter.Filter == null || filter.Filter.Count == 0)
+                {
+                    filter.Filter = new List<FilterTypeModel>() { new FilterTypeModel() { Field = Constant.Filter.QuestionFilterDefault, IsActive = true } };
+                }
+
+                if (filter.Sort == null || filter.Sort.Count == 0 || string.IsNullOrEmpty(filter.Sort[0].Field))
+                {
+                    filter.Sort = new List<SortTypeModel>
+                    {
+                         new SortTypeModel {Field = Constant.Filter.QuestionSortDefault, Asc =  false, IsActive = true}
+                    };
+                }
+
+                var filterData = ApiUtils.ListToDataTable(filter.Filter);
+                var sortData = ApiUtils.ListToDataTable(filter.Sort);
+
+                var skip = filter.Skip ?? 0;
+                var take = filter.Take ?? Constant.Filter.QuestionTakeDefault;
+                var isExport = filter.IsExport ?? false;
+                if (!string.IsNullOrEmpty(filter.MultipeFilter))
+                {
+                    filterData = null;
+                }
+                SqlParameter[] prams =
+                {
+                    new SqlParameter{ParameterName = "@filter", Value = filterData , SqlDbType = SqlDbType.Structured,TypeName = "dbo.FilterType"},
+                    new SqlParameter {ParameterName = "@sort",Value = sortData, SqlDbType = SqlDbType.Structured,TypeName = "dbo.SortType"},
+                    new SqlParameter {ParameterName = "@skip",Value = skip ,DbType = DbType.Int32},
+                    new SqlParameter {ParameterName = "@take",Value = take,DbType = DbType.Int32},
+                    new SqlParameter {ParameterName = "@multipeFilter",Value = filter.MultipeFilter as Object ?? DBNull.Value,DbType = DbType.String },
+                    new SqlParameter {ParameterName = "@isExport",Value = isExport,DbType = DbType.Boolean},
+                    new SqlParameter {ParameterName = "@userId",Value = userId,DbType = DbType.String},
+                    new SqlParameter {ParameterName = "@questionGroupId",Value = questionGroupId,DbType = DbType.Guid}
+                };
+                var source = await _unitOfWork.QuestionListViewModels.Get(Constant.StoreProcedure.GET_QUESTION_LIST, prams);
+                return source;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<QuestionDetailViewModel> GetQuestionDetail(Guid questionId)
+        {
+            try
+            {
+                var question = await _unitOfWork.Questions.GetById(questionId);
+                var answer = await _unitOfWork.Answers.Get(x => x.QuestionId == question.Id && x.IsActive == true);
+                var result = new QuestionDetailViewModel()
+                {
+                    Id = questionId,
+                    Description = question.Description,
+                    QuestionGroupId = question.QuestionGroupId,
+                    QuestionTypeKey = question.QuestionTypeKey,
+                    Answers = answer.Select(x => new AnswerDetailViewModel()
+                    {
+                        AnswerId = x.Id,
+                        
+                        Content = x.Content,
+                        IsCorrect = x.IsCorrect
+                    })
+                };
+                return result;
+
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        //public async Task<QuestionDetailViewModel> GetQuestionContainer(Guid questionId)
+        //{
+        //    try
+        //    {
+        //        SqlParameter[] prams =
+        //      {
+        //            new SqlParameter{ParameterName = "@questionId", Value = questionId , DbType = DbType.Guid}
+                  
+        //        };
+
+               
+
+        //        var source = await _unitOfWork.QuestionContainerViewModels.Get(Constant.StoreProcedure.GET_QUESTION_CONTAINER2, prams);
+        //        if (!source.Any())
+        //        {
+        //            return null;
+        //        }
+               
+
+        //        QuestionDetailViewModel ck = new QuestionDetailViewModel();
+        //        ck.Id = source.FirstOrDefault().Id;
+        //        ck.QuestionGroupId = source.FirstOrDefault().QuestionGroupId;
+        //        ck.QuestionTypeKey = source.FirstOrDefault().QuestionTypeKey;
+        //        ck.Description = source.FirstOrDefault().Description;
+        //        //ck.Answers = source.GroupBy(a => new { a.AnswerId, a.Content, a.IsCorrect }).Select(b => new AnswerDetailViewModel
+        //        //{
+        //        //    AnswerId = b.Key.AnswerId,
+        //        //    Content = b.Key.Content,
+        //        //    IsCorrect = b.Key.IsCorrect
+        //        //});
+        //        return ck;
+             
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        _logger.LogError(ex, ex.Message);
+        //        return null;
+        //    }
+        //}
     }
 }

@@ -127,7 +127,7 @@
 
                                 $('#pagination').unbind("page");
                                 var filter = {};
-                                GetListMember(filter);
+                                GetListMember(filter, unitId);
                               
                             }
                         },

@@ -5,36 +5,166 @@
         },
         registerEvent: function () {
 
-            //var displayMessage = function (message, msgType) {
-            //    toastr.options = {
-            //        "closeButton": true,
-            //        "debug": false,
-            //        "positionClass": "toast-top-right",
-            //        "onClick": null,
-            //        "showDuration": "300",
-            //        "hideDuration": "1000",
-            //        "timeOut": "8000",
-            //        "extendedTimeOut": "1000",
-            //        "showEasing": "swing",
-            //        "hideEasing": "linear",
-            //        "showMethod": "fadeIn",
-            //        "hideMethod": "fadeOut"
-            //    };
-            //    toastr[msgType](message);
-            //};
+            var currentDescriptionSortAsc = true;
+            var currentQuestionTypeSortAsc = true;
+            var currentCreatedDateSortAsc = true;
+           
 
-            //if ($('#success').val()) {
-            //    displayMessage($('#success').val(), 'success');
-            //}
-            //if ($('#info').val()) {
-            //    displayMessage($('#info').val(), 'info');
-            //}
-            //if ($('#warning').val()) {
-            //    displayMessage($('#warning').val(), 'warning');
-            //}
-            //if ($('#error').val()) {
-            //    displayMessage($('#error').val(), 'error');
-            //}
+            var totalPage = 0;
+            var totalRecord = 0;
+
+
+
+
+            function GetListQuestion(objectFilter, questionGroupId) {
+                var id = '';
+                $.ajax({
+                    url: "/Admin/Question/GetListQuestion?questionGroupId=" + questionGroupId,
+                    type: 'post',
+                    data: objectFilter,
+                    success: function (response) {
+
+                        $('#listQuestion').html(response);
+                        totalRecord = $('#rows').data('totalrow');
+                        totalPage = Math.ceil(totalRecord / 5);
+                        console.log(totalPage);
+
+                        $('#pagination').twbsPagination({
+                            totalPages: totalPage,
+                            visiblePages: 5,
+                            first: '<<',
+                            prev: '<',
+                            next: '>',
+                            last: '>>',
+                            onPageClick: function (event, page) {
+
+                                dataFilter.skip = (page - 1) * 5;
+                                dataFilter.take = 5;
+                                GetListQuestion(dataFilter, questionGroupId);
+                            }
+                        })
+
+
+                    },
+                    error: function (ex) {
+                        console.log(ex);
+                    }
+                })
+
+
+            }
+
+            //function paging (totalRow, callback) {
+            //    var totalPage = Math.ceil(totalRow / 5);
+
+            var questionGroupId = $("#selectGroupId option:selected").val();
+            console.log(questionGroupId);
+
+            var dataFilter = {
+                "filter": [
+                    {
+                        "field": "",
+                        "valueString": "",
+                        "valueDateTimeFrom": "",
+                        "valueDateTimeTo": "",
+                        "valueDecimalFrom": 0,
+                        "valueDecimalTo": 0,
+                        "valueBit": false,
+                        "isActive": true
+                    }
+                ],
+                "sort": [
+                    {
+                        "field": "",
+                        "asc": '',
+                        "isActive": true
+                    }
+                ],
+                "multipeFilter": "",
+                "skip": 0,
+                "take": 5,
+                "isExport": false
+            };
+            GetListQuestion(dataFilter, questionGroupId);
+
+
+
+            $(document).ready(function () {
+                $('#searchQuestion').on('click', function () {
+
+                    var questionGroupId = $("#selectGroupId option:selected").val();
+                    var searchValue = $("#selectGroupId option:selected").text();
+                  
+                    dataFilter.sort[0].field = '';
+                    $('#pagination').empty();
+
+                    $('#pagination').removeData("twbs-pagination");
+
+                    $('#pagination').unbind("page");
+                    GetListQuestion(dataFilter, questionGroupId);
+
+                });
+            })
+
+            $(document).on('click', ".deletemember", function () {
+                if (confirm('Bạn có muốn xóa thành viên này không')) {
+                    var id = $(this).data('idmember');
+                    var questionGroupId = $("#selectGroupId option:selected").val();
+                    console.log(id);
+
+                    $.ajax({
+                        url: "/Admin/TestMember/DeleteMember?Memberid=" + id,
+                        type: 'get',
+                        success: function (response) {
+                            if (response.status == 0) {
+                                window.location.href = "/home/error";
+                            }
+                            if (response.status == 1) {
+                                $('#pagination').empty();
+
+                                $('#pagination').removeData("twbs-pagination");
+
+                                $('#pagination').unbind("page");
+                                var filter = {};
+                                GetListQuestion(filter, questionGroupId);
+
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    })
+
+                }
+            })
+
+            $(document).on("click", ".sortQuestion", function () {
+
+                var sortName = $(this).data('sortquestion');
+
+                var questionGroupId = $("#selectGroupId option:selected").val();
+                dataFilter.sort[0].field = sortName;
+                if (sortName == "Description") {
+                    dataFilter.sort[0].asc = currentDescriptionSortAsc;
+                    GetListQuestion(dataFilter, questionGroupId);
+                    currentDescriptionSortAsc = !currentDescriptionSortAsc;
+                }
+
+                if (sortName == "QuestionType") {
+                    dataFilter.sort[0].asc = currentQuestionTypeSortAsc;
+                    GetListQuestion(dataFilter, questionGroupId);
+                    currentQuestionTypeSortAsc = !currentQuestionTypeSortAsc;
+                }
+
+                if (sortName == "CreatedDate") {
+                    dataFilter.sort[0].asc = currentCreatedDateSortAsc;
+                    GetListQuestion(dataFilter, questionGroupId);
+                    currentCreatedDateSortAsc = !currentCreatedDateSortAsc;
+                }
+
+              
+
+            })
 
             function toLetters(num) {
                 "use strict";
@@ -56,7 +186,7 @@
             function renderAnswer(answer, answerId) {
                 return `<div class="editor">
                                     <div class="editor_content">
-                                        <span> ${answer} </span> <span style="color:red;">*</span>
+                                        <span class = "nameanswer"> ${answer} </span> <span style="color:red;">*</span>
                                     </div>
                                     <textarea id="${answerId}" name="Content" class="ckeditor"></textarea>
                                     <select name="IsCorrect" class="isCorrect">
@@ -108,7 +238,7 @@
             function renderAnswer(answer, answerId) {
                 return `<div class="editor">
                                     <div class="editor_content">
-                                        <span> ${answer} </span> <span style="color:red;">*</span>
+                                        <span class="nameanswer"> ${answer} </span> <span style="color:red;">*</span>
                                     </div>
                                     <textarea id="${answerId}" name="Content" class="ckeditor"></textarea>
                                     <select name="IsCorrect" class="isCorrect">

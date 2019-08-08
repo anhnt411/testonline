@@ -400,6 +400,7 @@
                     var listAnswer = [];
 
                     var listisCorrect = $('.isCorrect');
+                    var listNameAnswer= $('.nameanswer');
                     var listId = [];
                     $('.ckeditor').each(function () {
                         listId.push($(this).attr('id'));
@@ -409,7 +410,9 @@
 
                         var content = CKEDITOR.instances[listId[i]].getData();
                         var iscorrect = $(listisCorrect[i]).val();
+                        var nameanswer = $(listNameAnswer[i]).text();
                         var item = {
+                            'AnswerName': nameanswer,
                             'Description': content,
                             'IsCorrect': iscorrect
                         };

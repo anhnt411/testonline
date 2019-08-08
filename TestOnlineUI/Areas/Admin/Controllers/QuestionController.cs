@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TestOnlineBase.Helper.PagingHelper;
 using TestOnlineBusiness.Interface;
 using TestOnlineEntity.Model.ViewModel;
 using TestOnlineModel.ViewModel.Admin;
@@ -19,11 +20,12 @@ namespace TestOnlineUI.Areas.Admin.Controllers
     {
         private readonly IQuestionBankDomain _bank;
         private readonly IQuestionDomain _question;
+
         private readonly ILogger<QuestionController> _logger;
         private readonly IUserDomain _user;
         private UserManager<ApplicationUser> _userManager;
 
-        public QuestionController(IQuestionBankDomain bank, IQuestionDomain question,ILogger<QuestionController> logger,IUserDomain userDomain, UserManager<ApplicationUser> userManager)
+        public QuestionController(IQuestionBankDomain bank, IQuestionDomain question, ILogger<QuestionController> logger, IUserDomain userDomain, UserManager<ApplicationUser> userManager)
         {
             this._bank = bank;
             this._question = question;
@@ -53,6 +55,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
         {
             var user = await _userManager.GetUserAsync(this.User);
             var questionGroup = await _bank.GetQuestionGroupDetail(groupQuestionId);
+           
             if (questionGroup == null)
             {
                 return View("error.cshtml");
@@ -86,7 +89,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(this.User);
-                var result = await _question.AddQuestion(question,user.Id);
+                var result = await _question.AddQuestion(question, user.Id);
                 TempData["success"] = "Thêm mới câu hỏi thành công";
                 if (result)
                 {
@@ -100,7 +103,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 return Json(new
                 {
                     status = 0
-                }); 
+                });
             }
             catch (Exception)
             {
@@ -114,8 +117,8 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(this.User);
-                var result = await _question.AddListQuestion(questionGroupId, file,user.Id);
-              
+                var result = await _question.AddListQuestion(questionGroupId, file, user.Id);
+
                 var questionGroup = await _bank.GetQuestionGroupDetail(questionGroupId);
                 if (questionGroup == null)
                 {
@@ -139,10 +142,56 @@ namespace TestOnlineUI.Areas.Admin.Controllers
 
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetListQuestion(FilterModel model, Guid questionGroupId)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(this.User);
+                var questions = await _question.GetListQuestion(model, questionGroupId, user.Id);
+                return PartialView(questions);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return View("Error.cshtml");
+            }
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateQuestion(Guid id)
+        {
+            try
+            {
+
+                {
+                    var user = await _userManager.GetUserAsync(this.User);
+                    var question = await _question.GetQuestionDetail(id);
+                    var questiongroup = await _bank.GetQuestionGroupDetail(question.QuestionGroupId);
+                    ViewBag.Question = question;
+                    ViewBag.ListQuestionGroup = await _bank.GetAll(user.Id);
+                    if (question == null)
+                    {
+
+                        return View("Error.cshtml");
+                    }
+
+                    return View(question);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return View();
             }
         }
     }

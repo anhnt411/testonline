@@ -13,6 +13,9 @@ namespace TestOnlineBase.Constant
             public const string GET_UNITS_LIST = "sp_GetTestUnit";
             public const string GET_MEMBER_LIST = "sp_GetTestMember";
             public const string GET_QUESTION_GROUP_LIST = "sp_GetQuestionGroup";
+            public const string GET_QUESTION_LIST = "sp_GetQuestionList";
+            public const string GET_QUESTION_CONTAINER = "sp_GetQuestionDetail";
+            public const string GET_QUESTION_CONTAINER2 = "sp_GetQuestionDetail2";
 
         }
         #endregion
@@ -52,6 +55,10 @@ namespace TestOnlineBase.Constant
             public const string QuestionGroupFilterDefault = "QuestionGroupName";
             public const string QuestionGroupSortDefault = "CreatedDate";
             public const int QuestionGroupTakeDefault = 5;
+
+            public const string QuestionFilterDefault = "Description";
+            public const string QuestionSortDefault = "CreaatedDate";
+            public const int QuestionTakeDefault = 5;
 
         }
 

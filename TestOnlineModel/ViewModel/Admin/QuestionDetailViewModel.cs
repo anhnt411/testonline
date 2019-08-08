@@ -5,27 +5,28 @@ using System.Text;
 
 namespace TestOnlineModel.ViewModel.Admin
 {
-    public class QuestionViewModel
+    public class QuestionDetailViewModel
     {
-        public int QuestionTypeKey { get; set; }
+        [Key]
+        public Guid Id { get; set; }
 
         public Guid QuestionGroupId { get; set; }
 
-        [Required]
+        public int QuestionTypeKey { get; set; }
+
         public string Description { get; set; }
 
-        public IEnumerable<AnswerViewModel> Answers { get; set; }
+        public IEnumerable<AnswerDetailViewModel> Answers { get; set; }
     }
 
-    public class AnswerViewModel
+    public class AnswerDetailViewModel
     {
-        [Required]
+        public Guid AnswerId { get; set; }
+
         public string AnswerName { get; set; }
-        [Required]
-        public string Description { get; set; }
+
+        public string Content { get; set; }
 
         public bool IsCorrect { get; set; }
     }
-
-
 }
