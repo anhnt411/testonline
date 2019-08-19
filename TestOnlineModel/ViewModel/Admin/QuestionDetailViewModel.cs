@@ -25,7 +25,10 @@ namespace TestOnlineModel.ViewModel.Admin
 
         public string AnswerName { get; set; }
 
+        public int? Sequence { get; set; }
         public string Content { get; set; }
+
+        public DateTime CreatedDate { get; set; }
 
         public bool IsCorrect { get; set; }
     }

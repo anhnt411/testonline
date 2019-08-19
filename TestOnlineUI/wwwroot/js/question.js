@@ -106,14 +106,15 @@
                 });
             })
 
-            $(document).on('click', ".deletemember", function () {
-                if (confirm('Bạn có muốn xóa thành viên này không')) {
-                    var id = $(this).data('idmember');
+            $(document).on('click', ".deleteQuestion", function (e) {
+              
+                if (confirm('Bạn có muốn xóa câu hỏi này không ?')) {
+                    var id = $(this).data('idquestion');
                     var questionGroupId = $("#selectGroupId option:selected").val();
                     console.log(id);
 
                     $.ajax({
-                        url: "/Admin/TestMember/DeleteMember?Memberid=" + id,
+                        url: "/Admin/Question/Delete?id=" + id,
                         type: 'get',
                         success: function (response) {
                             if (response.status == 0) {

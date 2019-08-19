@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using TestOnlineBase.Constant;
 using System.Data.SqlClient;
+using TestOnlineEntity.Model.Entity;
 
 namespace TestOnlineUI
 {
@@ -147,6 +148,7 @@ namespace TestOnlineUI
             services.AddScoped<IQuestionBankDomain, QuestionBankDomain>();
             services.AddSingleton<TestOnlineBase.Helper.IEmailSender, EmailSender>();
             services.AddScoped<IQuestionDomain, QuestionDomain>();
+            services.AddScoped<ITestScheduleDomain,TestScheduleDomain>();
 
         }
     }

@@ -193,7 +193,7 @@ select#selectCategoryId {
     margin-left: 40px;
 }
 
-a#addQuestionBank {
+a#addQuestionBank,a#addSchedule {
     color: #fff;
 }
 
@@ -251,4 +251,12 @@ label#file-error {
 
 .row.table.question {
     margin-top: 20px;
+}
+
+i.fas.fa-list.coni {
+    width: 29%;
+}
+
+i.fas.fa-user-tie.coni {
+    width: 29%;
 }

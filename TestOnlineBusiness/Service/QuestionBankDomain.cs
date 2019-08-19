@@ -35,6 +35,7 @@ namespace TestOnlineBusiness.Service
                 var listQuestionBank = await _unitOfWork.QuestionGroups.GetOne(x => x.CategoryId == model.CategoryId && x.CreatedBy == userId && x.IsActive == true && x.Name == model.Name);
 
 
+
                 if (listQuestionBank != null)
                 {
                     return false;

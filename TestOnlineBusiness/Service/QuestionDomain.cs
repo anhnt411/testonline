@@ -105,7 +105,7 @@ namespace TestOnlineBusiness.Service
                         var answer = new Answer()
                         {
                             Id = Guid.NewGuid(),
-                        
+                            Sequence = item.Sequence,
                             Content = item.Description,
                             IsActive = true,
                             QuestionId = question.Id,
@@ -534,10 +534,11 @@ namespace TestOnlineBusiness.Service
                     Answers = answer.Select(x => new AnswerDetailViewModel()
                     {
                         AnswerId = x.Id,
-                        
+                        Sequence = x.Sequence,
+                        CreatedDate = x.CreatedDate,
                         Content = x.Content,
                         IsCorrect = x.IsCorrect
-                    })
+                    }).OrderBy(x => x.Sequence)
                 };
                 return result;
 
@@ -548,6 +549,77 @@ namespace TestOnlineBusiness.Service
             }
         }
 
+        public async Task<bool> UpdateQuestion(Guid questionid, QuestionViewModel model,string userId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                if (!CheckQuestionValid(model))
+                {
+                    return false;
+                }
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    var question = await _unitOfWork.Questions.GetById(questionid);
+                    var listanswer = await _unitOfWork.Answers.Get(x => x.QuestionId == questionid && x.IsActive == true);
+                    foreach (var item in listanswer)
+                    {
+                        item.IsActive = false;
+                        _unitOfWork.Answers.Update(item);
+                    }
+                    question.QuestionGroupId = model.QuestionGroupId;
+                    question.QuestionTypeKey = model.QuestionTypeKey;
+                    question.Description = model.Description;
+                    question.UpdatedDate = DateTime.Now;
+                    _unitOfWork.Questions.Update(question);
+
+                    var listAnswer = model.Answers;
+                    foreach (var item in listAnswer)
+                    {
+                        var answer = new Answer()
+                        {
+                            Id = Guid.NewGuid(),
+                            Sequence = item.Sequence,
+                            Content = item.Description,
+                            IsActive = true,
+                            QuestionId = question.Id,
+                            IsCorrect = item.IsCorrect,
+                            CreatedBy = userId,
+                            CreatedDate = DateTime.Now,
+                            UpdatedBy = userId,
+                            UpdatedDate = DateTime.Now
+                        };
+                        _unitOfWork.Answers.Insert(answer);
+                      
+                    }
+                     await _unitOfWork.CommitAsync();
+
+
+                    scope.Complete();
+                }
+                return true;
+               
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteQuestion(Guid questionId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var question = await _unitOfWork.Questions.GetById(questionId);
+                question.IsActive = false;
+                 _unitOfWork.Questions.Update(question);
+                return await _unitOfWork.CommitAsync() > 0;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
+            }
+        }
+
         //public async Task<QuestionDetailViewModel> GetQuestionContainer(Guid questionId)
         //{
         //    try
@@ -555,17 +627,17 @@ namespace TestOnlineBusiness.Service
         //        SqlParameter[] prams =
         //      {
         //            new SqlParameter{ParameterName = "@questionId", Value = questionId , DbType = DbType.Guid}
-                  
+
         //        };
 
-               
+
 
         //        var source = await _unitOfWork.QuestionContainerViewModels.Get(Constant.StoreProcedure.GET_QUESTION_CONTAINER2, prams);
         //        if (!source.Any())
         //        {
         //            return null;
         //        }
-               
+
 
         //        QuestionDetailViewModel ck = new QuestionDetailViewModel();
         //        ck.Id = source.FirstOrDefault().Id;
@@ -579,7 +651,7 @@ namespace TestOnlineBusiness.Service
         //        //    IsCorrect = b.Key.IsCorrect
         //        //});
         //        return ck;
-             
+
         //    }
         //    catch(Exception ex)
         //    {

@@ -19,5 +19,7 @@ namespace TestOnlineBusiness.Interface
         Task<QuestionDetailViewModel> GetQuestionDetail(Guid questionId);
         Task<bool> AddQuestion(QuestionViewModel viewModel,string userId, CancellationToken cancellationToken = default(CancellationToken));
         Task<bool> AddListQuestion(Guid questiongroupId, IFormFile file,string userId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> DeleteQuestion(Guid questionId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> UpdateQuestion(Guid questionid, QuestionViewModel model,string userId ,CancellationToken cancellationToken = default(CancellationToken));
     }
 }

@@ -24,6 +24,8 @@ namespace TestOnlineModel.ViewModel.Admin
         [Required]
         public string Description { get; set; }
 
+        public int Sequence { get; set; }
+
         public bool IsCorrect { get; set; }
     }
 

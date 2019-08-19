@@ -280,6 +280,61 @@
                     }
                 })
 
+                $('#addschedule').validate({
+                    rules: {
+                        'Name': {
+                            required: true
+                        },
+                        'Time': {
+                            required: true,
+                            digits: true,
+                            min: 10,
+                            max: 300
+                        },
+                        'TotalQuestion': {
+                            required: true,
+                            digits: true,
+                            min: 1
+                        },
+                        'Percentage': {
+                            required: true,
+                            digits: true,
+                            min: 1,
+                            max: 100,
+                        },
+                        'Description': {
+                            required: true
+                        }
+
+                        
+                    },
+                    messages: {
+                        'Name': {
+                            required: "Vui lòng nhập vào tên kì thi"
+                        },
+                        'Time': {
+                            required: 'Nhập vào thời gian thi',
+                            digits: 'Sai định dạng',
+                            min: 'Thời gian thi phải lớn hơn 10 phút',
+                            max: 'Thời gian thi phải nhỏ hơn 300 phút'
+                        },
+                        'TotalQuestion': {
+                            required: 'Nhập vào tổng số câu hỏi ',
+                            digits: 'Số câu hỏi phải là số nguyên',
+                            min: 'Số câu hỏi phải lớn hơn 1'
+                        },
+                        'Percentage': {
+                            required: 'Nhập vào phần trăm để đạt kì thi',
+                            digits: 'Sai định dạng',
+                            min: 'Phần trăm phải lớn hơn 1 và nhỏ hơn 100',
+                            max: 'Phần trăm phải lớn hơn 1 và nhỏ hơn 100',
+                        },
+                        'Description': {
+                            required: 'Vui lòng nhập vào mô tả về cuộc thi'
+                        }
+                    }
+                })
+
                
             });
 
@@ -411,9 +466,11 @@
                         var content = CKEDITOR.instances[listId[i]].getData();
                         var iscorrect = $(listisCorrect[i]).val();
                         var nameanswer = $(listNameAnswer[i]).text();
+                        var sequence = i;
                         var item = {
                             'AnswerName': nameanswer,
                             'Description': content,
+                            'Sequence': sequence,
                             'IsCorrect': iscorrect
                         };
                         listAnswer.push(item);
@@ -454,6 +511,72 @@
 
             })
 
+            $(document).on('click', '#updateQuestionBtn', function () {
+
+                if (checkValidQuestion() == false) {
+                    alert('Vui lòng điền đầy đủ câu hỏi và đáp án');
+                }
+                if (checkValidQuestion() == true) {
+                    var questionContent = CKEDITOR.instances['questionContent'].getData();
+                    var questionGroupId = $('#selectGroupId').val();
+                    var questionTypeId = $('#selectType').val();
+                    var questionId = $('#questionId').val();
+                   
+                    var listAnswer = [];
+
+                    var listisCorrect = $('.isCorrect');
+                    var listNameAnswer = $('.nameanswer');
+                    var listId = [];
+                    $('.ckeditor').each(function () {
+                        listId.push($(this).attr('id'));
+                    });
+                    var count = listisCorrect.length;
+                    for (i = 0; i < count; i++) {
+
+                        var content = CKEDITOR.instances[listId[i]].getData();
+                        var iscorrect = $(listisCorrect[i]).val();
+                        var nameanswer = $(listNameAnswer[i]).text();
+                        var sequence = i;
+                        var item = {
+                            'AnswerName': nameanswer,
+                            'Sequence': sequence,
+                            'Description': content,
+                            'IsCorrect': iscorrect
+                        };
+                        listAnswer.push(item);
+                    }
+                    var object = {
+                        'QuestionTypeKey': questionTypeId,
+                        'QuestionGroupId': questionGroupId,
+                        'Description': questionContent,
+                        'Answers': listAnswer
+                    };
+
+                    $.ajax({
+                        url: '/Admin/Question/UpdateQuestion?questionId=' + questionId,
+                        data: { question: object },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function (res) {
+
+
+                            if (res.status == "0") {
+                                displayMessage('Xảy ra lỗi , chắc chắn rằng câu hỏi của bạn là hợp lệ', 'error')
+                            }
+                            if (res.status == "1") {
+
+                               
+
+                                displayMessage('Update câu hỏi thành công', 'success')
+
+                            }
+                        }
+                    })
+                }
+
+
+            })
+
             $(document).ready(function () {
                 $('#backListCategory').on('click', function () {
                     window.location.href = '/Admin/TestCategory/Index';
@@ -479,6 +602,17 @@
                     window.location.href = '/Admin/QuestionBank/Index';
                 })
             })
+
+            $(document).ready(function () {
+               
+                $('#backListGroup').on('click', function () {
+                    var id = $(this).data('questiongroupid');
+                   
+                    window.location.href = '/Admin/Question/Index?questionGroupId='+id;
+                })
+            })
+
+         
 
             $(document).ready(function () {
 

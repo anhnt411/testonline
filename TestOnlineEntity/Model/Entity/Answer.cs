@@ -16,6 +16,7 @@ namespace TestOnlineEntity.Model.Entity
 
         public string Content { get; set; }
 
+        public int? Sequence { get; set; }
         public bool IsCorrect { get; set; }
 
         public DateTime CreatedDate { get; set; }

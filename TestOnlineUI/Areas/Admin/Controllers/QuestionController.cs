@@ -194,5 +194,62 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 return View();
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateQuestion(Guid questionId, QuestionViewModel question)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(this.User);
+                var output = await _question.UpdateQuestion(questionId, question, user.Id);
+              
+                if (output)
+                {
+                    return Json(new
+                    {
+                        status = 1
+                    });
+                }
+
+
+                return Json(new
+                {
+                    status = 0
+                });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                var result = await _question.DeleteQuestion(id);
+                if (!result)
+                {
+                    return Json(new
+                    {
+                        status = 0
+                    });
+                }
+                return Json(new
+                {
+                    status = 1
+                });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Json(new
+                {
+                    status = 0
+                });
+            }
+        }
     }
 }

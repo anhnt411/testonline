@@ -15,7 +15,9 @@ namespace TestOnlineEntity.Model.Entity
         [Required]
         public string Name { get; set; }
 
-        public string Status { get; set; }
+        public int TotalQuestion { get; set; }
+
+        public int Percentage { get; set; }
 
         public Guid TestCategoryId { get; set; }
 
@@ -27,7 +29,7 @@ namespace TestOnlineEntity.Model.Entity
 
         public string Description { get; set; }
 
-        public string FileAttach { get; set; }
+        public bool? AllowViewAnswer { get; set; }
 
         public bool IsOpen { get; set; }
 

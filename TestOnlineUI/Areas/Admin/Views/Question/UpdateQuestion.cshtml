@@ -34,7 +34,8 @@
                 return pow ? toLetters(pow) + out : out;
             }
 
-              var questiontext = $('#questionmap').text();
+            var questiontext = $('#questionmap').text();
+           
 
             CKEDITOR.instances['questionContent'].setData(questiontext);
             var listId = [];
@@ -46,7 +47,7 @@
 
             for (i = 0; i < listId.length; i++) {
                 var ok = $(listmap[i]).text();
-               
+              
                 CKEDITOR.instances[listId[i]].setData(ok);
                 $(listname[i]).text('Đáp Án ' + toLetters(i + 1))
 
@@ -101,7 +102,7 @@
                         <div class="editor_content">
                             <span> Nội dung câu hỏi </span> <span style="color:red;">*</span>
                         </div>
-                        <div style="display:none;" id="questionmap">@Html.Raw(Model.Description)</div>
+                        <div style="display:none;" id="questionmap">@Model.Description</div>
                         <textarea id="questionContent" name="Description"></textarea>
                         <hr />
                     </div>
@@ -114,7 +115,7 @@
                                     <span class="nameanswer"></span> <span style="color:red;">*</span>
                                 </div>
                                  <div style="display:none;" class="map">
-                                     @Html.Raw(item.Content)
+                                     @item.Content
                                  </div>
                                     <textarea id="@item.AnswerId" name="Content" class="ckeditor"></textarea>
                                     <select name="IsCorrect" class="isCorrect">
@@ -155,8 +156,7 @@
         </div>
     </div>
         </div>
-    </div>
-</div>
+   
 
 <div class="col-md-2>"></div>
 

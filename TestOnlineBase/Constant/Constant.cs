@@ -16,6 +16,7 @@ namespace TestOnlineBase.Constant
             public const string GET_QUESTION_LIST = "sp_GetQuestionList";
             public const string GET_QUESTION_CONTAINER = "sp_GetQuestionDetail";
             public const string GET_QUESTION_CONTAINER2 = "sp_GetQuestionDetail2";
+            public const string GET_TEST_SCHEDULE = "sp_GetListSchedule";
 
         }
         #endregion
@@ -57,9 +58,12 @@ namespace TestOnlineBase.Constant
             public const int QuestionGroupTakeDefault = 5;
 
             public const string QuestionFilterDefault = "Description";
-            public const string QuestionSortDefault = "CreaatedDate";
+            public const string QuestionSortDefault = "CreatedDate";
             public const int QuestionTakeDefault = 5;
 
+            public const string ScheduleFilterDefault = "Name";
+            public const string ScheduleSortDefault = "CreatedDate";
+            public const int ScheduleTakeDefault = 5;
         }
 
         public static class Role

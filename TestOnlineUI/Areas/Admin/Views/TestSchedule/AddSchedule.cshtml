@@ -1,0 +1,135 @@
+﻿
+@{
+
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+
+    var listCategory = ViewBag.ListCategory;
+
+
+}
+
+@section script{
+    <script>
+        $('#selectCategoryId option[value=@ViewBag.CategoryId]').attr('selected', 'selected');
+        $('.startdate').datepicker({
+            dateFormat: "dd/mm/yy",
+            changeMonth: true,
+            changeYear: true,
+            onSelect: function(selected) {
+                $(".enddate").datepicker("option", "minDate", selected);
+                
+                var tempdate = $('#startdate1').datepicker('getDate').toJSON().split('T')[0];
+               
+              
+                $('#startdate').val(tempdate);
+               
+        }
+        });
+
+         $('.enddate').datepicker({
+            dateFormat: "dd/mm/yy",
+            changeMonth: true,
+             changeYear: true,
+              onSelect: function(selected) {
+                  $(".startdate").datepicker("option", "maxdate", selected);
+                 var tempdate = $('#enddate1').datepicker('getDate').toJSON().split('T')[0];
+                
+                $('#enddate').val(tempdate);
+        }
+
+         });
+
+       
+       
+       
+
+    </script>
+}
+
+@section title{
+    Thêm mới đợt thi
+}
+
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <div class="form_member_main">
+        <h4 class="heading_member"><strong>Thêm Mới </strong></h4>
+        <div class="form_member">
+            @{
+                <form asp-controller="TestSchedule" asp-action="AddSchedule" asp-area="Admin" method="post" id="addschedule" name="addschedule" role="form" enctype="multipart/form-data">
+
+                    <div> <span> Chuyên mục </span> <span style="color:red;">*</span></div>
+                    <div class="dropdown">
+                        <select name="CategoryId" id="selectCategoryId">
+                            @{
+                                foreach (var item in listCategory)
+                                {
+
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+
+                    <div class="namequestiongroup">
+                        <span> Tên đợt thi </span> <span style="color:red;">*</span>
+                        <input type="text" placeholder="Vui lòng nhập vào tên đợt thi" name="Name" class="txtMember">
+                    </div>
+
+                    <div class="namequestiongroup">
+                        <span> Thời lượng bài thi </span> <span style="color:red;">*</span>
+                        <input type="text" placeholder="Vui lòng nhập vào thời gian làm bài" name="Time" class="txtMember">
+                    </div>
+
+                    <div class="namequestiongroup">
+                        <span> Tổng câu hỏi sẽ thi </span> <span style="color:red;">*</span>
+                        <input type="text" placeholder="Vui lòng nhập số câu hỏi của bài thi" name="TotalQuestion" class="txtMember">
+                    </div>
+
+                    <div class="namequestiongroup">
+                        <span> Phần trăm đạt bài thi </span> <span style="color:red;">*</span>
+                        <input type="text" placeholder="Phần trăm cần để đỗ bài thi" name="Percentage" class="txtMember">
+                    </div>
+
+                    <div class="namequestiongroup">
+                        <span> Mô tả về bài thi </span> <span style="color:red;">*</span>
+                        <input type="text" placeholder="Mô tả về bài thi" name="Description" class="txtMember">
+                    </div>
+
+                    <div class="namequestiongroup">
+                        <span> Cho phép thi từ ngày </span> <span style="color:red;">*</span>
+                        <input type="text" placeholder="Vui lòng nhập vào ngày bắt đầu" id="startdate1"  class="txtMember startdate">
+                        <input type="date" name="StartDate" id="startdate"  hidden/>
+                    </div>
+
+                    <div class="namequestiongroup">
+                        <span> Bài thi kết thúc vào ngày </span> <span style="color:red;">*</span>
+                        <input type="text" placeholder="Vui lòng nhập vào ngày kết thúc" id="enddate1" class="txtMember enddate">
+                        <input type="date" name="EndDate" id="enddate" hidden />
+                    </div>              
+
+                    <div>
+                        <span>Cho phép thí sinh xem đáp án sau khi thi</span>
+                        <div class="dropdown">
+                            <select name="AllowViewAnswer" id="AllowViewAnswer">
+                                <option value="true" selected>Cho phép</option>
+                                <option value="false">Không cho phép</option>
+                            </select>
+                        </div>
+                       
+                    </div>
+
+
+
+
+
+                    <input type="submit" value="Xác nhận" name="submit" class="txt2Member">
+                    <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListQuestionGroup">
+
+                </form>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-md-2>"></div>

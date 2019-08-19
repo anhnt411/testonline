@@ -340,6 +340,41 @@ namespace TestOnlineUI.Controllers
             return Json(success);
         }
 
+        [HttpPost]
+        public ActionResult UploadCKEditor(IFormFile upload, string CKEditorFuncNum, string CKEditor, string langCode)
+        {
+            if (upload.Length <= 0) return null;
+            if (!upload.IsImage())
+            {
+                var NotImageMessage = "Vui lòng chọn 1 ảnh";
+                dynamic NotImage = JsonConvert.DeserializeObject("{ 'uploaded': 0, 'error': { 'message': \"" + NotImageMessage + "\"}}");
+                return Json(NotImage);
+            }
+
+            var fileName = upload.FileName;
+
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload_img/", fileName);
+            if (System.IO.File.Exists(path))
+            {
+                var message = "Upload ảnh thành công";
+                var urlimg = $"{"/upload_img/"}{fileName}";
+                dynamic result = JsonConvert.DeserializeObject("{ 'uploaded': 1,'fileName': \"" + fileName + "\",'url': \"" + urlimg + "\", 'error': { 'message': \"" + message + "\"}}");
+                return Json(result);
+            }
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                upload.CopyTo(stream);
+
+            }
+
+            var url = $"{"/upload_img/"}{fileName}";
+            var successMessage = "Upload ảnh thành công";
+            dynamic success = JsonConvert.DeserializeObject("{ 'uploaded': 1,'fileName': \"" + fileName + "\",'url': \"" + url + "\", 'error': { 'message': \"" + successMessage + "\"}}");
+            return Json(success);
+        }
+
 
 
 

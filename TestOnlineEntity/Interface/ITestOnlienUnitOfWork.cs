@@ -39,5 +39,7 @@ namespace TestOnlineEntity.Interface
         IRepository<QuestionListViewModel> QuestionListViewModels { get; }
 
         IRepository<QuestionContainerViewModel> QuestionContainerViewModels { get; }
+
+        IRepository<TestScheduleViewModel> TestScheduleViewModels { get; }
     }
 }
