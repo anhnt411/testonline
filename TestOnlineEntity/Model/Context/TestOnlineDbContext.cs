@@ -38,6 +38,12 @@ namespace TestOnlineEntity.Model.Context
 
         public DbSet<TestSchedule> TestSchedules { get; set; }
 
+        public DbSet<ExamDetail> ExamDetails { get; set; }
+
+        public DbSet<ScheduleUser> ScheduleUsers { get; set; }
+
+        public DbSet<ExamUser> ExamUsers { get; set; }
+
         public DbSet<TestCategoryViewModel> TestCategoryViewModels { get; }
 
         public DbSet<TestUnitViewModel> TestUnitViewModels { get; }
@@ -50,6 +56,8 @@ namespace TestOnlineEntity.Model.Context
 
         public DbSet<TestScheduleViewModel> TestScheduleViewModels { get; }
         public DbSet<QuestionContainerViewModel> QuestionContainerViewModel { get; }
+
+        public DbSet<QuestionBankInfoViewModel> QuestionBankInfoViewModels { get; }
 
     }
 

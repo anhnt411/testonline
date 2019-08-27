@@ -130,6 +130,46 @@ namespace TestOnlineUI.Controllers
         {
             return View();
         }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> LoginUser(LoginViewModel viewModel, string returnUrl)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    TempData["error"] = "Sai tên tài khoản hoặc mật khẩu";
+                    return View();
+                }
+                var output = await _userDomain.Login(viewModel);
+                if (output == null)
+                {
+                    TempData["error"] = "Sai tên tài khoản hoặc mật khẩu";
+                    return View();
+                }
+                if (output.Equals("Xac thuc"))
+                {
+                    TempData["warning"] = "Vui lòng xác thực email của bạn";
+                    return View();
+                }
+                var user = (ApplicationUser)output;
+                await _signInManager.SignInAsync(user, false);
+                if (Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Index", "Home", new { area = "User" });
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                TempData["error"] = "Có lỗi xảy ra";
+                return View();
+            }
+        }
        
      
         public async Task<IActionResult> ConfirmEmail(string userId,string code)
@@ -376,7 +416,78 @@ namespace TestOnlineUI.Controllers
         }
 
 
+        public async Task<IActionResult> UpdateInfoUser()
+        {
+            var user = await _userManager.GetUserAsync(this.User);
+            if (user == null)
+            {
+                TempData["error"] = "Đã xảy ra lỗi";
+                return View();
+            }
+            var userInfo = new UserInfoViewModel()
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                FullName = user.FullName,
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber,
+                Image = user.Image
+            };
+            return View(userInfo);
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateInfoUser(UserInfoViewModel viewModel, IFormFile file)
+        {
+            var user = await _userManager.GetUserAsync(this.User);
+            var userInfo = new UserInfoViewModel()
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                FullName = user.FullName,
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber,
+                Image = user.Image
+            };
+            string imageName = null;
+
+            if (!ModelState.IsValid)
+            {
+                TempData["error"] = "Xảy ra lỗi";
+                return View(userInfo);
+            }
+            if (file != null)
+            {
+                imageName = UploadImageFile.UploadImage(file);
+            }
+
+
+            user.FullName = viewModel.FullName;
+            user.PhoneNumber = viewModel.PhoneNumber;
+            user.Address = viewModel.Address;
+            if (imageName != null)
+            {
+                user.Image = imageName;
+            }
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                TempData["success"] = "Cập nhật thông tin thành công";
+                var newUserInfo = new UserInfoViewModel()
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    FullName = user.FullName,
+                    Address = user.Address,
+                    PhoneNumber = user.PhoneNumber,
+                    Image = user.Image
+                };
+                return View(newUserInfo);
+            }
+            TempData["error"] = "Có lỗi xảy ra";
+            return View(userInfo);
+
+        }
 
     }
 }     

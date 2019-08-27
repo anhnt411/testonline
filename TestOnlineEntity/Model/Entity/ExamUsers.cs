@@ -6,21 +6,31 @@ using System.Text;
 
 namespace TestOnlineEntity.Model.Entity
 {
-    [Table("Exams")]
-    public class Exam
+    [Table("ExamUsers")]
+    public class ExamUser
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid TestScheduleId { get; set; }
+
+        public string MemberId { get; set; }
+
+        public Guid ExamId { get; set; }
 
         public string CreatedBy { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
-        public DateTime? UpdatedDate { get; set; }
+        public string Updatedby { get; set; }
 
-        public string UpdatedBy { get; set; }
+        public DateTime UpdatedDate { get; set; }
+
+        public Guid ScheduleId { get; set; }
+
+        public bool? IsAccess { get; set; }
+
+        public bool? IsSubmit { get; set; }
 
         public bool IsActive { get; set; }
     }
 }
+

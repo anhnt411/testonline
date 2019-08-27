@@ -27,7 +27,11 @@ namespace TestOnlineEntity.Service
                                      IRepository<QuestionGroupViewModel> questionGroupViewModel,
                                      IRepository<QuestionListViewModel> questionListViewModel,
                                      IRepository<QuestionContainerViewModel> questionContainerViewModel,
-                                     IRepository<TestScheduleViewModel> testScheduleViewModel
+                                     IRepository<TestScheduleViewModel> testScheduleViewModel,
+                                     IRepository<QuestionBankInfoViewModel> questionBankInfoViewModel,
+                                     IRepository<ExamDetail> examDetail,
+                                     IRepository<ScheduleUser> scheduleUser,
+                                     IRepository<ExamUser> examUser
             
                                     )
         {
@@ -48,6 +52,10 @@ namespace TestOnlineEntity.Service
             this.QuestionListViewModels = questionListViewModel;
             this.QuestionContainerViewModels = questionContainerViewModel;
             this.TestScheduleViewModels = testScheduleViewModel;
+            this.QuestionBankInfoViewModels = questionBankInfoViewModel;
+            this.ExamDetails = examDetail;
+            this.ScheduleUsers = scheduleUser;
+            this.ExamUsers = examUser;
         }
 
         public virtual IRepository<TestCategory> TestCategories { get; set; }       
@@ -59,6 +67,13 @@ namespace TestOnlineEntity.Service
         public virtual IRepository<TestSchedule> TestSchedules { get; set; }  
         public virtual IRepository<Question> Questions { get; set; }
         public virtual IRepository<ResultTest> ResultTests { get; set; }
+
+        public virtual IRepository<ExamDetail> ExamDetails { get; set; }
+
+        public virtual IRepository<ScheduleUser> ScheduleUsers { get; set; }
+
+        public virtual IRepository<ExamUser> ExamUsers { get; set; }
+
         public virtual IRepository<TestCategoryViewModel> TestCategoryViewModels { get; }
         public virtual IRepository<TestUnitViewModel> TestUnitViewModels { get; }
         public virtual IRepository<TestMemberViewModel> TestMemberViewModels { get; }
@@ -71,6 +86,8 @@ namespace TestOnlineEntity.Service
 
         public virtual IRepository<TestScheduleViewModel> TestScheduleViewModels { get; }
 
+        public virtual IRepository<QuestionBankInfoViewModel> QuestionBankInfoViewModels { get; }
+      
 
         public IDbContextTransaction BeginTransactionScope()
         {

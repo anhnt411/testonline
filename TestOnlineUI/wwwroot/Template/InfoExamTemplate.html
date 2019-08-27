@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Mail</title>
+    <style>
+        span,b{
+            color:red;
+            font-weight : bold;
+        }
+    </style>
+</head>
+<body>
+    Thư mời tham dự kì thi : <span>{{ScheduleName}}</span> <br/>
+    Thời gian diễn ra từ ngày: <b>{{StartDate}}</b>  đến <b>{{EndDate}}</b> <br />
+    Thời gian làm bài: <b>{{TotalTime}}</b> phút <br />
+    Thí sinh vui lòng truy cập vào địa chỉ : <a href="https://localhost:44380/Home/LoginUser">https://localhost:44380/Home/LoginUser</a><br />
+    Tài khoản : <span>{{UserName}}</span><br />
+    Mật khẩu : <span>{{PassWord}}</span><br />
+    Hy vọng các bạn tham gia kì thi và dành kết quả tốt nhất.
+</body>
+</html>

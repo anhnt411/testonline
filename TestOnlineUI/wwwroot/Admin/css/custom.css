@@ -260,3 +260,57 @@ i.fas.fa-list.coni {
 i.fas.fa-user-tie.coni {
     width: 29%;
 }
+
+
+.col-md-12.redexam h4 {
+    color: #5d8f3e;
+}
+
+button#createExam {
+    margin-left: 14px;
+    margin-top: 10px;
+}
+
+button#viewExam, #adduser,#viewUser {
+    margin-top: 8px;
+    margin-left: 20px;
+}
+
+ul.answerlist{
+    list-style:none;
+}
+
+.questionContent p {
+    font-style: italic;
+    color: red;
+}
+
+.question img{
+    width : 250px;
+    height : 250px;
+}
+
+.True {
+    font-style: italic;
+    color: deepskyblue;
+}
+
+.isanswercorrect p {
+    display: inline;
+}
+
+.answerlist img{
+    display:block;
+    width:250px;
+    height:250px;
+}
+
+select#selectUnit {
+    width: 190px;
+    margin-left: 10px;
+    margin-bottom:30px;
+}
+
+button#sendEmail {
+    margin-left: 13px;
+}

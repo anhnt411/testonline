@@ -28,6 +28,12 @@ namespace TestOnlineEntity.Interface
 
         IRepository<ResultTest> ResultTests { get; set; }
 
+        IRepository<ExamDetail> ExamDetails { get; set; }
+
+        IRepository<ScheduleUser> ScheduleUsers { get; set; }
+
+       IRepository<ExamUser> ExamUsers { get; set; }
+
         IRepository<TestCategoryViewModel> TestCategoryViewModels { get; }
 
         IRepository<TestUnitViewModel> TestUnitViewModels { get; }
@@ -41,5 +47,7 @@ namespace TestOnlineEntity.Interface
         IRepository<QuestionContainerViewModel> QuestionContainerViewModels { get; }
 
         IRepository<TestScheduleViewModel> TestScheduleViewModels { get; }
+
+        IRepository<QuestionBankInfoViewModel> QuestionBankInfoViewModels { get; }
     }
 }

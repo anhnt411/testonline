@@ -24,6 +24,8 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\User\Data\" />
+    <Folder Include="Areas\User\Models\" />
     <Folder Include="ImageUpload\" />
     <Folder Include="Views\User\" />
     <Folder Include="wwwroot\img\CkEditorImg\" />

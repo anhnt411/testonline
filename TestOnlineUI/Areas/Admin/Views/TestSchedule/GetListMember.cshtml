@@ -1,0 +1,134 @@
+﻿@using TestOnlineModel.ViewModel.Admin
+@model IEnumerable<TestMemberViewModel>
+
+
+<div class="row table">
+    <!-- /.panel-heading -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <input class="checkAll" type="checkbox" />
+                    </th>
+                    <th>
+                        STT
+                    </th>
+                    <th>
+                        Họ tên
+                    </th>
+                    <th>
+                        Số điện thoại
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Ngày sinh
+                    </th>
+                    <th>
+                        Địa chỉ
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody id="parentcheck">
+                @{
+                    foreach (var item in Model)
+                    {
+
+                        <tr class="rows" data-totalrow="@item.TotalRecord" id="rows">
+                            <td><input type="checkbox" data-memberid="@item.Id" class="checkmember" /></td>
+                            <td>@item.STT </td>
+                            <td>@item.FullName</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.Email</td>
+                            <td>@item.DateOfBirth</td>
+                            <td>@item.Address</td>
+
+                        </tr>
+                    }
+                }
+
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-danger" id="addgroupuser">Thêm thí sinh được chọn vào đợt thi</button>
+        <button class="btn btn-danger" id="viewUser">Xem danh sách thí sinh</button>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".checkAll").on("click", function () {
+            console.log('vao');
+            $(this)
+                .closest("table")
+                .find("tbody :checkbox")
+                .prop("checked", this.checked)
+                .closest("tr")
+                .toggleClass("selected", this.checked);
+        });
+
+        $("tbody :checkbox").on("click", function () {
+            // toggle selected class to the checkbox in a row
+            $(this)
+                .closest("tr")
+                .toggleClass("selected", this.checked);
+
+            // add selected class on check all
+            $(this).closest("table")
+                .find(".checkAll")
+                .prop("checked",
+                    $(this)
+                        .closest("table")
+                        .find("tbody :checkbox:checked").length ==
+                    $(this)
+                        .closest("table")
+                        .find("tbody :checkbox").length
+                );
+        });
+    });
+    $('#addgroupuser').on('click', function () {
+         var listchecked = [];
+         $('#parentcheck input:checked').each(function() {
+             listchecked.push($(this).data('memberid'));
+             $
+         });
+        var schedule = $('#scheduleId').val();
+        var viewModel = {
+            ScheduleId: schedule,
+            ListMember: listchecked
+        }
+          $.ajax({
+                        url: '/Admin/TestSchedule/CreateListMember',
+                        data: { viewModel: viewModel },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function (res) {
+                            if (res.status == "0") {
+                                alert('Đã xảy ra lỗi thử lại sau');
+                            }
+                            if (res.status == "1") {
+
+                                alert('Thêm mới danh sách thí sinh thành công');
+
+                            }
+                        }
+                    })
+    })
+    $(document).on('click', '#viewUser', function () {
+               var schedule = $('#scheduleId').val();
+
+                  window.location.href = '/Admin/TestSchedule/ViewListMemberDetail?scheduleId=' + schedule;
+            })
+
+         
+</script>

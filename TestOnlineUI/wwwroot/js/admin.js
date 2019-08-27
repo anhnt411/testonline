@@ -335,6 +335,8 @@
                     }
                 })
 
+                
+
                
             });
 
@@ -442,6 +444,38 @@
                 }
 
             }
+            $(document).on('click', '.deletememberschedule', function () {
+                if (confirm('Bạn có muốn xóa thí sinh này khỏi đợt thi không ?')) {
+                    var id = $(this).data('idmember');
+                    var schedule = $(this).data('schedule');
+                    var viewModel = {
+                        'ScheduleId': schedule,
+                        'MemberId': id
+                    };
+                   
+
+                    $.ajax({
+                        url: "/Admin/TestSchedule/DeleteMember",
+                        type: 'post',
+                        data: { viewmodel: viewModel },
+                        success: function (response) {
+                            if (response.status == 0) {
+                                alert('Xảy ra lỗi, thử lại sau');
+                            }
+                            if (response.status == 1) {
+                                window.location.href = "/Admin/TestSchedule/ViewListMemberDetail?scheduleId=" + schedule;
+
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    })
+
+                }
+               
+
+            })
 
             $(document).on('click', '#addQuestionBtn', function () {
 
@@ -511,6 +545,104 @@
 
             })
 
+            $(document).on('click', '#createExam', function () {
+             
+                var totalquestion = $(this).data('totalquestion');
+                var tong = 0;
+                var realnumber = $('.realnumber');
+                for (var i = 0; i < realnumber.length; i++) {
+                    tong = tong + parseInt($(realnumber[i]).val());
+                }
+              
+                if (totalquestion != tong) {
+                    alert('Số câu hỏi trong đề thi là '+ totalquestion);
+                }
+                else
+                {
+                    var scheduleId = $('#scheduleid').text();
+                    var numberexam = $('#numberExam').val();
+                    var questionGroupInfo = [];
+
+                    var list = $('.realnumber');
+                    var hidegroup = $('.hidegroupid');
+                    for (var i = 0; i < list.length; i++) {
+                        var numberquestion = $(list[i]).val();
+                        var idgroup = $(hidegroup[i]).text();
+                        var object = {
+                            QuestionGroupId: idgroup,
+                            TotalQuestion: numberquestion
+                        };
+                        questionGroupInfo.push(object);
+                    }
+                    var viewModel = {
+                        'ScheduleId': scheduleId,
+                        'TotalExam': numberexam,
+                        'QuestionGroupList': questionGroupInfo
+                    };
+
+                    $.ajax({
+                        url: '/Admin/TestSchedule/CreateExam',
+                        data: { viewModel: viewModel },
+                        dataType: 'json',
+                        type: 'post',
+                        success: function (res) {
+
+
+                            if (res.status == "0") {
+                                displayMessage('Xảy ra lỗi , vui lòng thử lại sau', 'error');
+                            }
+                            if (res.status == "1") {
+                                displayMessage('Tạo đề thi thành công', 'success');
+                               
+
+                            }
+                        }
+                    })
+                }
+            })
+
+            $(document).on('click', '#sendEmail', function () {
+                var listmember = [];
+                $('.tdmemberid').each(function () {
+                    var id = $(this).text();
+                    listmember.push(id);
+                })
+                var scheduleId = $(this).data('schedule');
+                var viewModel = {
+                    'ScheduleId': scheduleId,
+                    'ListMember': listmember
+                };
+
+                $.ajax({
+                    url: '/Admin/TestSchedule/SendEmail',
+                    data: { viewModel: viewModel },
+                    dataType: 'json',
+                    type: 'post',
+                    beforeSend: function () {
+                        $('.loader').show();
+                    },
+                    complete: function () {
+                        $('.loader').hide();
+                    },
+                    success: function (res) {
+
+
+                        if (res.status == "0") {
+                            displayMessage('Xảy ra lỗi, thử lại sau', 'error')
+                        }
+                        if (res.status == "1") {
+
+                           
+
+                            displayMessage('Gửi email đến các thí sinh thành công', 'success')
+
+                        }
+                    }
+                })
+
+
+            })
+
             $(document).on('click', '#updateQuestionBtn', function () {
 
                 if (checkValidQuestion() == false) {
@@ -575,6 +707,21 @@
                 }
 
 
+            })
+
+            $(document).on('click', '#viewExam', function () {
+                var id = $(this).data('scheduleid');
+                window.location.href = '/Admin/TestSchedule/ViewExam?scheduleId='+id;
+            })
+
+            $(document).on('click', '#adduser', function () {
+                var id = $(this).data('scheduleid');
+                window.location.href = '/Admin/TestSchedule/CreateListMember?scheduleId='+id;
+            })
+
+            $(document).on('click', '#viewUser', function () {
+                var id = $(this).data('scheduleid');
+                window.location.href = '/Admin/TestSchedule/ViewListMemberDetail?scheduleId=' + id;
             })
 
             $(document).ready(function () {

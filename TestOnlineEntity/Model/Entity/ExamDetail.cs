@@ -6,12 +6,17 @@ using System.Text;
 
 namespace TestOnlineEntity.Model.Entity
 {
-    [Table("Exams")]
-    public class Exam
+    [Table("ExamDetails")]
+    public class ExamDetail
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid TestScheduleId { get; set; }
+
+        public Guid ExamId { get; set; }
+
+        public Guid QuestionId { get; set; }
+
+        public int QuestionSequence { get; set; }
 
         public string CreatedBy { get; set; }
 

@@ -1,0 +1,115 @@
+﻿@using TestOnlineEntity.Model.Entity
+@using TestOnlineModel.ViewModel.Admin
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var schedule = (TestSchedule)ViewBag.Schedule;
+
+    var listInfo = (IEnumerable<QuestionBankInfoViewModel>)ViewBag.QuestionBankInfo;
+}
+
+@section title{
+    Tạo đề ngẫu nhiên cho cuộc thi
+
+}
+
+@section script{ 
+    <script>
+        $(document).on('click', ".deletegroup", function (e) {
+             $(this).parent().parent().remove();
+        })
+
+        function checkUserInput(input, total) {
+            if (input > total) {
+                alert('Không có đủ số câu hỏi trong ngân hàng câu hỏi');
+            }
+        }
+      
+
+      
+    </script>
+}
+<div class="row">
+    <div class="col-md-12 redexam">
+        <h4> Thông tin về đợt thi</h4>
+        <hr />
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+        <p id="scheduleid" style="display:none">@schedule.Id</p>
+        <p>Tên đợt thi   : <b>@schedule.Name</b></p>
+        <p>Thời gian thi : <b>@schedule.TestTime phút</b></p>
+        <p>Số câu hỏi    : <b>@schedule.TotalQuestion</b></p>
+        <p>Thời gian thi : <b>Từ ngày @schedule.StartDate.ToString("dd/MM/yyyy") đến ngày @schedule.EndDate.ToString("dd/MM/yyyy")</b></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 redexam">
+        <h4>Nhập thông tin để tạo đề thi</h4>
+        <hr />
+    </div>
+</div>
+
+<div class="row table">
+    <!-- /.panel-heading -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>              
+                    <th>
+                        <a href="#"> Ngân hàng câu hỏi</a>
+                    </th>
+                    <th>
+                        <a href="#">Số câu trong ngân hàng</a>
+                    </th>
+                    <th>
+                        <a href="#">Số câu sẽ có trong đề </a>
+                    </th>
+                    <th>
+                        <a href="#">Loại bỏ</a>
+                    </th>               
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var item in listInfo)
+                    {
+
+                        <tr class="rows"  id="rows">
+                            <td>@item.Name </td>
+                            <td>@item.TotalQuestion</td>
+                            <td style="display:none;"><input type="text" value="@item.Id" class="idgroup"></td>
+                            <td><span style="display:none;" class="hidegroupid">@item.Id</span> <input type="number" min="0" max="@item.TotalQuestion" class="realnumber" name="numberQuestion" value="0" onchange="checkUserInput(this.value,@item.TotalQuestion)"/></td>
+                            <td> <a href="#" class="deletegroup"  data-idquestiongroup="@item.Id"><i class="fas fa-trash-alt coni"></i></a></td>                         
+                       </tr>
+                    }
+                }
+
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+       Số đề thi cần tạo <input type="number" name="numberExam" id="numberExam" min ="1" value="1" />
+    </div>
+    <div>
+        <button class="btn btn-danger" id="createExam" data-totalquestion="@schedule.TotalQuestion">Tạo đề thi</button>
+        <button class='btn btn-danger' id='viewExam' data-scheduleid="@schedule.Id">Xem đề thi</button>
+        <button class='btn btn-danger' id='adduser' data-scheduleid="@schedule.Id">Thêm danh sách thí sinh</button>
+        <button class="btn btn-danger" id="viewUser" data-scheduleid="@schedule.Id">Xem danh sách thí sinh</button>
+    </div>
+</div>
+

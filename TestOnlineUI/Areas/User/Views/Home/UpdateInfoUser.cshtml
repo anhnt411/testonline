@@ -1,0 +1,90 @@
+﻿
+@{
+    Layout = "~/Areas/User/Views/Shared/_Layout.cshtml";
+}
+@using TestOnlineModel.ViewModel.User
+@model UserInfoViewModel
+
+@section title{
+    Cập nhật thông tin người dùng
+}
+@section script{
+    @*<script>
+            $('#SelectImage').on('click', function (e)
+            {
+                e.preventDefault();
+                var finder = new CKFinder();
+                finder.selectActionFunction = function(url)
+                {
+                    $('#txtImage').val(url);
+                }
+                finder.popup();
+            }
+            )
+
+
+        </script>*@
+    <script>
+        $(document).ready(function () {
+            $('#txtImage').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('#fileName').html(fileName);
+                readURL(this);
+
+            });
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#myImage').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+
+        });
+    </script>
+}
+
+@*@using (Html.BeginForm("UpdateInfoUser", "Home", FormMethod.Post, new { @id = "updateAdmin", @class = "mt-3", enctype = "multipart/form-data" }))
+    {*@
+<form enctype="multipart/form-data" asp-area="User" asp-controller="Home" asp-action="UpdateInfoUser" id="updateAdmin" method="post">
+    <div class="form-group ">
+        <label>Tài khoản <span style="color: red">*</span></label>
+        <input class="form-control" value="@Model.UserName" id="UserName" name="UserName" placeholder="Nhập vào tên tài khoản lớn hơn 5 và nhỏ hơn 30 ký tự" readonly>
+    </div>
+    <div class="form-group ">
+        <label>Email <span style="color: red">*</span></label>
+        <input class="form-control" value="@Model.Email" id="Email" name="Email" readonly>
+    </div>
+
+    <div class="form-group ">
+        <label>Họ tên  <span style="color: red">*</span></label>
+        <input class="form-control" value="@Model.FullName" id="FullName" name="FullName" placeholder="Nhập vào họ tên của bạn">
+    </div>
+
+    <div class="form-group ">
+        <label>Số điện thoại</label>
+        <input class="form-control" id="PhoneNumber" name="PhoneNumber" placeholder="Nhập vào số điện thoại của bạn" value="@Model.PhoneNumber">
+    </div>
+
+    <div class="form-group ">
+        <label>Địa chỉ</label>
+        <input class="form-control" id="Address" name="Address" placeholder="Nhập vào địa chỉ của bạn" value="@Model.Address">
+    </div>
+
+    <div class="form-group required">
+        <label>Ảnh đại diện</label>
+        <div class="display-img"><img id="myImage" src="~/upload_img/@Model.Image" alt="Alternate Text" width="100" /></div>
+        <input class="form-control" id="txtImage" name="file" type="file">
+    </div>
+
+    <button type="submit" class="btn btn-danger">Xác nhận</button>
+    <a class="btn btn-danger" href="/User/Home/Index">Quay lại</a>
+</form>
+
+

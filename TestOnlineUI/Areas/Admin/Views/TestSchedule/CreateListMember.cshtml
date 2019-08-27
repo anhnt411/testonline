@@ -1,0 +1,73 @@
+﻿@using TestOnlineEntity.Model.Entity;
+@using TestOnlineModel.ViewModel.Admin
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var schedule = (TestSchedule)ViewBag.Schedule;
+    var listMember = (IEnumerable<TestUnitViewModel>)ViewBag.listUnit;
+    var user = ViewBag.User;
+
+}
+
+@section title{
+    Danh sách thí sinh
+
+}
+
+@section script{ 
+    <script src="~/js/userexam.js"></script>
+  
+     
+    
+}
+
+<div class="row">
+    <div class="col-md-12 redexam">
+        <h4> Thông tin về đợt thi</h4>
+        <hr />
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+        <p id="scheduleid" style="display:none">@schedule.Id</p>
+        <p>Tên đợt thi   : <b>@schedule.Name</b></p>
+        <p>Thời gian thi : <b>@schedule.TestTime phút</b></p>
+        <p>Số câu hỏi    : <b>@schedule.TotalQuestion</b></p>
+        <p>Thời gian thi : <b>Từ ngày @schedule.StartDate.ToString("dd/MM/yyyy") đến ngày @schedule.EndDate.ToString("dd/MM/yyyy")</b></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 redexam">
+        <h4>Nhập thông tin thí sinh</h4>
+        <hr />
+    </div>
+</div>
+
+ <div class="row">
+     <div class="col-md-8">
+         <span>Chọn danh sách thí sinh từ đơn vị</span>
+         <select id="selectUnit">
+             @foreach (var item in listMember)
+             {
+                 <option value="@item.Id">@item.Name</option>
+             }
+         </select>
+     </div>
+ </div>
+
+ <div id="listMemberExam">
+ </div>
+
+ <input type="text" hidden id="scheduleId" value="@schedule.Id" />
+
+
+
+
+

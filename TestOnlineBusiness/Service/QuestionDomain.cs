@@ -429,20 +429,24 @@ namespace TestOnlineBusiness.Service
 
 
                             var listAnswer = item.Answers;
+                            int i = 0;
                             foreach (var item1 in listAnswer)
                             {
-                                var answer = new Answer()
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Content = item1.Description,
-                                    IsActive = true,
-                                    QuestionId = question.Id,
-                                    IsCorrect = item1.IsCorrect,
-                                    CreatedBy = userId,
-                                    CreatedDate = DateTime.Now,
-                                    UpdatedBy = userId,
-                                    UpdatedDate = DateTime.Now
+
+                            var answer = new Answer()
+                            {
+                                Id = Guid.NewGuid(),
+                                Content = item1.Description,
+                                IsActive = true,
+                                QuestionId = question.Id,
+                                IsCorrect = item1.IsCorrect,
+                                CreatedBy = userId,
+                                CreatedDate = DateTime.Now,
+                                UpdatedBy = userId,
+                                Sequence = i,
+                                UpdatedDate = DateTime.Now
                                 };
+                            i++;
                                 _unitOfWork.Answers.Insert(answer);
 
                             }
