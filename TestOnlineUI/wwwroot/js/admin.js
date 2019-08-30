@@ -545,6 +545,42 @@
 
             })
 
+            $(document).on('click', '#submitexam', function () {
+                var result = [];
+                var examid = $(this).data('examid');
+               
+                $('.useranswer').each(function () {
+                    var a = $(this).data('questionid');
+                    var b = $(this).data('answerid');
+                    var object = {
+                        'questionid': a,
+                        'answerid': b
+                    };
+                    result.push(object);
+
+                })
+                var viewModel = {
+                    'ExamId': examid,
+                    'ListAnswer' : result
+                };
+
+                $.ajax({
+                    url: '/User/Home/UserViewExamDetail',
+                    data: { viewModel: viewModel },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (res) {
+                        if (res.status == "0") {
+                            displayMessage('Xảy ra lỗi, thử lại sau', 'error')
+                        }
+                        if (res.status == "1") {
+
+                            displayMessage('Cảm ơn bạn đã hoàn thành bài thi', 'success')
+
+                        }
+                    }
+                })
+            })
             $(document).on('click', '#createExam', function () {
              
                 var totalquestion = $(this).data('totalquestion');
@@ -722,6 +758,12 @@
             $(document).on('click', '#viewUser', function () {
                 var id = $(this).data('scheduleid');
                 window.location.href = '/Admin/TestSchedule/ViewListMemberDetail?scheduleId=' + id;
+            })
+            $(document).on('click', '#accessexam', function () {
+
+                var id = $(this).data('examuser');
+                console.log(id);
+                window.location.href = "/User/Home/UserViewExamDetail?userexamId=" + id;
             })
 
             $(document).ready(function () {

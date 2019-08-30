@@ -211,6 +211,7 @@ namespace TestOnlineBusiness.Service
                 {
                     var listAnswer = (await _unitOfWork.Answers.Get(x => x.IsActive == true && x.QuestionId == item.QuestionId)).Select(x => new AnswerViewModel2
                     {
+                        AnswerId = x.Id,
                         AnswerDescript = x.Content,
                         IsCorrect = x.IsCorrect,
                         AnswerSequence = Number2String(x.Sequence+1, true)
@@ -426,7 +427,158 @@ namespace TestOnlineBusiness.Service
 
         }
 
+        public async Task<IEnumerable<UserScheduleViewModel>> GetListUserSchedule(FilterModel filter, string userId)
+        {
+            try
+            {
+                if (filter == null)
+                {
+                    filter = new FilterModel();
+                }
+
+                if (filter.Filter == null || filter.Filter.Count == 0)
+                {
+                    filter.Filter = new List<FilterTypeModel>() { new FilterTypeModel() { Field = Constant.Filter.ScheduleFilterDefault, IsActive = true } };
+                }
+
+                if (filter.Sort == null || filter.Sort.Count == 0 || string.IsNullOrEmpty(filter.Sort[0].Field))
+                {
+                    filter.Sort = new List<SortTypeModel>
+                    {
+                         new SortTypeModel {Field = Constant.Filter.ScheduleSortDefault, Asc =  false, IsActive = true}
+                    };
+                }
+
+                var filterData = ApiUtils.ListToDataTable(filter.Filter);
+                var sortData = ApiUtils.ListToDataTable(filter.Sort);
+
+                var skip = filter.Skip ?? 0;
+                var take = filter.Take ?? Constant.Filter.ScheduleTakeDefault;
+                var isExport = filter.IsExport ?? false;
+               
+                SqlParameter[] prams =
+                {
+                    new SqlParameter{ParameterName = "@filter", Value = filterData , SqlDbType = SqlDbType.Structured,TypeName = "dbo.FilterType"},
+                    new SqlParameter {ParameterName = "@sort",Value = sortData, SqlDbType = SqlDbType.Structured,TypeName = "dbo.SortType"},
+                    new SqlParameter {ParameterName = "@skip",Value = skip ,DbType = DbType.Int32},
+                    new SqlParameter {ParameterName = "@take",Value = take,DbType = DbType.Int32},
+                    new SqlParameter {ParameterName = "@multipeFilter",Value = filter.MultipeFilter as Object ?? DBNull.Value,DbType = DbType.String },
+                    new SqlParameter {ParameterName = "@isExport",Value = isExport,DbType = DbType.Boolean},
+                    new SqlParameter {ParameterName = "@userId",Value = userId,DbType = DbType.String}
+
+                };
+                var source = await _unitOfWork.UserscheduleViewModels.Get(Constant.StoreProcedure.GET_USER_SCHEDULE, prams);
+                return source;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<ExamDetailViewModel>> GetUserListExamDetail(Guid examId)
+        {
+            try
+            {
+                List<ExamDetailViewModel> list = new List<ExamDetailViewModel>();
+                var userexam = await _unitOfWork.ExamUsers.GetById(examId);
+                var examDetails = (await _unitOfWork.ExamDetails.Get(x => x.IsActive == true && x.ExamId == userexam.ExamId)).Select(x => new {
+                    QuestionId = x.QuestionId,
+                    QuestionSequence = x.QuestionSequence,
+                    ExamId = x.ExamId
+
+                }).OrderBy(x => x.QuestionSequence).ToList();
 
 
+
+                foreach (var item in examDetails)
+                {
+                    var listAnswer = (await _unitOfWork.Answers.Get(x => x.IsActive == true && x.QuestionId == item.QuestionId)).Select(x => new AnswerViewModel2
+                    {
+                        AnswerId = x.Id,
+                        AnswerDescript = x.Content,
+                        IsCorrect = x.IsCorrect,
+                        AnswerSequence = Number2String(x.Sequence + 1, true)
+                    }).OrderBy(x => x.AnswerSequence).ToList();
+                    ExamDetailViewModel temp = new ExamDetailViewModel()
+                    {
+                        ExamId = item.ExamId,
+                        QuestionId = item.QuestionId,
+                        QuestionName = (await _unitOfWork.Questions.GetById(item.QuestionId)).Description,
+                        QuestionTypeKey = (await _unitOfWork.Questions.GetById(item.QuestionId)).QuestionTypeKey,
+                        ListAnswer = listAnswer
+                    };
+                    list.Add(temp);
+                }
+
+
+                return list;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<bool> UpdateAccessExam(Guid examId)
+        {
+            try
+            {
+                var exam = await _unitOfWork.ExamUsers.GetById(examId);
+                //var exam = await _unitOfWork.ExamUsers.GetOne(x => x.ExamId == examId && x.MemberId == userId);
+                exam.IsAccess = true;
+                _unitOfWork.ExamUsers.Update(exam);
+                return await _unitOfWork.CommitAsync() > 0;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> AddAnswerExamUser(UserAnswerViewModel viewModel, string userId)
+        {
+            try
+            {
+                var userExam = await _unitOfWork.ExamUsers.GetOne(x => x.ExamId == viewModel.ExamId && x.MemberId == userId);
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    userExam.IsSubmit = true;
+                    _unitOfWork.ExamUsers.Update(userExam);
+
+                    foreach (var item in viewModel.ListAnswer)
+                    {
+                        var answerExamUser = new AnswerExamUser()
+                        {
+                            Id = Guid.NewGuid(),
+                            ExamId = viewModel.ExamId,
+                            AnswerId = item.AnswerId,
+                            QuestionId = item.QuestionId,
+                            IsActive = true,
+                            CreatedBy = userId,
+                            CreatedDate = DateTime.Now,
+                            UpdatedBy = userId,
+                            UpdatedDate = DateTime.Now
+                        };
+                        _unitOfWork.AnswerExamUsers.Insert(answerExamUser);
+                    }
+                    await _unitOfWork.CommitAsync();
+                    scope.Complete();
+                    
+                }
+
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
+            }
+        }
     }
 }

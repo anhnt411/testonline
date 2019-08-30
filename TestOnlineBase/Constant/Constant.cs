@@ -17,6 +17,7 @@ namespace TestOnlineBase.Constant
             public const string GET_QUESTION_CONTAINER = "sp_GetQuestionDetail";
             public const string GET_QUESTION_CONTAINER2 = "sp_GetQuestionDetail2";
             public const string GET_TEST_SCHEDULE = "sp_GetListSchedule";
+            public const string GET_USER_SCHEDULE = "sp_GetListUserSchedule";
 
         }
         #endregion

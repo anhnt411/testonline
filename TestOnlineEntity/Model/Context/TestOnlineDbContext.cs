@@ -44,6 +44,8 @@ namespace TestOnlineEntity.Model.Context
 
         public DbSet<ExamUser> ExamUsers { get; set; }
 
+        public DbSet<AnswerExamUser> AnswerExamUsers { get; set; }
+
         public DbSet<TestCategoryViewModel> TestCategoryViewModels { get; }
 
         public DbSet<TestUnitViewModel> TestUnitViewModels { get; }
@@ -59,6 +61,7 @@ namespace TestOnlineEntity.Model.Context
 
         public DbSet<QuestionBankInfoViewModel> QuestionBankInfoViewModels { get; }
 
+        public DbSet<UserScheduleViewModel> UserScheduleViewModels { get; }
     }
 
     

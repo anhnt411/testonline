@@ -31,5 +31,13 @@ namespace TestOnlineBusiness.Interface
 
         Task<bool> DeleteMemberSchedule(DeleteMemberViewModel viewModle);
         Task<IEnumerable<ExamDetailViewModel>> GetListExamDetail(Guid examId, string userId);
+
+        Task<IEnumerable<ExamDetailViewModel>> GetUserListExamDetail(Guid examId);
+
+        Task<bool> UpdateAccessExam(Guid examId);
+
+        Task<IEnumerable<UserScheduleViewModel>> GetListUserSchedule(FilterModel model, string userId);
+
+        Task<bool> AddAnswerExamUser(UserAnswerViewModel viewModel, string userId);
     }
 }

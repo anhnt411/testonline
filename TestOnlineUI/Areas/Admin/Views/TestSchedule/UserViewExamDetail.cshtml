@@ -1,0 +1,56 @@
+﻿@using TestOnlineModel.ViewModel.Admin
+@model IEnumerable<ExamDetailViewModel>
+@{
+    ViewData["Title"] = "UserViewExamDetail";
+    Layout = "~/Areas/User/Views/Shared/_Layout.cshtml";
+}
+<div class="row table">
+    <!-- /.panel-heading -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Câu hỏi
+                    </th>
+                    <th>
+                        Mã câu hỏi
+                    </th>
+                    <th>
+                        Nội dung câu hỏi
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 0;
+                    foreach (var item in Model)
+                    {
+                        var listAnswer = item.ListAnswer;
+                        i = i + 1;
+                        <tr class="rowsdetailquestion">
+                            <td>Câu hỏi @i</td>
+                            <td>@item.QuestionId</td>
+                            <td align="left">
+                                <div class="questionContent">@Html.Raw(item.QuestionName)</div>
+                                <ul class="answerlist">
+                                    @foreach (var item1 in listAnswer)
+                                    {
+                                        <li class="isanswercorrect @item1.IsCorrect">@item1.AnswerSequence. @Html.Raw(item1.AnswerDescript)</li>
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                }
+
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+

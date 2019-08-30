@@ -7,8 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TestOnlineBase.Helper.FileHelper;
+using TestOnlineBase.Helper.PagingHelper;
+using TestOnlineBusiness.Interface;
 using TestOnlineEntity.Model.ViewModel;
+using TestOnlineModel.ViewModel.Admin;
 using TestOnlineModel.ViewModel.User;
 
 namespace TestOnlineUI.Areas.User.Controllers
@@ -20,17 +24,66 @@ namespace TestOnlineUI.Areas.User.Controllers
 
         private UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly ILogger<HomeController> _logger;
+        private readonly ITestScheduleDomain _schedule;
 
-        public HomeController(UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+        public HomeController(UserManager<ApplicationUser> userManager, ITestScheduleDomain schedule, ILogger<HomeController> logger, IHostingEnvironment hostingEnvironment)
         {
             this._userManager = userManager;
             this._hostingEnvironment = hostingEnvironment;
+            this._logger = logger;
+            this._schedule = schedule;
         }
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> UserViewExamDetail(Guid userexamId)
+        {
+            var user = await _userManager.GetUserAsync(this.User);
+            var result = await _schedule.UpdateAccessExam(userexamId);
+            var examDetails = await _schedule.GetUserListExamDetail(userexamId);
+            return View(examDetails);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UserViewExamDetail(UserAnswerViewModel viewModel)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(this.User);
+                var result = await _schedule.AddAnswerExamUser(viewModel, user.Id);
+                return Json(new
+                {
+                    status = 1
+                });
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Json(new
+                {
+                    status = 0
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetListUserSchedule(FilterModel model)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(this.User);
+                var list = await _schedule.GetListUserSchedule(model, user.Id);
+                return PartialView(list);
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return View("error.cshtml");
+            }
+        }
+       
         [HttpGet]
         public async Task<IActionResult> UpdateInfoUser()
         {

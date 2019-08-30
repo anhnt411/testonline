@@ -272,6 +272,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                 return View("error.cshtml");
             }
         }
+       
 
         [HttpGet]
         public async Task<IActionResult> ViewListMemberDetail(Guid scheduleId)

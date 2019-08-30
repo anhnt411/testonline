@@ -31,7 +31,9 @@ namespace TestOnlineEntity.Service
                                      IRepository<QuestionBankInfoViewModel> questionBankInfoViewModel,
                                      IRepository<ExamDetail> examDetail,
                                      IRepository<ScheduleUser> scheduleUser,
-                                     IRepository<ExamUser> examUser
+                                     IRepository<ExamUser> examUser,
+                                     IRepository<UserScheduleViewModel> userScheduleViewModel,
+                                     IRepository<AnswerExamUser> answerExamUser
             
                                     )
         {
@@ -56,6 +58,8 @@ namespace TestOnlineEntity.Service
             this.ExamDetails = examDetail;
             this.ScheduleUsers = scheduleUser;
             this.ExamUsers = examUser;
+            this.UserscheduleViewModels = userScheduleViewModel;
+            this.AnswerExamUsers = answerExamUser;
         }
 
         public virtual IRepository<TestCategory> TestCategories { get; set; }       
@@ -67,6 +71,8 @@ namespace TestOnlineEntity.Service
         public virtual IRepository<TestSchedule> TestSchedules { get; set; }  
         public virtual IRepository<Question> Questions { get; set; }
         public virtual IRepository<ResultTest> ResultTests { get; set; }
+
+      
 
         public virtual IRepository<ExamDetail> ExamDetails { get; set; }
 
@@ -87,7 +93,9 @@ namespace TestOnlineEntity.Service
         public virtual IRepository<TestScheduleViewModel> TestScheduleViewModels { get; }
 
         public virtual IRepository<QuestionBankInfoViewModel> QuestionBankInfoViewModels { get; }
-      
+
+        public IRepository<UserScheduleViewModel> UserscheduleViewModels { get; }
+        public IRepository<AnswerExamUser> AnswerExamUsers { get; set; }
 
         public IDbContextTransaction BeginTransactionScope()
         {
