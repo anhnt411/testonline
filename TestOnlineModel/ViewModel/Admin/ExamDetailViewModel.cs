@@ -13,6 +13,8 @@ namespace TestOnlineModel.ViewModel.Admin
 
         public int? QuestionTypeKey { get; set; }
 
+        public bool? QuestionTrue { get; set; }
+
         public IEnumerable<AnswerViewModel2> ListAnswer { get; set; }
 
     }
@@ -22,8 +24,10 @@ namespace TestOnlineModel.ViewModel.Admin
         public Guid AnswerId { get; set; }
         public string AnswerDescript { get; set; }
 
-        public bool IsCorrect { get; set; }
+        public bool? IsCorrect { get; set; }
 
         public string AnswerSequence { get; set; }
+
+        public bool? IsUserAnswer { get; set; }
     }
 }

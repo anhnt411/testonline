@@ -39,5 +39,7 @@ namespace TestOnlineBusiness.Interface
         Task<IEnumerable<UserScheduleViewModel>> GetListUserSchedule(FilterModel model, string userId);
 
         Task<bool> AddAnswerExamUser(UserAnswerViewModel viewModel, string userId);
+
+        Task<IEnumerable<ExamDetailViewModel>> ReviewUserExamDetail(Guid examId, string userId);
     }
 }

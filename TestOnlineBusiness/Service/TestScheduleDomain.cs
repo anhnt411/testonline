@@ -38,7 +38,7 @@ namespace TestOnlineBusiness.Service
             this._userManager = userManager;
             this._sender = sender;
             this._env = env;
-           
+
         }
 
         public async Task<bool> AddSchedule(TestScheduleViewModel viewModel, string userId, CancellationToken cancellationToken = default)
@@ -68,11 +68,12 @@ namespace TestOnlineBusiness.Service
                     TestCategoryId = viewModel.CategoryId,
                     Percentage = viewModel.Percentage,
                     TotalQuestion = viewModel.TotalQuestion
-                    
+
                 };
                 _unitOfWork.TestSchedules.Insert(testSchedule);
                 return await _unitOfWork.CommitAsync() > 0;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;
@@ -105,21 +106,21 @@ namespace TestOnlineBusiness.Service
                 }
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;
             }
         }
 
-        public async Task<bool> CreateExam(CreateExamViewModel viewModel,string userId)
+        public async Task<bool> CreateExam(CreateExamViewModel viewModel, string userId)
         {
             try
             {
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     var ran = new Random();
-                    for(int i = 0; i < viewModel.TotalExam; i++)
+                    for (int i = 0; i < viewModel.TotalExam; i++)
                     {
                         List<Question> listQuestion = new List<Question>();
                         var temp = new Exam()
@@ -138,15 +139,15 @@ namespace TestOnlineBusiness.Service
                         foreach (var item in viewModel.QuestionGroupList)
                         {
                             var list1 = (await _unitOfWork.Questions.Get(x => x.QuestionGroupId == item.QuestionGroupId && x.IsActive == true)).ToList();
-                            
-                            for(int i1 = 0; i1 < item.TotalQuestion; i1++)
+
+                            for (int i1 = 0; i1 < item.TotalQuestion; i1++)
                             {
                                 var index = ran.Next(list1.Count());
                                 var randItem = list1[index];
                                 listQuestion.Add(randItem);
                                 list1.RemoveAt(index);
                             }
-                            
+
 
                         }
                         var list2 = RandomQuestion<Question>.Randomize(listQuestion);
@@ -166,14 +167,15 @@ namespace TestOnlineBusiness.Service
                             };
                             _unitOfWork.ExamDetails.Insert(examDetail);
                         }
-                      var result =  await _unitOfWork.CommitAsync();
-                      
-                     
+                        var result = await _unitOfWork.CommitAsync();
+
+
                     }
                     scope.Complete();
                 }
                 return true;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;
@@ -187,7 +189,8 @@ namespace TestOnlineBusiness.Service
                 var listExam = await _unitOfWork.Exams.Get(x => x.TestScheduleId == scheduleId && x.IsActive == true);
                 return listExam;
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
@@ -199,13 +202,14 @@ namespace TestOnlineBusiness.Service
             try
             {
                 List<ExamDetailViewModel> list = new List<ExamDetailViewModel>();
-                var examDetails = (await _unitOfWork.ExamDetails.Get(x => x.IsActive == true && x.CreatedBy == userId && x.ExamId == examId)).Select(x => new {
+                var examDetails = (await _unitOfWork.ExamDetails.Get(x => x.IsActive == true && x.CreatedBy == userId && x.ExamId == examId)).Select(x => new
+                {
                     QuestionId = x.QuestionId,
                     QuestionSequence = x.QuestionSequence,
-                    
-                }).OrderBy(x=>x.QuestionSequence).ToList();
 
-                
+                }).OrderBy(x => x.QuestionSequence).ToList();
+
+
 
                 foreach (var item in examDetails)
                 {
@@ -214,7 +218,7 @@ namespace TestOnlineBusiness.Service
                         AnswerId = x.Id,
                         AnswerDescript = x.Content,
                         IsCorrect = x.IsCorrect,
-                        AnswerSequence = Number2String(x.Sequence+1, true)
+                        AnswerSequence = Number2String(x.Sequence + 1, true)
                     }).OrderBy(x => x.AnswerSequence).ToList();
                     ExamDetailViewModel temp = new ExamDetailViewModel()
                     {
@@ -228,10 +232,11 @@ namespace TestOnlineBusiness.Service
 
                 return list;
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return null; 
+                return null;
             }
         }
 
@@ -240,7 +245,8 @@ namespace TestOnlineBusiness.Service
             try
             {
                 var listScheduleUser = (await _unitOfWork.ScheduleUsers.Get(x => x.TestScheduleId == scheduleId && x.IsActive == true)).
-                    Select(x=>new {
+                    Select(x => new
+                    {
                         MemberId = x.MemberId
                     }
                     );
@@ -251,7 +257,8 @@ namespace TestOnlineBusiness.Service
                     list.Add(user);
                 }
                 return list;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
@@ -268,7 +275,8 @@ namespace TestOnlineBusiness.Service
                 };
                 var result = await _unitOfWork.QuestionBankInfoViewModels.Get("sp_GetQuestionBankInfo", prams);
                 return result;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
@@ -335,7 +343,8 @@ namespace TestOnlineBusiness.Service
             {
                 var testschedule = await _unitOfWork.TestSchedules.GetById(scheduleId);
                 return testschedule;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
@@ -347,12 +356,13 @@ namespace TestOnlineBusiness.Service
             try
             {
                 var rand = new Random();
-                
+
                 var listExam = (await _unitOfWork.Exams.Get(x => x.TestScheduleId == viewModel.ScheduleId && x.IsActive == true && x.CreatedBy == userId)).
-                    Select(x=> new {
+                    Select(x => new
+                    {
                         ExamId = x.Id
                     }).ToList();
-                using(var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     foreach (var item in viewModel.ListMember)
                     {
@@ -369,7 +379,7 @@ namespace TestOnlineBusiness.Service
                             CreatedDate = DateTime.Now,
                             Updatedby = userId,
                             UpdatedDate = DateTime.Now
-                         
+
 
                         };
                         _unitOfWork.ExamUsers.Insert(userExam);
@@ -379,11 +389,11 @@ namespace TestOnlineBusiness.Service
                 }
 
                 var schedule = await _unitOfWork.TestSchedules.GetById(viewModel.ScheduleId);
-                var path = _env.WebRootPath+"\\Template\\InfoExamTemplate.html";
+                var path = _env.WebRootPath + "\\Template\\InfoExamTemplate.html";
                 foreach (var item in viewModel.ListMember)
                 {
                     var member = await _userManager.FindByIdAsync(item);
-                   
+
                     string message = System.IO.File.ReadAllText(path);
                     message = message.Replace("{{ScheduleName}}", schedule.Name);
                     message = message.Replace("{{TotalTime}}", schedule.TestTime.ToString());
@@ -395,7 +405,8 @@ namespace TestOnlineBusiness.Service
                     await _sender.SendEmailAsync(member.Email, "TestOnline - Thư mời tham dự kì thi ", message);
                 }
                 return true;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;
@@ -410,7 +421,8 @@ namespace TestOnlineBusiness.Service
                 item.IsActive = false;
                 _unitOfWork.ScheduleUsers.Update(item);
                 return await _unitOfWork.CommitAsync() > 0;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;
@@ -455,7 +467,7 @@ namespace TestOnlineBusiness.Service
                 var skip = filter.Skip ?? 0;
                 var take = filter.Take ?? Constant.Filter.ScheduleTakeDefault;
                 var isExport = filter.IsExport ?? false;
-               
+
                 SqlParameter[] prams =
                 {
                     new SqlParameter{ParameterName = "@filter", Value = filterData , SqlDbType = SqlDbType.Structured,TypeName = "dbo.FilterType"},
@@ -484,7 +496,8 @@ namespace TestOnlineBusiness.Service
             {
                 List<ExamDetailViewModel> list = new List<ExamDetailViewModel>();
                 var userexam = await _unitOfWork.ExamUsers.GetById(examId);
-                var examDetails = (await _unitOfWork.ExamDetails.Get(x => x.IsActive == true && x.ExamId == userexam.ExamId)).Select(x => new {
+                var examDetails = (await _unitOfWork.ExamDetails.Get(x => x.IsActive == true && x.ExamId == userexam.ExamId)).Select(x => new
+                {
                     QuestionId = x.QuestionId,
                     QuestionSequence = x.QuestionSequence,
                     ExamId = x.ExamId
@@ -533,7 +546,8 @@ namespace TestOnlineBusiness.Service
                 exam.IsAccess = true;
                 _unitOfWork.ExamUsers.Update(exam);
                 return await _unitOfWork.CommitAsync() > 0;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;
@@ -568,17 +582,132 @@ namespace TestOnlineBusiness.Service
                     }
                     await _unitOfWork.CommitAsync();
                     scope.Complete();
-                    
+
                 }
 
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return false;
             }
         }
+
+        public async Task<IEnumerable<ExamDetailViewModel>> ReviewUserExamDetail(Guid examId, string userId)
+        {
+            try
+            {
+                List<ExamDetailViewModel> list = new List<ExamDetailViewModel>();
+
+                var examDetails = (await _unitOfWork.ExamDetails.Get(x => x.IsActive == true && x.ExamId == examId)).Select(x => new
+                {
+                    QuestionId = x.QuestionId,
+                    QuestionSequence = x.QuestionSequence,
+                    ExamId = x.ExamId
+
+                }).OrderBy(x => x.QuestionSequence).ToList();
+
+                var userAnswer = (await _unitOfWork.AnswerExamUsers.Get(x => x.ExamId == examId && x.CreatedBy == userId)).Select(x=> new  {
+                    UserAnswer = x.AnswerId
+                });
+
+              
+                if (!userAnswer.Any())
+                {
+                    foreach (var item in examDetails)
+                    {
+                        var listAnswer = (await _unitOfWork.Answers.Get(x => x.IsActive == true && x.QuestionId == item.QuestionId)).Select(x => new AnswerViewModel2
+                        {
+                            AnswerId = x.Id,
+                            AnswerDescript = x.Content,
+                            IsCorrect = x.IsCorrect,
+                            AnswerSequence = Number2String(x.Sequence + 1, true),
+                            IsUserAnswer = false
+                        }).OrderBy(x => x.AnswerSequence).ToList();
+                        ExamDetailViewModel temp = new ExamDetailViewModel()
+                        {
+                            ExamId = item.ExamId,
+                            QuestionId = item.QuestionId,
+                            QuestionName = (await _unitOfWork.Questions.GetById(item.QuestionId)).Description,
+                            QuestionTypeKey = (await _unitOfWork.Questions.GetById(item.QuestionId)).QuestionTypeKey,
+                            QuestionTrue = true,
+                            ListAnswer = listAnswer
+                        };
+                        list.Add(temp);
+                    }
+
+
+                    return list;
+                }
+                else
+                {
+                    List<Guid> listUserAnswer = new List<Guid>();
+                    foreach (var item in userAnswer)
+                    {
+                        listUserAnswer.Add(item.UserAnswer);
+                    }
+                    foreach (var item in examDetails)
+                    {
+                        var listAnswer = (await _unitOfWork.Answers.Get(x => x.IsActive == true && x.QuestionId == item.QuestionId)).Select(x => new AnswerViewModel2
+                        {
+                            AnswerId = x.Id,
+                            AnswerDescript = x.Content,
+                            IsCorrect = x.IsCorrect,
+                            AnswerSequence = Number2String(x.Sequence + 1, true),
+                            IsUserAnswer = IsUserAnswer(x.Id,listUserAnswer)
+                        }).OrderBy(x => x.AnswerSequence).ToList();
+                        ExamDetailViewModel temp = new ExamDetailViewModel()
+                        {
+                            ExamId = item.ExamId,
+                            QuestionId = item.QuestionId,
+                            QuestionName = (await _unitOfWork.Questions.GetById(item.QuestionId)).Description,
+                            QuestionTypeKey = (await _unitOfWork.Questions.GetById(item.QuestionId)).QuestionTypeKey,
+                            QuestionTrue = true,
+                            ListAnswer = listAnswer
+                        };
+                        list.Add(temp);
+                    }
+
+                   
+                  
+
+                    foreach (var item in list)
+                    {
+                        foreach (var item1 in item.ListAnswer)
+                        {
+                            
+                                if (item1.IsCorrect != item1.IsUserAnswer)
+                                {
+                                   
+                                    item.QuestionTrue = false;
+                                     break;
+                                }
+                               
+                            
+                            
+                        }
+                    }
+
+                    return list;
+                }
+
+             
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        private bool IsUserAnswer(Guid answerId,IEnumerable<Guid> listAnswer)
+        {
+            return listAnswer.Contains(answerId);
+        }
     }
 }
+        
+    

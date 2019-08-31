@@ -548,7 +548,7 @@
             $(document).on('click', '#submitexam', function () {
                 var result = [];
                 var examid = $(this).data('examid');
-               
+                $(this).attr("disabled", true);
                 $('.useranswer').each(function () {
                     var a = $(this).data('questionid');
                     var b = $(this).data('answerid');
@@ -574,12 +574,19 @@
                             displayMessage('Xảy ra lỗi, thử lại sau', 'error')
                         }
                         if (res.status == "1") {
-
+                            
                             displayMessage('Cảm ơn bạn đã hoàn thành bài thi', 'success')
+                          
 
                         }
                     }
                 })
+            })
+
+            $(document).on('click', '#viewaccessexam', function () {
+                var id = $(this).data('examid');
+                
+                window.location.href = "/User/Home/ReviewUserExam?examId=" + id;
             })
             $(document).on('click', '#createExam', function () {
              

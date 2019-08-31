@@ -38,6 +38,7 @@
                         foreach (var item in Model)
                         {
                             var a = (DateTime.Now >= item.StartDate && DateTime.Now <= item.EndDate) ? "" : "disabled";
+                            var b = (DateTime.Now > item.EndDate && item.IsSubmit == true) ? "disabled" : "";
 
                                         <tr class="rows" data-totalrow="@item.TotalRecord" id="rows">
                                             <td>@item.STT </td>
@@ -51,7 +52,7 @@
                                             <td><button class="btn btn-danger @a"   data-examuser="@item.Id" id="accessexam">Vào thi</button></td>
                                             }
                                             else{
-                                            <td><button class="btn btn-danger" id="#viewaccessexam">Xem kết quả</button></td>
+                                            <td><button class="btn btn-danger @b" data-examid="@item.ExamId" id="viewaccessexam">Xem kết quả</button></td>
                                             }
 
                                         </tr>

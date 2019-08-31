@@ -68,7 +68,29 @@ namespace TestOnlineUI.Areas.User.Controllers
                 });
             }
         }
-
+        [HttpGet]
+        public async Task<IActionResult> ReviewUserExam(Guid examId)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(this.User);
+                var result = await _schedule.ReviewUserExamDetail(examId, user.Id);
+                int correctQuestion = 0;
+                foreach (var item in result)
+                {
+                    if(item.QuestionTrue == false || item.QuestionTrue == null)
+                    {
+                        correctQuestion++;
+                    }
+                }
+                ViewBag.CorrectQuestion = result.Count() - correctQuestion;
+                return View(result);
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return View("error.cshtml");
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> GetListUserSchedule(FilterModel model)
         {
