@@ -545,6 +545,31 @@
 
             })
 
+            $(document).on('click', '.deleteschedule', function () {
+                if (confirm('Bạn có muốn xóa đợt thi này không ?')) {
+                    var id = $(this).data('scheduleid');
+                   
+
+                    $.ajax({
+                        url: "/Admin/TestSchedule/DeleteSchedule?scheduleId="+id,
+                        type: 'get',                  
+                        success: function (response) {
+                            if (response.status == 0) {
+                                alert('Xảy ra lỗi, thử lại sau');
+                            }
+                            if (response.status == 1) {
+                                window.location.reload();
+
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    })
+
+                }
+            })
+
             $(document).on('click', '#submitexam', function () {
                 var result = [];
                 var examid = $(this).data('examid');
@@ -794,11 +819,84 @@
             })
 
             $(document).ready(function () {
+                $('#backListSchedule').on('click', function () {
+                    window.location.href = '/Admin/TestSchedule/Index';
+                })
+            })
+
+            $(document).ready(function () {
+                $('#backprev').on('click', function () {
+                    window.location.href = '/Admin/TestSchedule/Index';
+                })
+            })
+
+            $(document).ready(function () {
                 $('#backListQuestionGroup').on('click', function () {
                     window.location.href = '/Admin/QuestionBank/Index';
                 })
             })
 
+            $(document).ready(function () {
+                $('#exportallmember').on('click', function () {
+                    $('table').tblToExcel();
+                })
+            })
+
+            $(document).ready(function () {
+                $('#exportaccessmember').on('click', function () {
+                    $('table').tblToExcel();
+                })
+            })
+
+            $(document).ready(function () {
+                $('#exportnotaccessmember').on('click', function () {
+                    $('table').tblToExcel();
+                })
+            })
+
+            $(document).ready(function () {
+                $('#backprev1').on('click', function () {
+                    window.history.go(-1);
+                })
+            })
+
+            
+
+            $(document).ready(function () {
+                $(document).on("click", "#accessmember tbody tr", function () {
+                    var memberid = $(this).data('memberid');
+                    var examid = $(this).data('examid');
+                    var a = '/Admin/TestSchedule/AdminReviewUserExam?examid=' + examid + '&memberid=' + memberid;
+                    console.log(a);
+                    window.location.href = a;
+                
+
+                });
+            });
+
+            $(document).ready(function () {
+                $(document).on("click", "#passmember tbody tr", function () {
+                    var memberid = $(this).data('memberid');
+                    var examid = $(this).data('examid');
+                    var a = '/Admin/TestSchedule/AdminReviewUserExam?examid=' + examid + '&memberid=' + memberid;
+                    console.log(a);
+                    window.location.href = a;
+
+
+                });
+            });
+
+           
+
+            $(document).ready(function () {
+                $('#exportmemberpass').on('click', function () {
+                    $('table').tblToExcel();
+                })
+            })
+
+          
+
+          
             $(document).ready(function () {
                
                 $('#backListGroup').on('click', function () {

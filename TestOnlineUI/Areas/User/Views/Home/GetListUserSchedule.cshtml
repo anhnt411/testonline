@@ -49,10 +49,11 @@
                                             <td>@item.EndDate</td>
                                             <td>@item.TotalTime</td>
                                             @if((@item.IsAccess == null || @item.IsAccess == false) && item.IsSubmit !=true ){
-                                            <td><button class="btn btn-danger @a"   data-examuser="@item.Id" id="accessexam">Vào thi</button></td>
-                                            }
-                                            else{
-                                            <td><button class="btn btn-danger @b" data-examid="@item.ExamId" id="viewaccessexam">Xem kết quả</button></td>
+                                                       <td><button class="btn btn-danger @a"   data-examuser="@item.Id" id="accessexam">Vào thi</button></td>
+                                                    }
+                                                    else{
+                                                        var a1 = (item.EndDate < DateTime.Now) ? "" : "disabled";
+                                            <td><button class="btn btn-danger @b" data-examid="@item.Id" id="viewaccessexam" @a1>Xem kết quả</button></td>
                                             }
 
                                         </tr>

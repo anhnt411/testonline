@@ -1,0 +1,64 @@
+﻿@using TestOnlineModel.ViewModel.Admin
+@model AdminScheduleViewModel
+@{
+    ViewData["Title"] = "AdminViewSchedule";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section title{
+    Thống kê về kì thi
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Danh sách thí sinh tham dự kì thi</h5>
+                    <p class="card-text">Có tất cả  @Model.TotalMember thí sinh tham dự kì thi</p>
+                    <a href="~/Admin/TestSchedule/AdminViewListMember?scheduleId=@Model.ScheduleId" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Danh sách thi sinh đã hoàn thành bài thi</h5>
+                    <p class="card-text"> @Model.TotalAccess/@Model.TotalMember thí sinh.</p>
+                    <a href="~/Admin/TestSchedule/AdminViewListMemberAccess?scheduleId=@Model.ScheduleId" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Danh sách thi sinh chưa hoàn thành bài thi</h5>
+                    <p class="card-text"> @Model.TotalNotAccess/@Model.TotalMember thí sinh.</p>
+                    <a href="~/Admin/TestSchedule/AdminViewListMemberNotAccess?scheduleId=@Model.ScheduleId" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Danh sách thi sinh vượt qua kì thi</h5>
+                    <p class="card-text">Có @Model.TotalPass thí sinh đã vượt qua kì thi.</p>
+                    <a href="~/Admin/TestSchedule/AdminViewListMemberPass?scheduleId=@Model.ScheduleId" class="btn btn-primary">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <button class="btn btn-danger" id="backprev">Quay lại</button>
+        </div>
+
+    </div>
+
+</div>
+
+

@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -19,6 +21,8 @@ using TestOnlineEntity.Interface;
 using TestOnlineEntity.Model.Entity;
 using TestOnlineEntity.Model.ViewModel;
 using TestOnlineModel.ViewModel.Admin;
+using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace TestOnlineBusiness.Service
 {
@@ -30,14 +34,15 @@ namespace TestOnlineBusiness.Service
         private UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _sender;
         private readonly IHostingEnvironment _env;
-
-        public TestScheduleDomain(ITestOnlienUnitOfWork unitOfWork, IHostingEnvironment env, IEmailSender sender, ILogger<TestScheduleDomain> logger, UserManager<ApplicationUser> userManager)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public TestScheduleDomain(ITestOnlienUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor, IHostingEnvironment env, IEmailSender sender, ILogger<TestScheduleDomain> logger, UserManager<ApplicationUser> userManager)
         {
             this._unitOfWork = unitOfWork;
             this._logger = logger;
             this._userManager = userManager;
             this._sender = sender;
             this._env = env;
+            this._httpContextAccessor = contextAccessor;
 
         }
 
@@ -259,6 +264,107 @@ namespace TestOnlineBusiness.Service
                 return list;
             }
             catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<AdminViewAccessScheduleViewModel>> GetListMemberScheduleAccess(Guid scheduleId)
+        {
+            try
+            {
+                var listScheduleUser = (await _unitOfWork.ExamUsers.Get( x => x.ScheduleId == scheduleId && x.IsActive == true && x.IsAccess != null)).
+                    Select(x => new
+                    {
+                        MemberId = x.MemberId,
+                        ExamId = x.ExamId,
+                        UserExamId = x.Id
+                    }
+                    );
+                List<AdminViewAccessScheduleViewModel> list = new List<AdminViewAccessScheduleViewModel>();
+                foreach (var item in listScheduleUser)
+                {
+                    var user = await _userManager.FindByIdAsync(item.MemberId);
+                    var viewModel = new AdminViewAccessScheduleViewModel()
+                    {
+                        ExamId = item.ExamId,
+                        Address = user.Address,
+                        Email = user.Email,
+                        FullName = user.FullName,
+                        PhoneNumber = user.PhoneNumber,
+                        MemberId = user.Id,
+                        UserExamId = item.UserExamId
+
+                    };
+                    list.Add(viewModel);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> GetListMemberScheduleNotAccess(Guid scheduleId)
+        {
+            try
+            {
+                var listScheduleUser = (await _unitOfWork.ExamUsers.Get(x => x.ScheduleId == scheduleId && x.IsActive == true && x.IsAccess == null)).
+                    Select(x => new
+                    {
+                        MemberId = x.MemberId
+                    }
+                    );
+                List<ApplicationUser> list = new List<ApplicationUser>();
+                foreach (var item in listScheduleUser)
+                {
+                    var user = await _userManager.FindByIdAsync(item.MemberId);
+                    list.Add(user);
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<AdminViewAccessScheduleViewModel>> GetListMemberSchedulePass(Guid scheduleId)
+        {
+            try
+            {
+                var listScheduleUser = (await _unitOfWork.ExamUsers.Get(x => x.ScheduleId == scheduleId && x.IsActive == true && x.IsPass == true)).
+                 Select(x => new
+                 {
+                     MemberId = x.MemberId,
+                     ExamId = x.ExamId,
+                     UserExamId = x.Id
+                 }
+                 );
+                List<AdminViewAccessScheduleViewModel> list = new List<AdminViewAccessScheduleViewModel>();
+                foreach (var item in listScheduleUser)
+                {
+                    var user = await _userManager.FindByIdAsync(item.MemberId);
+                    var viewModel = new AdminViewAccessScheduleViewModel()
+                    {
+                        ExamId = item.ExamId,
+                        Address = user.Address,
+                        Email = user.Email,
+                        FullName = user.FullName,
+                        PhoneNumber = user.PhoneNumber,
+                        MemberId = user.Id,
+                        UserExamId = item.UserExamId
+
+                    };
+                    list.Add(viewModel);
+                }
+                return list;
+            }
+            catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
@@ -583,9 +689,156 @@ namespace TestOnlineBusiness.Service
                     await _unitOfWork.CommitAsync();
                     scope.Complete();
 
+                    
                 }
+                List<ExamDetailViewModel> list = new List<ExamDetailViewModel>();
+
+                var examDetails = (await _unitOfWork.ExamDetails.Get(x => x.IsActive == true && x.ExamId == userExam.ExamId)).Select(x => new
+                {
+                    QuestionId = x.QuestionId,
+                    QuestionSequence = x.QuestionSequence,
+                    ExamId = x.ExamId
+
+                }).OrderBy(x => x.QuestionSequence).ToList();
+
+                var userAnswer = (await _unitOfWork.AnswerExamUsers.Get(x => x.ExamId == userExam.ExamId && x.CreatedBy == userId)).Select(x => new
+                {
+                    UserAnswer = x.AnswerId
+                });
 
 
+                if (!userAnswer.Any())
+                {
+                    foreach (var item in examDetails)
+                    {
+                        var listAnswer = (await _unitOfWork.Answers.Get(x => x.IsActive == true && x.QuestionId == item.QuestionId)).Select(x => new AnswerViewModel2
+                        {
+                            AnswerId = x.Id,
+                            AnswerDescript = x.Content,
+                            IsCorrect = x.IsCorrect,
+                            AnswerSequence = Number2String(x.Sequence + 1, true),
+                            IsUserAnswer = false
+                        }).OrderBy(x => x.AnswerSequence).ToList();
+                        ExamDetailViewModel temp = new ExamDetailViewModel()
+                        {
+                            ExamId = item.ExamId,
+                            QuestionId = item.QuestionId,
+                            QuestionName = (await _unitOfWork.Questions.GetById(item.QuestionId)).Description,
+                            QuestionTypeKey = (await _unitOfWork.Questions.GetById(item.QuestionId)).QuestionTypeKey,
+                            QuestionTrue = true,
+                            ListAnswer = listAnswer
+                        };
+                        list.Add(temp);
+                    }
+                    int countWrong = 0;
+
+                    foreach (var item in list)
+                    {
+                        foreach (var item1 in item.ListAnswer)
+                        {
+
+                            if (item1.IsCorrect != item1.IsUserAnswer)
+                            {
+
+                                item.QuestionTrue = false;
+                                countWrong++;
+                                break;
+                            }
+
+
+
+                        }
+                    }
+                    var scheduleUser = await _unitOfWork.ScheduleUsers.GetOne(x => x.TestScheduleId == userExam.ScheduleId && x.MemberId == userId && x.IsActive == true);
+                    scheduleUser.IsPass = false;
+                    _unitOfWork.ScheduleUsers.Update(scheduleUser);
+
+                    await _unitOfWork.CommitAsync();
+
+
+                }
+                else
+                {
+                    List<Guid> listUserAnswer = new List<Guid>();
+                    foreach (var item in userAnswer)
+                    {
+                        listUserAnswer.Add(item.UserAnswer);
+                    }
+                    foreach (var item in examDetails)
+                    {
+                        var listAnswer = (await _unitOfWork.Answers.Get(x => x.IsActive == true && x.QuestionId == item.QuestionId)).Select(x => new AnswerViewModel2
+                        {
+                            AnswerId = x.Id,
+                            AnswerDescript = x.Content,
+                            IsCorrect = x.IsCorrect,
+                            AnswerSequence = Number2String(x.Sequence + 1, true),
+                            IsUserAnswer = IsUserAnswer(x.Id, listUserAnswer)
+                        }).OrderBy(x => x.AnswerSequence).ToList();
+                        ExamDetailViewModel temp = new ExamDetailViewModel()
+                        {
+                            ExamId = item.ExamId,
+                            QuestionId = item.QuestionId,
+                            QuestionName = (await _unitOfWork.Questions.GetById(item.QuestionId)).Description,
+                            QuestionTypeKey = (await _unitOfWork.Questions.GetById(item.QuestionId)).QuestionTypeKey,
+                            QuestionTrue = true,
+                            ListAnswer = listAnswer
+                        };
+                        list.Add(temp);
+                    }
+
+
+                    int countWrong = 0;
+
+                    foreach (var item in list)
+                    {
+                        foreach (var item1 in item.ListAnswer)
+                        {
+
+                            if (item1.IsCorrect != item1.IsUserAnswer)
+                            {
+
+                                item.QuestionTrue = false;
+                                countWrong++;
+                                break;
+                            }
+
+
+
+                        }
+                    }
+                 
+                    var scheduleUser = await _unitOfWork.ScheduleUsers.GetOne(x => x.TestScheduleId == userExam.ScheduleId && x.MemberId == userId && x.IsActive == true);
+                    var schedule = await _unitOfWork.TestSchedules.GetOne(x => x.Id == userExam.ScheduleId && x.IsActive == true);
+                    var totalrecord = schedule.TotalQuestion;
+                    var pt = (int)((totalrecord - countWrong)*100) / totalrecord ;
+                    if (pt >= schedule.Percentage)
+                    {
+                        scheduleUser.IsPass = true;
+                        _unitOfWork.ScheduleUsers.Update(scheduleUser);
+
+                        userExam.IsPass = true;
+                        _unitOfWork.ExamUsers.Update(userExam);
+
+                        await _unitOfWork.CommitAsync();
+                    }
+                    else
+                    {
+                        scheduleUser.IsPass = false;
+                        _unitOfWork.ScheduleUsers.Update(scheduleUser);
+
+                        userExam.IsPass = false;
+                        _unitOfWork.ExamUsers.Update(userExam);
+
+                        await _unitOfWork.CommitAsync();
+                    }
+
+
+
+
+
+
+
+                }
                 return true;
             }
             catch (Exception ex)
@@ -600,8 +853,8 @@ namespace TestOnlineBusiness.Service
             try
             {
                 List<ExamDetailViewModel> list = new List<ExamDetailViewModel>();
-
-                var examDetails = (await _unitOfWork.ExamDetails.Get(x => x.IsActive == true && x.ExamId == examId)).Select(x => new
+                var userExam = await _unitOfWork.ExamUsers.GetById(examId);
+                var examDetails = (await _unitOfWork.ExamDetails.Get(x => x.IsActive == true && x.ExamId == userExam.ExamId)).Select(x => new
                 {
                     QuestionId = x.QuestionId,
                     QuestionSequence = x.QuestionSequence,
@@ -609,7 +862,7 @@ namespace TestOnlineBusiness.Service
 
                 }).OrderBy(x => x.QuestionSequence).ToList();
 
-                var userAnswer = (await _unitOfWork.AnswerExamUsers.Get(x => x.ExamId == examId && x.CreatedBy == userId)).Select(x=> new  {
+                var userAnswer = (await _unitOfWork.AnswerExamUsers.Get(x => x.ExamId == userExam.ExamId && x.CreatedBy == userId)).Select(x=> new  {
                     UserAnswer = x.AnswerId
                 });
 
@@ -637,6 +890,27 @@ namespace TestOnlineBusiness.Service
                         };
                         list.Add(temp);
                     }
+                    int countWrong = 0;
+
+                    foreach (var item in list)
+                    {
+                        foreach (var item1 in item.ListAnswer)
+                        {
+
+                            if (item1.IsCorrect != item1.IsUserAnswer)
+                            {
+
+                                item.QuestionTrue = false;
+                                countWrong++;
+                                break;
+                            }
+
+
+
+                        }
+                    }
+
+                    var totalrecord = (await _unitOfWork.TestSchedules.GetOne(x => x.Id == userExam.ExamId && x.IsActive == true)).TotalQuestion;
 
 
                     return list;
@@ -670,8 +944,8 @@ namespace TestOnlineBusiness.Service
                         list.Add(temp);
                     }
 
-                   
-                  
+
+                    int countWrong = 0;
 
                     foreach (var item in list)
                     {
@@ -682,6 +956,7 @@ namespace TestOnlineBusiness.Service
                                 {
                                    
                                     item.QuestionTrue = false;
+                                    countWrong++;
                                      break;
                                 }
                                
@@ -689,6 +964,10 @@ namespace TestOnlineBusiness.Service
                             
                         }
                     }
+
+                    
+
+                    
 
                     return list;
                 }
@@ -706,6 +985,169 @@ namespace TestOnlineBusiness.Service
         private bool IsUserAnswer(Guid answerId,IEnumerable<Guid> listAnswer)
         {
             return listAnswer.Contains(answerId);
+        }
+
+        public async Task<bool> DeleteSchedule(Guid scheduleId)
+        {
+            try
+            {
+                var schedule = await _unitOfWork.TestSchedules.GetById(scheduleId);
+                if (schedule != null)
+                {
+                    schedule.IsActive = false;
+                    _unitOfWork.TestSchedules.Update(schedule);
+                    return await _unitOfWork.CommitAsync() > 0;
+                }
+                return false;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return false;
+            }
+        }
+
+        public async Task<AdminScheduleViewModel> GetAdminViewModel(Guid scheduleId, string userId)
+        {
+            try
+            {
+                var listUserSchedule = await _unitOfWork.ScheduleUsers.Get(x => x.TestScheduleId == scheduleId && x.CreatedBy == userId && x.IsActive == true);
+                var totalUser = listUserSchedule.Count();
+                var listAccess = await _unitOfWork.ExamUsers.Get(x => x.ScheduleId == scheduleId && x.CreatedBy == userId && x.IsActive == true && x.IsAccess != null);
+                var totalAccess = listAccess.Count();
+                var totalNotAccess = totalUser - totalAccess;
+                var totalPass = await _unitOfWork.ScheduleUsers.GetCount(x => x.TestScheduleId == scheduleId && x.IsActive == true && x.IsPass == true);
+                return new AdminScheduleViewModel()
+                {
+                    ScheduleId = scheduleId,
+                    TotalMember = totalUser,
+                    TotalAccess = totalAccess,
+                    TotalNotAccess = totalNotAccess,
+                    TotalPass = totalPass
+
+                };
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<ExportViewModel>> ExportToExcel(Guid scheduleId, string userId, int key)
+        {
+            try
+            {
+               
+                if(key == 1)
+                {
+                    var  listScheduleUser = (await _unitOfWork.ScheduleUsers.Get(x => x.TestScheduleId == scheduleId && x.CreatedBy == userId && x.IsActive == true)).
+                     Select(x => new
+                     {
+                         MemberId = x.MemberId
+                     }
+                     );
+                    List<ApplicationUser> list = new List<ApplicationUser>();
+                    foreach (var item in listScheduleUser)
+                    {
+                        var user = await _userManager.FindByIdAsync(item.MemberId);
+                        list.Add(user);
+                    }
+                    var result = list.Select(x => new ExportViewModel()
+                    {
+                        FullName = x.FullName,
+                        Address = x.Address,
+                        Email = x.Email,
+                        PhoneNumber = x.PhoneNumber
+                    });
+                    return result;
+                  
+                    
+                }
+                if (key == 2)
+                {
+                    var listScheduleUser = (await _unitOfWork.ScheduleUsers.Get(x => x.TestScheduleId == scheduleId && x.CreatedBy == userId && x.IsActive == true)).
+                     Select(x => new
+                     {
+                         MemberId = x.MemberId
+                     }
+                     );
+                    List<ApplicationUser> list = new List<ApplicationUser>();
+                    foreach (var item in listScheduleUser)
+                    {
+                        var user = await _userManager.FindByIdAsync(item.MemberId);
+                        list.Add(user);
+                    }
+                    var result = list.Select(x => new ExportViewModel()
+                    {
+                        FullName = x.FullName,
+                        Address = x.Address,
+                        Email = x.Email,
+                        PhoneNumber = x.PhoneNumber
+                    });
+                    return result;
+
+
+                }
+                if (key == 3)
+                {
+                    var listScheduleUser = (await _unitOfWork.ScheduleUsers.Get(x => x.TestScheduleId == scheduleId && x.CreatedBy == userId && x.IsActive == true)).
+                     Select(x => new
+                     {
+                         MemberId = x.MemberId
+                     }
+                     );
+                    List<ApplicationUser> list = new List<ApplicationUser>();
+                    foreach (var item in listScheduleUser)
+                    {
+                        var user = await _userManager.FindByIdAsync(item.MemberId);
+                        
+                        list.Add(user);
+                    }
+                    var result = list.Select(x => new ExportViewModel()
+                    {
+                        FullName = x.FullName,
+                        Address = x.Address,
+                        Email = x.Email,
+                        PhoneNumber = x.PhoneNumber
+                    });
+                    return result;
+
+
+                }
+                if (key == 4)
+                {
+                    var listScheduleUser = (await _unitOfWork.ScheduleUsers.Get(x => x.TestScheduleId == scheduleId && x.CreatedBy == userId && x.IsActive == true)).
+                     Select(x => new
+                     {
+                         MemberId = x.MemberId
+                     }
+                     );
+                    List<ApplicationUser> list = new List<ApplicationUser>();
+                    foreach (var item in listScheduleUser)
+                    {
+                        var user = await _userManager.FindByIdAsync(item.MemberId);
+                        list.Add(user);
+                    }
+                    var result = list.Select(x => new ExportViewModel()
+                    {
+                        FullName = x.FullName,
+                        Address = x.Address,
+                        Email = x.Email,
+                        PhoneNumber = x.PhoneNumber
+                    });
+                    return result;
+
+
+                }
+
+
+                return null;
+
+              
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
         }
     }
 }

@@ -16,9 +16,7 @@
                     <th>
                         Trạng thái 
                     </th>
-                    <th>
-                        Đóng/mở 
-                    </th>
+                  
                     <th>
                         <a href="#" class="sortSchedule" data-sortschedule="Category">Chuyên mục</a>
                     </th>
@@ -47,15 +45,14 @@
                                 <tr class="rows" data-totalrow="@item.TotalRecord" id="rows">
                                     <td>@item.STT </td>
                                     <td>@item.Name</td>
-                                    <td>@item.Status</td>
-                                    <td>@item.OpenOrClose</td>
+                                    <td>@item.Status</td>                                
                                     <td>@item.CategoryName</td>
-                                    <td>@item.Time</td>
+                                    <td>@item.Time phút</td>
                                     <td>@item.StartDate</td>
                                     <td>@item.EndDate</td>
                                     <td>@item.UserCreate</td>
 
-                                    <td>   <a href="~/Admin/TestSchedule/CreateExam?scheduleId=@item.Id"><i class="fas fa-list coni"></i></a>  <a href="~/Admin/Question/Index?questionGroupId=@item.Id"><i class="fas fa-user-tie coni"></i></a>  <a href="/Admin/QuestionBank/UpdateQuestionGroup?questionGroupId=@item.Id"><i class="fas fa-pen-alt coni"></i></a>  <a href="#" class="deletequestiongroup" data-categoryid="@item.CategoryId" data-idquestiongroup="@item.Id"><i class="fas fa-trash-alt coni"></i></a></td>
+                                    <td width="100px"><a href="~/Admin/TestSchedule/CreateExam?scheduleId=@item.Id"><i class="fas fa-list coni"></i></a>  <a href="~/Admin/TestSchedule/AdminViewSchedule?scheduleId=@item.Id"><i class="fas fa-user-tie coni"></i></a>   <a href="#" class="deleteschedule" data-scheduleid="@item.Id" ><i class="fas fa-trash-alt coni"></i></a></td>
                                 </tr>
                     }
                 }

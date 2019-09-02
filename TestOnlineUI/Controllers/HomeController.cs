@@ -114,7 +114,7 @@ namespace TestOnlineUI.Controllers
                 {
                      return Redirect(returnUrl);
                 }
-                return RedirectToAction("Index", "Home", new { area = "Admin"  });
+                return RedirectToAction("Index", "TestCategory", new { area = "Admin"  });
              
             }
             catch (Exception ex)

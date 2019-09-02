@@ -29,6 +29,12 @@ namespace TestOnlineBusiness.Interface
 
         Task<IEnumerable<ApplicationUser>> GetListMemberSchedule(Guid scheduleId);
 
+        Task<IEnumerable<AdminViewAccessScheduleViewModel>> GetListMemberScheduleAccess(Guid scheduleId);
+
+        Task<IEnumerable<ApplicationUser>> GetListMemberScheduleNotAccess(Guid scheduleId);
+
+        Task<IEnumerable<AdminViewAccessScheduleViewModel>> GetListMemberSchedulePass(Guid scheduleId);
+
         Task<bool> DeleteMemberSchedule(DeleteMemberViewModel viewModle);
         Task<IEnumerable<ExamDetailViewModel>> GetListExamDetail(Guid examId, string userId);
 
@@ -41,5 +47,11 @@ namespace TestOnlineBusiness.Interface
         Task<bool> AddAnswerExamUser(UserAnswerViewModel viewModel, string userId);
 
         Task<IEnumerable<ExamDetailViewModel>> ReviewUserExamDetail(Guid examId, string userId);
+
+        Task<bool> DeleteSchedule(Guid scheduleId);
+
+        Task<AdminScheduleViewModel> GetAdminViewModel(Guid scheduleId, string userId);
+
+        Task<IEnumerable<ExportViewModel>> ExportToExcel(Guid scheduleId, string userId, int key);
     }
 }

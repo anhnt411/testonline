@@ -25,5 +25,8 @@ namespace TestOnlineEntity.Model.Entity
         public DateTime UpdatedDate { get; set; }
 
         public bool IsActive { get; set; }
+
+        public bool? IsPass { get; set; }
+
     }
 }
