@@ -6,8 +6,13 @@
     //TempData["success"] = TempData["updatesuccess"];
 
     var listCategory = new List<TestCategory>();
-    listCategory = ViewBag.ListCategory;
-    var firstItem = listCategory.FirstOrDefault().Id;
+    listCategory = ViewBag.ListCategory ?? (new List<TestCategory>());
+    dynamic firstItem = "";
+    if (listCategory.Any())
+    {
+        firstItem = listCategory.FirstOrDefault().Id;
+    }
+     
     TempData["success"] = TempData["updateschedulesuccess"];
 
 }
@@ -49,12 +54,20 @@
     <div class="col-md-4">
         <select name="TestCategoryId" id="selectCategoryId">
             @{
-                <option value="0" selected> -- Chọn chuyên mục</option>
-                foreach (var item in listCategory)
+                @if (listCategory.Any())
                 {
+                    <option value="0" selected> -- Chọn chuyên mục</option>
+                    foreach (var item in listCategory)
+                    {
 
-                    <option value="@item.Id">@item.Name</option>
+                        <option value="@item.Id">@item.Name</option>
+                    }
                 }
+                else
+                {
+                    <option value="0" selected> -- Chọn chuyên mục</option>
+                }
+
             }
         </select>
         <button class="btn btn-danger" id="searchQuestionBank">Tìm kiếm</button>
@@ -64,7 +77,7 @@
 <div class="row text-questionbank">
 
     <p>
-        Sau khi thêm mới đợt thi, bạn chọn các chức năng ở cột Chức năng để tạo đề thi và thí sinh dự thi. Khi hoàn tất tạo đề và thêm thí sinh vào đợt thi, bạn chuyển trạng thái đợt thi ở cột đóng/mở để cho phép thí sinh vào thi.
+        Sau khi thêm mới đợt thi, bạn chọn các chức năng ở cột Chức năng để tạo đề thi và thí sinh dự thi. Khi hoàn tất tạo đề và thêm thí sinh vào đợt thi, bạn sẽ gửi mail cho thí sinh để mời tham dự cuộc thi.
     </p>
 </div>
 

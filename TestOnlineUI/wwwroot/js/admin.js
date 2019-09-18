@@ -104,13 +104,14 @@
                     rules: {
 
                         'file': {
+                            required : true,
                             extension: "xls|xlsx"
                         }
                     },
                     messages: {
 
                         'file': {
-
+                            required : "Vui lòng chọn file",
                             extension: 'File không hợp lệ'
                         }
                     }
@@ -201,6 +202,21 @@
                             digits: "Nhập vào số điện thoại hợp lệ có 10 số",
                             minlength: "Nhập vào số điện thoại hợp lệ có 10 số",
                             maxlength: "Nhập vào số điện thoại hợp lệ có 10 số"
+                        }
+                    }
+                })
+
+                $('#addmemberfrm1').validate({
+                    rules: {
+                        'file': {
+                            required: true,
+                            extension: "xlsx|xls"
+                        }
+                    },
+                    messages: {
+                        'Name': {
+                            required: "Vui lòng nhập vào họ tên",
+                            extension:"File không hợp lệ"
                         }
                     }
                 })
@@ -599,10 +615,10 @@
                             displayMessage('Xảy ra lỗi, thử lại sau', 'error')
                         }
                         if (res.status == "1") {
-                            
-                            displayMessage('Cảm ơn bạn đã hoàn thành bài thi', 'success')
-                          
 
+                            alert('Cảm ơn bạn đã hoàn thành bài thi.Bạn có thể xem kết quả sau khi kì thi kết thúc');
+
+                            window.location.href = "/User/Home/Index";
                         }
                     }
                 })
@@ -613,6 +629,7 @@
                 
                 window.location.href = "/User/Home/ReviewUserExam?examId=" + id;
             })
+
             $(document).on('click', '#createExam', function () {
              
                 var totalquestion = $(this).data('totalquestion');
@@ -672,9 +689,10 @@
             $(document).on('click', '#sendEmail', function () {
                 var listmember = [];
                 $('.tdmemberid').each(function () {
-                    var id = $(this).text();
+                    var id = $(this).data('idmember');
                     listmember.push(id);
                 })
+                
                 var scheduleId = $(this).data('schedule');
                 var viewModel = {
                     'ScheduleId': scheduleId,
@@ -791,6 +809,11 @@
                 var id = $(this).data('scheduleid');
                 window.location.href = '/Admin/TestSchedule/ViewListMemberDetail?scheduleId=' + id;
             })
+
+            $(document).on('click', '#viewUser2', function () {
+                var id = $(this).data('scheduleid');
+                window.location.href = '/Admin/TestSchedule/ViewListMemberDetail?scheduleId=' + id;
+            })
             $(document).on('click', '#accessexam', function () {
 
                 var id = $(this).data('examuser');
@@ -803,6 +826,14 @@
                     window.location.href = '/Admin/TestCategory/Index';
                 });
             })
+            $(document).ready(function () {
+                $('#backprevgroup').on('click', function () {
+                    var id = $(this).data('group');
+                    window.location.href = '/Admin/QuestionBank/Index';
+                });
+            })
+
+
 
             $(document).ready(function () {
                 $('#backListUnit').on('click', function () {
@@ -813,11 +844,19 @@
             $(document).ready(function () {
                 
                 $('#backListMember').on('click', function () {
-                    var id = $(this).data('memberunitid');
-                    window.location.href = '/Admin/TestMember/Index?unitId='+id;
+                    var unitid = $(this).data('memberunitid');
+                    window.location.href = '/Admin/TestMember/Index?unitId=' + unitid;
                 });
             })
 
+            $(document).ready(function () {
+
+                $('#backListGroup').on('click', function () {
+                    var unitid = $(this).data('questiongroupid');
+                    window.location.href = '/Admin/Question/Index?questionGroupId=' + unitid;
+                });
+            })
+           
             $(document).ready(function () {
                 $('#backListSchedule').on('click', function () {
                     window.location.href = '/Admin/TestSchedule/Index';
@@ -831,6 +870,14 @@
             })
 
             $(document).ready(function () {
+                $('#backprevunit').on('click', function () {
+                    window.location.href = '/Admin/TestUnit/Index';
+                })
+            })
+
+           
+
+            $(document).ready(function () {
                 $('#backListQuestionGroup').on('click', function () {
                     window.location.href = '/Admin/QuestionBank/Index';
                 })
@@ -838,24 +885,58 @@
 
             $(document).ready(function () {
                 $('#exportallmember').on('click', function () {
-                    $('table').tblToExcel();
+                    $('table').table2excel({
+
+                        exclude: ".noExl",
+                        name: "Worksheet Name",
+                        filename: "danhsachthisinhthamgiathi", //do not include extension
+                        fileext: ".xlsx" // file extension
+                    });
                 })
             })
 
+          
+
             $(document).ready(function () {
                 $('#exportaccessmember').on('click', function () {
-                    $('table').tblToExcel();
+                    $('table').table2excel({
+                      
+                        exclude: ".noExl",
+                        name: "Worksheet Name",
+                        filename: "hoanthanhbaithi", //do not include extension
+                        fileext: ".xlsx" // file extension
+                    });
                 })
             })
 
             $(document).ready(function () {
                 $('#exportnotaccessmember').on('click', function () {
-                    $('table').tblToExcel();
+                    $('table').table2excel({
+
+                        exclude: ".noExl",
+                        name: "Worksheet Name",
+                        filename: "chuahoanthanhbaithi", //do not include extension
+                        fileext: ".xlsx" // file extension
+                    });
                 })
             })
 
             $(document).ready(function () {
                 $('#backprev1').on('click', function () {
+                    window.history.go(-1);
+                })
+            })
+
+
+            $(document).ready(function () {
+                $('#backprev12').on('click', function () {
+                    window.history.go(-1);
+                })
+            })
+
+            $(document).ready(function () {
+                $('#backprev09').on('click', function () {
+                    alert('ok');
                     window.history.go(-1);
                 })
             })
@@ -890,7 +971,13 @@
 
             $(document).ready(function () {
                 $('#exportmemberpass').on('click', function () {
-                    $('table').tblToExcel();
+                    $('table').table2excel({
+
+                        exclude: ".noExl",
+                        name: "Worksheet Name",
+                        filename: "dokithi", //do not include extension
+                        fileext: ".xlsx" // file extension
+                    });
                 })
             })
 

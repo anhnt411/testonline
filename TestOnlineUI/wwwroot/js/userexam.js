@@ -20,7 +20,7 @@ $("#selectUnit").change(function () {
 
     $(document).ready(function () {
         $(".checkAll").on("click", function () {
-            console.log(vao);
+          
             $(this)
                 .closest("table")
                 .find("tbody :checkbox")
@@ -49,7 +49,7 @@ $("#selectUnit").change(function () {
         });
     });
 
-var selected = [];
-var a = $('#parentcheck');
-console.log(a);
+//var selected = [];
+//var a = $('#parentcheck');
+//console.log(a);
 

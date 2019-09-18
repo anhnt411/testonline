@@ -415,7 +415,7 @@ namespace TestOnlineUI.Controllers
             return Json(success);
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> UpdateInfoUser()
         {
             var user = await _userManager.GetUserAsync(this.User);

@@ -47,9 +47,9 @@
                         int i = 1;
                         foreach (var item in Model)
                         {
-                        <tr>
-                            <td style="display:none" class="tdmemberid">@item.Id</td>
-                            <td>@i </td>
+                        <tr class="tdmemberid" data-idmember="@item.Id">
+                            @*<td style="display:none" class="tdmemberid">@item.Id</td>*@
+                            <td>@i</td>
                             <td>@item.FullName</td>
                             <td>@item.Email</td>
                             <td>@item.PhoneNumber</td>
@@ -73,6 +73,7 @@
 
 <div class="row">
     <button class="btn btn-danger" id="sendEmail" data-schedule="@schedule.Id">Gửi mail đến các thí sinh</button>
+    <button class="btn btn-danger" id="backprev1">Quay lại</button>
 </div>
 
 

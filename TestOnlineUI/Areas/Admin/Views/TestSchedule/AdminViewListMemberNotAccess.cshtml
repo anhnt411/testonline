@@ -46,15 +46,15 @@
                     int i = 1;
                     foreach (var item in Model)
                     {
-                        <tr>
+                                <tr class="tdmemberid" data-idmember="@item.Id">
+                                    @*<td style="display:none" class="tdmemberid" data-tdmemberid="@item.Id"></td>*@
+                                    <td>@i</td>
+                                    <td>@item.FullName</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@item.Address</td>
 
-                            <td>@i</td>
-                            <td>@item.FullName</td>
-                            <td>@item.Email</td>
-                            <td>@item.PhoneNumber</td>
-                            <td>@item.Address</td>
-
-                        </tr>
+                                </tr>
 
                         i++;
                     }
@@ -73,6 +73,8 @@
 
 <div class="row">
     <button class="btn btn-danger" id="exportnotaccessmember" data-filterkey="1" data-schedule="@schedule.Id">Xuất danh sách thí sinh</button>
+    <button class="btn btn-danger" id="sendEmail" data-schedule="@schedule.Id">Gửi mail đến các thí sinh</button>
+    <button class="btn btn-danger" id="backprev1">Quay lại</button>
 </div>
 
 

@@ -46,13 +46,30 @@ namespace TestOnlineUI.Areas.User.Controllers
             var user = await _userManager.GetUserAsync(this.User);
             var result = await _schedule.UpdateAccessExam(userexamId);
             var examDetails = await _schedule.GetUserListExamDetail(userexamId);
+
+            var first = examDetails.First();         
+            var testTime = (await _schedule.GetSchedule((first.ScheduleId.Value))).TestTime;
+
+            DateTime? startTime = first.StartTime;
+            DateTime? endTime = startTime.Value.AddMinutes(testTime);
+            if(endTime.Value.Subtract(DateTime.Now).TotalMinutes <= 0)
+            {
+                return RedirectToAction("Home", "LoginUser");
+            }
+
+            var time = (int)endTime.Value.Subtract(DateTime.Now).TotalSeconds;
+            ViewBag.TestTime = time;
+            
+
+
+
             return View(examDetails);
         }
         [HttpPost]
         public async Task<IActionResult> UserViewExamDetail(UserAnswerViewModel viewModel)
         {
             try
-            {
+          {
                 var user = await _userManager.GetUserAsync(this.User);
                 var result = await _schedule.AddAnswerExamUser(viewModel, user.Id);
                 return Json(new

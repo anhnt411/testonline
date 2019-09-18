@@ -93,6 +93,11 @@ namespace TestOnlineBusiness.Service
                 {
                     foreach (var item in viewModel.ListMember)
                     {
+                        var check = await _unitOfWork.ScheduleUsers.CheckExist(x => x.MemberId == item && x.TestScheduleId == viewModel.ScheduleId);
+                        if (check)
+                        {
+                            return false;
+                        }
                         var temp = new ScheduleUser()
                         {
                             Id = Guid.NewGuid(),
@@ -102,7 +107,8 @@ namespace TestOnlineBusiness.Service
                             Updatedby = userId,
                             UpdatedDate = DateTime.Now,
                             IsActive = true,
-                            TestScheduleId = viewModel.ScheduleId
+                            TestScheduleId = viewModel.ScheduleId,
+                            IsAdded = true
                         };
                         _unitOfWork.ScheduleUsers.Insert(temp);
                     }
@@ -472,23 +478,27 @@ namespace TestOnlineBusiness.Service
                 {
                     foreach (var item in viewModel.ListMember)
                     {
-                        var index = rand.Next(listExam.Count());
-                        var randItem = listExam[index];
-                        var userExam = new ExamUser()
+                        if( !(await _unitOfWork.ExamUsers.CheckExist(x=>x.MemberId == item && x.ScheduleId == viewModel.ScheduleId && x.CreatedBy == userId)))
                         {
-                            Id = Guid.NewGuid(),
-                            ExamId = randItem.ExamId,
-                            ScheduleId = viewModel.ScheduleId,
-                            MemberId = item,
-                            IsActive = true,
-                            CreatedBy = userId,
-                            CreatedDate = DateTime.Now,
-                            Updatedby = userId,
-                            UpdatedDate = DateTime.Now
+                            var index = rand.Next(listExam.Count());
+                            var randItem = listExam[index];
+                            var userExam = new ExamUser()
+                            {
+                                Id = Guid.NewGuid(),
+                                ExamId = randItem.ExamId,
+                                ScheduleId = viewModel.ScheduleId,
+                                MemberId = item,
+                                IsActive = true,
+                                CreatedBy = userId,
+                                CreatedDate = DateTime.Now,
+                                Updatedby = userId,
+                                UpdatedDate = DateTime.Now
 
 
-                        };
-                        _unitOfWork.ExamUsers.Insert(userExam);
+                            };
+                            _unitOfWork.ExamUsers.Insert(userExam);
+                        }
+                      
                     }
                     await _unitOfWork.CommitAsync();
                     scope.Complete();
@@ -606,8 +616,12 @@ namespace TestOnlineBusiness.Service
                 {
                     QuestionId = x.QuestionId,
                     QuestionSequence = x.QuestionSequence,
-                    ExamId = x.ExamId
-
+                    ExamId = x.ExamId,
+                    ScheduleId = userexam.ScheduleId,
+                    IsAccess = userexam.IsAccess,
+                    StartTime = userexam.StartTime,
+                    IsSubmit = userexam.IsSubmit
+                    
                 }).OrderBy(x => x.QuestionSequence).ToList();
 
 
@@ -627,6 +641,10 @@ namespace TestOnlineBusiness.Service
                         QuestionId = item.QuestionId,
                         QuestionName = (await _unitOfWork.Questions.GetById(item.QuestionId)).Description,
                         QuestionTypeKey = (await _unitOfWork.Questions.GetById(item.QuestionId)).QuestionTypeKey,
+                        ScheduleId = item.ScheduleId,
+                        IsAccess = item.IsAccess,
+                        StartTime = item.StartTime,
+                        IsSubmit = item.IsSubmit,
                         ListAnswer = listAnswer
                     };
                     list.Add(temp);
@@ -650,6 +668,11 @@ namespace TestOnlineBusiness.Service
                 var exam = await _unitOfWork.ExamUsers.GetById(examId);
                 //var exam = await _unitOfWork.ExamUsers.GetOne(x => x.ExamId == examId && x.MemberId == userId);
                 exam.IsAccess = true;
+                if (exam.StartTime == null)
+                {
+                    exam.StartTime = DateTime.Now;
+                }
+              
                 _unitOfWork.ExamUsers.Update(exam);
                 return await _unitOfWork.CommitAsync() > 0;
             }
@@ -669,23 +692,26 @@ namespace TestOnlineBusiness.Service
                 {
                     userExam.IsSubmit = true;
                     _unitOfWork.ExamUsers.Update(userExam);
-
-                    foreach (var item in viewModel.ListAnswer)
+                    if (viewModel.ListAnswer != null)
                     {
-                        var answerExamUser = new AnswerExamUser()
+                        foreach (var item in viewModel.ListAnswer)
                         {
-                            Id = Guid.NewGuid(),
-                            ExamId = viewModel.ExamId,
-                            AnswerId = item.AnswerId,
-                            QuestionId = item.QuestionId,
-                            IsActive = true,
-                            CreatedBy = userId,
-                            CreatedDate = DateTime.Now,
-                            UpdatedBy = userId,
-                            UpdatedDate = DateTime.Now
-                        };
-                        _unitOfWork.AnswerExamUsers.Insert(answerExamUser);
+                            var answerExamUser = new AnswerExamUser()
+                            {
+                                Id = Guid.NewGuid(),
+                                ExamId = viewModel.ExamId,
+                                AnswerId = item.AnswerId,
+                                QuestionId = item.QuestionId,
+                                IsActive = true,
+                                CreatedBy = userId,
+                                CreatedDate = DateTime.Now,
+                                UpdatedBy = userId,
+                                UpdatedDate = DateTime.Now
+                            };
+                            _unitOfWork.AnswerExamUsers.Insert(answerExamUser);
+                        }
                     }
+                  
                     await _unitOfWork.CommitAsync();
                     scope.Complete();
 
@@ -910,7 +936,7 @@ namespace TestOnlineBusiness.Service
                         }
                     }
 
-                    var totalrecord = (await _unitOfWork.TestSchedules.GetOne(x => x.Id == userExam.ExamId && x.IsActive == true)).TotalQuestion;
+                    var totalrecord = (await _unitOfWork.TestSchedules.GetOne(x => x.Id == userExam.ScheduleId && x.IsActive == true)).TotalQuestion;
 
 
                     return list;

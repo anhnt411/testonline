@@ -271,8 +271,18 @@ button#createExam {
     margin-top: 10px;
 }
 
-button#viewExam, #adduser,#viewUser {
+button#viewExam, #adduser {
     margin-top: 8px;
+    margin-left: 20px;
+}
+
+#viewUser {
+    margin-top: 8px;
+    margin-left: 20px;
+}
+
+#viewUser2 {
+    margin-top: 1px;
     margin-left: 20px;
 }
 
@@ -313,6 +323,8 @@ select#selectUnit {
 
 button#sendEmail {
     margin-left: 13px;
+    margin-right:20px;
+    height:39px;
 }
 
 button#submitexam {
@@ -332,6 +344,7 @@ button#backprev {
 
 button#exportallmember, #exportaccessmember,#exportnotaccessmember {
     margin-left: 13px;
+    height:38px;
 }
 
 button#backprev1 {
@@ -342,4 +355,19 @@ button#backprev1 {
 
 button#exportmemberpass {
     margin-left: 13px;
+    height:38px;
+}
+
+button#backprev12 {
+    width: 150px;
+    margin-top: 9px;
+    margin-left: 15px;
+}
+
+button#backprev09 {
+    margin-left: 20px;
+}
+div#countdowntimer {
+    position: fixed;
+    top: -1px;
 }

@@ -38,7 +38,7 @@
                         foreach (var item in Model)
                         {
                             var a = (DateTime.Now >= item.StartDate && DateTime.Now <= item.EndDate) ? "" : "disabled";
-                            var b = (DateTime.Now > item.EndDate && item.IsSubmit == true) ? "disabled" : "";
+                            var b = (DateTime.Now > item.EndDate || item.IsSubmit == true || item.IsAccess == true) ? "disabled" : "";
 
                                         <tr class="rows" data-totalrow="@item.TotalRecord" id="rows">
                                             <td>@item.STT </td>
@@ -47,13 +47,13 @@
                                             <td>@item.Status</td>
                                             <td>@item.StartDate</td>
                                             <td>@item.EndDate</td>
-                                            <td>@item.TotalTime</td>
+                                            <td>@item.TotalTime phút</td>
                                             @if((@item.IsAccess == null || @item.IsAccess == false) && item.IsSubmit !=true ){
-                                                       <td><button class="btn btn-danger @a"   data-examuser="@item.Id" id="accessexam">Vào thi</button></td>
+                                                       <td><button class="btn btn-danger"   data-examuser="@item.Id" id="accessexam" @a>Vào thi</button></td>
                                                     }
                                                     else{
-                                                        var a1 = (item.EndDate < DateTime.Now) ? "" : "disabled";
-                                            <td><button class="btn btn-danger @b" data-examid="@item.Id" id="viewaccessexam" @a1>Xem kết quả</button></td>
+                                                        
+                                            <td><button class="btn btn-danger" data-examid="@item.Id" id="viewaccessexam" @b>Xem kết quả</button></td>
                                             }
 
                                         </tr>

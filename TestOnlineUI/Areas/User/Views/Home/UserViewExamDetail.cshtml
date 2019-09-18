@@ -1,43 +1,65 @@
-﻿@using TestOnlineModel.ViewModel.Admin
+﻿
+
+@using TestOnlineModel.ViewModel.Admin
 @model IEnumerable<ExamDetailViewModel>
 @{
     ViewData["Title"] = "UserViewExamDetail";
     Layout = "~/Areas/User/Views/Shared/_Layout.cshtml";
 
     var first = Model.First().ExamId;
+    var testTime = ViewBag.TestTime;
+    var minute = testTime / 60;
+    var seconda = testTime % 60;
+    var check = "ok";
+    if (Model.First().IsAccess == true && Model.First().IsSubmit != null)
+    {
+        check = "not";
+    }
 }
 
 @section script{
+  
     <script>
-       
+     
+       $(function () {
+     $("#timetotest").countdowntimer({
 
-        $(document).ready(function () {
-               $('input:checkbox').change(function () {
-            if ($(this).is(":checked")) {
-                $(this).addClass("useranswer");
-            } else {
-                $(this).removeClass("useranswer");
-            }
+        minutes: @minute,
+        seconds: @seconda,
+        size: "lg"
+
+        });
         });
 
-        $('input:radio').change(function () {
-          $('input[name='+$(this).attr('name')+']:not(:checked)').removeClass("useranswer");
-         $('input[name='+$(this).attr('name')+']:checked').addClass("useranswer");
-        })
+        var time_in_sec = parseInt(@minute* 60 +@seconda, 10);
+        time_in_sec *= 1000;
 
+        setTimeout(function () {
+            $('#submitexam').trigger('click');
+        }, time_in_sec)
 
-        })
+        
 
-        $(function(){
-	            $("#timetotest").countdowntimer({
-                    hours: 3,
-                    minutes: 10,
-                    seconds: 10,
-                    size: "lg"
-		        
-	});
-});
+          $('input:checkbox').change(function () {
+        if ($(this).is(":checked")) {
+            $(this).addClass("useranswer");
+        } else {
+            $(this).removeClass("useranswer");
+        }
+    });
+
+    $('input:radio').change(function () {
+        $('input[name=' + $(this).attr('name') + ']:not(:checked)').removeClass("useranswer");
+        $('input[name=' + $(this).attr('name') + ']:checked').addClass("useranswer");
+    })
+
+         history.pushState(null, document.title, location.href);
+    window.addEventListener('popstate', function (event) {
+        history.pushState(null, document.title, location.href);
+    });
     </script>
+
+
 
 }
 
@@ -113,5 +135,4 @@
     </div>
 
 </div>
-
 

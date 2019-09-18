@@ -6,10 +6,16 @@
     //TempData["success"] = TempData["updatesuccess"];
 
     var listCategory = new List<TestCategory>();
-    listCategory = ViewBag.ListCategory;
-    var firstItem = listCategory.FirstOrDefault().Id;
+    listCategory = ViewBag.ListCategory??(new List<TestCategory>());
+    dynamic firstItem = "";
+    if ( listCategory.Any() )
+    {
+         firstItem = listCategory.FirstOrDefault().Id;
+    }
+   
+
     TempData["success"] = TempData["updategroupsuccess"];
-  
+
 }
 
 @section title{
@@ -49,12 +55,22 @@
     <div class="col-md-4">
         <select name="TestCategoryId" id="selectCategoryId">
             @{
-                <option value="0" selected> -- Chọn chuyên mục</option>
-                foreach (var item in listCategory)
+                @if ( listCategory.Any())
                 {
+                    <option value="0" selected> -- Chọn chuyên mục</option>
 
-                    <option value="@item.Id">@item.Name</option>
+
+                    foreach (var item in listCategory)
+                    {
+
+                        <option value="@item.Id">@item.Name</option>
+                    }
                 }
+                else
+                {
+                    <option value="0" selected> -- Chọn chuyên mục</option>
+                }
+
             }
         </select>
         <button class="btn btn-danger" id="searchQuestionBank">Tìm kiếm</button>

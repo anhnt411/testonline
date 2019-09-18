@@ -195,7 +195,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
                         status = 1
                     });
                 }
-                TempData["error"] = "Có lỗi xảy ra";
+               
                 return Json(new
                 {
                   
@@ -205,7 +205,7 @@ namespace TestOnlineUI.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                TempData["error"] = "Có lỗi xảy ra";
+               
                 return Json(new
                 {
                     status = 0

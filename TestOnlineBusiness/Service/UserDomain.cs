@@ -54,8 +54,9 @@ namespace TestOnlineBusiness.Service
                     Email = userViewModel.Email,
                     UserName = userViewModel.UserName,
                     Address = userViewModel.Address,
-                    PhoneNumber = userViewModel.PhoneNumber,   
+                    PhoneNumber = userViewModel.PhoneNumber,
                     FullName = userViewModel.FullName,
+                    Image = "user.png",
                     Status = true
                 };
                 var result = await _userManager.CreateAsync(user, userViewModel.Password);                    

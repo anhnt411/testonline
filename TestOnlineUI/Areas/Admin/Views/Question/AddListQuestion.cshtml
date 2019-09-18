@@ -19,34 +19,37 @@
 
 
 }
-
+<div class="row">
+    
+    <a href="~/File/ListQuestion.xlsx" style="margin-left:30px;">Tải file mẫu</a> <span style="color:red;margin-left:10px">Vui lòng tải về file mẫu và làm theo hướng dẫn<span>
+</div>
 <div class="col-md-2"></div>
 <div class="col-md-8">
     <div class="form_member_main">
         <h4 class="heading_member"><strong>Thêm Mới </strong></h4>
         <div class="form_member">
             @{
-                        <form method="post" action="~/Admin/Question/AddListQuestion" id="addlistquestionfrm" name="addlistquestionFrm" role="form" enctype="multipart/form-data">
+                <form method="post" action="~/Admin/Question/AddListQuestion" id="addlistquestionfrm" name="addlistquestionFrm" role="form" enctype="multipart/form-data">
 
-                            <div> <span> Nhóm câu hỏi </span> <span style="color:red;">*</span></div>
-                            <div class="dropdown">
-                                <select name="QuestionGroupId" id="selectGroupId">
-                                    @{
-                                        foreach (var item in list)
-                                        {
+                    <div> <span> Nhóm câu hỏi </span> <span style="color:red;">*</span></div>
+                    <div class="dropdown">
+                        <select name="QuestionGroupId" id="selectGroupId">
+                            @{
+                                foreach (var item in list)
+                                {
 
-                                            <option value="@item.Id">@item.Name</option>
-                                        }
-                                    }
-                                </select>
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
 
-                            </div>
+                    </div>
 
-                            <div class="fileExcel">  Chọn file <span style="color:red;">*</span> </div><div> <input type="file" name="file"> <br /> </div>
-                            <input type="submit"  value="Xác nhận" name="submit" class="txt2Member">
-                            <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListGroup" data-questiongroupid="@ViewBag.QuestionGroup.Id">
+                    <div class="fileExcel">  Chọn file <span style="color:red;">*</span> </div><div> <input type="file" name="file"> <br /> </div>
+                    <input type="submit" value="Xác nhận" name="submit" class="txt2Member">
+                    <input type="button" value="Quay lại" name="submit" class="txt2Member" id="backListGroup" data-questiongroupid="@ViewBag.QuestionGroup.Id">
 
-                        </form>
+                </form>
             }
         </div>
     </div>

@@ -15,6 +15,14 @@ namespace TestOnlineModel.ViewModel.Admin
 
         public bool? QuestionTrue { get; set; }
 
+        public DateTime? StartTime { get; set; }
+
+        public Guid? ScheduleId { get; set; }
+
+        public bool? IsAccess { get; set; }
+
+        public bool? IsSubmit { get; set; }
+
         public IEnumerable<AnswerViewModel2> ListAnswer { get; set; }
 
     }

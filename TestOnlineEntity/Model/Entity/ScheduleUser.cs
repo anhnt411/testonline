@@ -28,5 +28,6 @@ namespace TestOnlineEntity.Model.Entity
 
         public bool? IsPass { get; set; }
 
+        public bool? IsAdded { get; set; }
     }
 }

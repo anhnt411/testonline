@@ -36,9 +36,9 @@
                 @{
                     foreach (var item in Model)
                     {
-
+                      
                         <tr class="rows" data-totalrow="@item.TotalRecord" id="rows">
-                            <td><input type="checkbox" data-memberid="@item.Id" class="checkmember" /></td>
+                            <td><input type="checkbox" data-memberid="@item.Id" class="checkmember"  /></td>
                             <td>@item.STT </td>
                             <td>@item.FullName</td>
                             <td>@item.PhoneNumber</td>
@@ -62,7 +62,8 @@
 <div class="row">
     <div class="col-md-12">
         <button class="btn btn-danger" id="addgroupuser">Thêm thí sinh được chọn vào đợt thi</button>
-        <button class="btn btn-danger" id="viewUser">Xem danh sách thí sinh</button>
+        <button class="btn btn-danger" id="viewUser2">Xem danh sách thí sinh</button>
+     
     </div>
 </div>
 <script>
@@ -114,7 +115,7 @@
                         type: 'post',
                         success: function (res) {
                             if (res.status == "0") {
-                                alert('Đã xảy ra lỗi thử lại sau');
+                                alert('Xảy ra lỗi, tồn tại thí sinh đã được thêm vào đợt thi');
                             }
                             if (res.status == "1") {
 
@@ -124,10 +125,10 @@
                         }
                     })
     })
-    $(document).on('click', '#viewUser', function () {
-               var schedule = $('#scheduleId').val();
+              $(document).on('click', '#viewUser2', function () {
+              var schedule = $('#scheduleId').val();
 
-                  window.location.href = '/Admin/TestSchedule/ViewListMemberDetail?scheduleId=' + schedule;
+                 window.location.href = '/Admin/TestSchedule/ViewListMemberDetail?scheduleId=' + schedule;
             })
 
          

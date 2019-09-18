@@ -32,6 +32,8 @@ namespace TestOnlineEntity.Model.Entity
 
         public bool IsActive { get; set; }
 
+        public DateTime? StartTime { get; set; }
+
         public bool? IsPass { get; set; }
     }
 }
